@@ -2,6 +2,20 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.1.1] — 2026-10-19 — Sign-in troubleshooting
+
+### Found
+- First sign-in links redirected to `http://localhost:3000` because the Supabase Auth Site URL / Redirect URLs were still at defaults.
+- Further requests then failed with `429 over_email_send_rate_limit`: Supabase's built-in sender allows only 2 emails per hour
+  per project (both were used at 16:03 and 16:06 UTC on 18 Oct). The built-in sender also only delivers to Supabase team-member
+  addresses, so `jon@doblados.net` may not receive mail until custom SMTP (Resend) is configured.
+
+### Changed
+- Sign-in error messages now distinguish the hourly email limit ("try again in about an hour"), the 60-second per-address
+  cooldown, and general request throttling (previously all showed "wait a minute").
+- Made `jon.doblados@gmail.com` (Jon's existing account, created during the first sign-in) an admin of Tuesday Socials @CBP1,
+  and added it to `private.bootstrap_admins`. `jon@doblados.net` remains a bootstrap admin too.
+
 ## [0.1.0] — 2026-10-19 — Pilot-ready core (Phases 1–6)
 
 ### Decisions (confirmed with Jon)

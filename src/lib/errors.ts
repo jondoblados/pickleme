@@ -22,10 +22,17 @@ const MESSAGES: Record<string, string> = {
 }
 
 export function friendlyError(e: unknown): string {
+  const code = (e && typeof e === 'object' && 'code' in e) ? String((e as { code: unknown }).code) : ''
+  if (code === 'over_email_send_rate_limit') {
+    return 'PickleMe has reached its sign-in email limit for now. Please try again in about an hour, or ask an organiser.'
+  }
+  if (code === 'over_request_rate_limit') return 'Too many attempts from this device. Please wait a few minutes and try again.'
   const raw = (e && typeof e === 'object' && 'message' in e) ? String((e as { message: unknown }).message) : String(e)
   if (MESSAGES[raw]) return MESSAGES[raw]
   if (/failed to fetch|network/i.test(raw)) return 'Connection problem — check your internet and try again. Nothing was changed.'
-  if (/rate limit|too many/i.test(raw)) return 'Too many attempts. Please wait a minute and try again.'
+  if (/email rate limit/i.test(raw)) return 'PickleMe has reached its sign-in email limit for now. Please try again in about an hour, or ask an organiser.'
+  if (/for security purposes|after \d+ seconds/i.test(raw)) return 'Please wait a minute before requesting another link.'
+  if (/rate limit|too many/i.test(raw)) return 'Too many attempts. Please wait a few minutes and try again.'
   if (/expired|invalid.*(token|otp)|otp.*(expired|invalid)/i.test(raw)) return 'This sign-in link has expired or was already used. Request a new one below.'
   return raw || 'Something went wrong. Please try again.'
 }
