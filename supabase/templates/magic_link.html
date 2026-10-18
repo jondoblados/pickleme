@@ -1,0 +1,12 @@
+<!-- Supabase Auth → Email Templates → "Magic Link" AND "Confirm signup".
+     Subject: Your PickleMe sign-in link -->
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#15211b">
+  <h2 style="margin:0 0 12px;color:#14382b">Sign in to PickleMe</h2>
+  <p style="margin:0 0 20px">Tap the button to sign in and get back to your pickleball game.</p>
+  <p style="margin:0 0 24px">
+    <a href="{{ .RedirectTo }}&auth=confirm&token_hash={{ .TokenHash }}&type=email"
+       style="background:#14382b;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:bold;display:inline-block">
+      Sign in to PickleMe</a>
+  </p>
+  <p style="margin:0 0 8px;font-size:13px;color:#5a675f">This link works once and expires in 1 hour. If you didn't ask to sign in, you can ignore this email.</p>
+</div>
