@@ -2,6 +2,13 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.1.2] — 2026-10-19 — Email delivery plan
+
+- Checked doblados.net DNS: hosted at Moniker; root MX/SPF belong to Google Workspace; `mail.doblados.net` is a Google CNAME;
+  no DMARC record yet.
+- Chose a dedicated sending subdomain `pickleme.doblados.net` (Resend region Tokyo) so Workspace email is unaffected.
+- Added `docs/resend-setup.md` with the Resend, Moniker DNS and Supabase SMTP steps.
+
 ## [0.1.1] — 2026-10-19 — Sign-in troubleshooting
 
 ### Found
