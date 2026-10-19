@@ -2,6 +2,23 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.2.1] — 2026-10-20 — Privacy notice, Privacy Policy and FAQ
+
+### Added
+- Short privacy notice under the "Email me a sign-in link" button on the sign-in screen, linking to the Privacy Policy
+  (PDPA notification at the point of collection).
+- Privacy Policy page (`?view=privacy`), tailored to how PickleMe actually works: Supabase, Resend, GitHub Pages and
+  Google Fonts as providers; emails not visible to anyone in the app; no analytics or ad trackers; contact jon@doblados.net.
+- FAQ & guide page (`?view=faq`) that doubles as a user guide: signing in, joining, waitlist, withdrawing, sharing,
+  organiser tasks and privacy.
+- Footer with "FAQ & guide" and "Privacy Policy" links on every screen (sign-in, onboarding and the signed-in app).
+  Both pages are public, and opening them keeps any invite or game link parameters so nothing is lost on the way back.
+
+### Follow-ups
+- [ ] The policy commits to deleting or anonymising identifiable sign-up records 12 months after a game; a scheduled
+  clean-up job still needs to be built.
+- [ ] Account deletion is by email request for now; self-service deletion not yet built.
+
 ## [0.2.0] — 2026-10-19 — Promotion emails (FR-004, Phase 7)
 
 ### Added

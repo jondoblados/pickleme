@@ -3,7 +3,7 @@ import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
 import { api, isOrganiser, type Me } from './lib/api'
 import { friendlyError } from './lib/errors'
-import { isInviteToken, parseRoute, routeToSearch, type Route } from './lib/route'
+import { isInfoView, isInviteToken, parseRoute, routeToSearch, withView, type Route } from './lib/route'
 import { ToastProvider, Spinner, Notice, useToast } from './components/ui'
 import { SignIn } from './screens/SignIn'
 import { AuthConfirm } from './screens/AuthConfirm'
@@ -13,6 +13,7 @@ import { GamePage } from './screens/GamePage'
 import { GameForm } from './screens/GameForm'
 import { Members } from './screens/Members'
 import { Wordmark } from './components/Wordmark'
+import { Faq, Footer, PrivacyPolicy } from './screens/InfoPages'
 
 function readHashError(): string | null {
   if (!window.location.hash.includes('error')) return null
@@ -56,8 +57,30 @@ function Root() {
   const q = new URLSearchParams(search)
   if (q.get('auth') === 'confirm') return <AuthConfirm search={search} onDone={next => setUrl(next, true)} />
   if (session === undefined) return <div className="page center"><Spinner /></div>
-  if (!session) return <SignIn search={search} initialError={hashError} />
+  const openInfo = (view: 'privacy' | 'faq') => setUrl(withView(search, view))
+  if (!session) {
+    if (isInfoView(search)) return <PublicInfo search={search} onNav={openInfo} onBack={() => setUrl(withView(search, null))} />
+    return <SignIn search={search} initialError={hashError} footer={<Footer onNav={openInfo} dark />} />
+  }
   return <SignedIn session={session} search={search} setUrl={setUrl} />
+}
+
+function PublicInfo({ search, onNav, onBack }: { search: string; onNav: (v: 'privacy' | 'faq') => void; onBack: () => void }) {
+  const view = new URLSearchParams(search).get('view')
+  return (
+    <div className="app">
+      <header className="topbar">
+        <div className="topbar-inner">
+          <button className="brand" onClick={onBack} aria-label="PickleMe sign in"><Wordmark small /></button>
+          <button className="btn btn-ghost btn-sm" onClick={onBack}>Sign in</button>
+        </div>
+      </header>
+      <main className="page">
+        {view === 'faq' ? <Faq onNav={onNav} /> : <PrivacyPolicy onNav={onNav} />}
+      </main>
+      <Footer onNav={onNav} />
+    </div>
+  )
 }
 
 function SignedIn({ session, search, setUrl }: { session: Session; search: string; setUrl: (s: string, replace?: boolean) => void }) {
@@ -97,12 +120,13 @@ function SignedIn({ session, search, setUrl }: { session: Session; search: strin
     <button className="btn" onClick={loadMe}>Try again</button></Shell>
   if (!me) return <div className="page center"><Spinner /></div>
 
-  if (!me.display_name) {
+  if (!me.display_name && route.name !== 'privacy' && route.name !== 'faq') {
     return <div className="page narrow onboarding">
       <Wordmark />
       <h1 className="display">Welcome to PickleMe</h1>
       <p className="lede">Choose the name other players will see on the game lists.</p>
       <ProfileForm initial="" email={session.user.email ?? ''} onSaved={loadMe} submitLabel="Continue" />
+      <Footer onNav={v => go({ name: v })} />
     </div>
   }
 
@@ -110,7 +134,9 @@ function SignedIn({ session, search, setUrl }: { session: Session; search: strin
   const organiser = isOrganiser(group?.role)
 
   let body
-  if (!group) {
+  if (route.name === 'privacy' || route.name === 'faq') {
+    body = route.name === 'faq' ? <Faq onNav={v => go({ name: v })} /> : <PrivacyPolicy onNav={v => go({ name: v })} />
+  } else if (!group) {
     body = <div className="empty">
       <h1 className="display">You're signed in</h1>
       <p>You are not in a pickleball group yet. Ask an organiser in your WhatsApp group for the PickleMe invite link, then open it on this device.</p>
@@ -126,7 +152,7 @@ function SignedIn({ session, search, setUrl }: { session: Session; search: strin
   } else if (route.name === 'profile') {
     body = <section className="stack">
       <h1 className="display">Your profile</h1>
-      <ProfileForm initial={me.display_name} email={session.user.email ?? ''} submitLabel="Save name"
+      <ProfileForm initial={me.display_name ?? ''} email={session.user.email ?? ''} submitLabel="Save name"
         onSaved={async () => { await loadMe(); toast('Name updated.') }} />
       <button className="btn btn-ghost" onClick={signOut}>Sign out</button>
     </section>
@@ -160,6 +186,7 @@ function Shell({ me, go, signOut, route, organiser, children }:
         {!me && <button className="btn btn-ghost btn-sm" onClick={signOut}>Sign out</button>}
       </header>
       <main className="page">{children}</main>
+      <Footer onNav={v => go({ name: v })} />
     </div>
   )
 }

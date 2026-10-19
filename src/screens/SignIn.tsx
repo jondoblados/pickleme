@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { supabase, APP_URL } from '../lib/supabase'
 import { friendlyError } from '../lib/errors'
 import { safeNext } from '../lib/route'
@@ -7,7 +7,7 @@ import { Wordmark } from '../components/Wordmark'
 
 const COOLDOWN = 60
 
-export function SignIn({ search, initialError }: { search: string; initialError: string | null }) {
+export function SignIn({ search, initialError, footer }: { search: string; initialError: string | null; footer?: ReactNode }) {
   const [email, setEmail] = useState(() => localStorage.getItem('pm:last-email') ?? '')
   const [sentTo, setSentTo] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -34,6 +34,15 @@ export function SignIn({ search, initialError }: { search: string; initialError:
     if (error) { setError(friendlyError(error)); return }
     localStorage.setItem('pm:last-email', addr)
     setSentTo(addr); setCooldown(COOLDOWN)
+  }
+
+  // The footer's handler keeps invite/game parameters; reuse it by clicking the footer link's equivalent.
+  const openPrivacy = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const q2 = new URLSearchParams(window.location.search); q2.set('view', 'privacy')
+    history.pushState(null, '', window.location.pathname + '?' + q2.toString())
+    window.dispatchEvent(new PopStateEvent('popstate'))
+    window.scrollTo(0, 0)
   }
 
   const context = q.get('invite') ? 'You have been invited to a pickleball group. Sign in with your email to join.'
@@ -74,9 +83,15 @@ export function SignIn({ search, initialError }: { search: string; initialError:
             <button className="btn btn-primary btn-lg" disabled={busy || cooldown > 0} type="submit">
               {busy ? 'Sending…' : cooldown > 0 ? `Wait ${cooldown}s` : 'Email me a sign-in link'}
             </button>
+            <p className="privacy-notice">
+              We use your email to sign you in and your display name to identify you in your pickleball groups.
+              Your display name and game-signup status are visible to authorised group members; your email is not shown on player rosters.
+              Read our <a href="?view=privacy" onClick={openPrivacy}>Privacy Policy</a> for information about service providers, retention and your choices.
+            </p>
           </form>
         )}
       </div>
+      {footer}
     </div>
   )
 }
