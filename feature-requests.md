@@ -14,7 +14,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-001 | Create group | Requested | 2026-10-19 | — |
 | FR-002 | Group switcher | Requested | 2026-10-19 | — |
 | FR-003 | Group-aware invites and game links | Requested | 2026-10-19 | — |
-| FR-004 | Promotion emails | Implemented (v0.2.0) — goes live once `RESEND_API_KEY` is set | 2026-10-19 | 2026-10-19 |
+| FR-004 | Promotion emails | Implemented (v0.2.0, live) | 2026-10-19 | 2026-10-19 |
 | FR-005 | Sign-in CAPTCHA | Requested | 2026-10-19 | — |
 
 ## Details
@@ -43,7 +43,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Notes:** Depends on FR-002.
 
 ### FR-004 — Promotion emails
-- **Status:** Implemented in v0.2.0 (2026-10-19). Activation pending: add the `RESEND_API_KEY` Edge Function secret.
+- **Status:** Implemented in v0.2.0 (2026-10-19). Live since `RESEND_API_KEY` was added; verified end to end.
 - **Requested:** 2026-10-19 by Jon (priority: high)
 - **Description:** When a waitlisted player moves into the playing list (because someone withdrew, an organiser removed
   a player, or the player limit was raised), email them automatically with the game details and a link to the game.

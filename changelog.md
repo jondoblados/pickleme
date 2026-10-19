@@ -27,8 +27,10 @@ All notable work on PickleMe, newest first. Phases refer to the PickleMe Impleme
   "RESEND_API_KEY not configured" until the secret is added.
 - Confirmed Resend DNS records for `pickleme.doblados.net` and DMARC for doblados.net are published.
 
-### Open items
-- [ ] Jon: add `RESEND_API_KEY` in Supabase → Edge Functions → Secrets, then run an end-to-end test.
+### Verified live (2026-10-19)
+- Jon added `RESEND_API_KEY`. End-to-end test with Resend test inboxes (game with 1 spot; player 1 withdrew):
+  the waitlisted player's email was sent through Resend about 2 seconds after the withdrawal (status `sent`, 1 attempt,
+  Resend message ID recorded). Test accounts and game deleted afterwards; real games and members untouched.
 
 ## Unreleased (folded into 0.2.0)
 
