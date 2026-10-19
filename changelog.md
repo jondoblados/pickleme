@@ -2,6 +2,11 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## Unreleased
+
+- Added `feature-requests.md` to track requested features (FR-001 Create group, FR-002 Group switcher,
+  FR-003 Group-aware invites and game links).
+
 ## [0.1.2] — 2026-10-19 — Email delivery plan
 
 - Checked doblados.net DNS: hosted at Moniker; root MX/SPF belong to Google Workspace; `mail.doblados.net` is a Google CNAME;

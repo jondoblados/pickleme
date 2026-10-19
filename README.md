@@ -24,6 +24,7 @@ and automatic promotion when someone withdraws.
 | `supabase/tests/acceptance.sql` | Database acceptance tests (self-rolling-back) |
 | `supabase/templates/magic_link.html` | Custom email template for magic links |
 | `changelog.md` | Log of work done |
+| `feature-requests.md` | Requested features and their status |
 
 ## Local development
 
