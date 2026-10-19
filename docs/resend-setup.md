@@ -33,6 +33,14 @@ API Keys → Create → permission **Sending access**, domain `pickleme.doblados
   body = `supabase/templates/magic_link.html`.
 - Authentication → URL Configuration: Site URL `https://jon.doblados.net/pickleme/`, Redirect URL `https://jon.doblados.net/pickleme/**`.
 
-## 5. Test
+## 5. Promotion emails (FR-004)
+Supabase → Edge Functions → Secrets → add `RESEND_API_KEY` (a Resend key with Sending access for `pickleme.doblados.net`;
+a separate key named `pickleme-promotions` is recommended). Emails go from `PickleMe <games@pickleme.doblados.net>`.
+Optional secrets: `PROMOTION_FROM`, `APP_URL`. Check delivery in Resend → Emails (tag `type=promotion`).
+
+Note: Resend's dashboard may show newer record values than the table above (e.g. a CNAME for `send.pickleme`).
+Always use exactly what Resend shows.
+
+## 6. Test
 Request a link for jon@doblados.net at https://jon.doblados.net/pickleme/, check delivery in Resend → Emails,
 and confirm the link opens PickleMe (not localhost).

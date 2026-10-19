@@ -2,7 +2,35 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
-## Unreleased
+## [0.2.0] — 2026-10-19 — Promotion emails (FR-004, Phase 7)
+
+### Added
+- Added FR-004 Promotion emails and FR-005 Sign-in CAPTCHA to `feature-requests.md`; FR-004 now Implemented.
+- Migration `20261019000004_promotion_emails.sql`:
+  - `notification_outbox` gains `status` (pending/sending/sent/skipped/failed), `claimed_at`, `next_attempt_at`,
+    `provider_message_id`, `skipped_reason`.
+  - Enabled `pg_net` and `pg_cron`. A statement trigger on the outbox calls the Edge Function right after a promotion
+    commits; a cron job every 2 minutes retries anything due.
+  - Shared secret and function URL stored in Supabase Vault; database ↔ function calls are authenticated with it.
+  - `claim_promotion_emails` (row locking with SKIP LOCKED, max 50 per run), `complete_promotion_email` (sent, or retry with
+    2/4/8/16-minute backoff, failed after 5 attempts), `release_promotion_emails` (return rows without using an attempt).
+  - Eligibility re-checked at send time: skipped if the player withdrew, is no longer in the playing list, the game was
+    cancelled, or the game has finished.
+- Edge Function `send-promotions` (Deno): sends one email per promotion through the Resend API from
+  `PickleMe <games@pickleme.doblados.net>`, with an idempotency key per promotion so retries never send twice.
+  Email includes name, game, date, time, location, playing-list position, "View the game" link and a reminder to withdraw
+  if they can't make it. If `RESEND_API_KEY` is missing it releases rows and returns 503 (nothing is lost).
+- Waitlist message in the app now says "…and we'll email you."
+- `supabase/tests/promotion_emails.sql`: 12 checks, all passing (claim, sent, no duplicates, skip after withdrawal,
+  backoff, re-claim, release, cancelled game, wrong secret, players can't read the outbox, trigger fires).
+- Verified live: function rejects missing/wrong secret (401/403); database → function call works and reports
+  "RESEND_API_KEY not configured" until the secret is added.
+- Confirmed Resend DNS records for `pickleme.doblados.net` and DMARC for doblados.net are published.
+
+### Open items
+- [ ] Jon: add `RESEND_API_KEY` in Supabase → Edge Functions → Secrets, then run an end-to-end test.
+
+## Unreleased (folded into 0.2.0)
 
 - Added `feature-requests.md` to track requested features (FR-001 Create group, FR-002 Group switcher,
   FR-003 Group-aware invites and game links).

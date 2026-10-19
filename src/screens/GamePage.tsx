@@ -118,7 +118,7 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
               : 'Not signed up'}
           </p>
           <p className="small me-help">
-            {me.status === 'waitlist' ? 'If someone withdraws, you move up automatically.'
+            {me.status === 'waitlist' ? 'If someone withdraws, you move up automatically and we’ll email you.'
               : me.status === 'playing' ? 'Can’t make it? Withdraw so the next person on the waitlist gets your spot.'
               : canJoin ? (spotsLeft > 0 ? `${spotsLeft} ${spotsLeft === 1 ? 'spot' : 'spots'} left.` : 'Game is full — you’ll join the waitlist.')
               : game.status === 'cancelled' ? 'This game was cancelled.' : 'Sign-ups are closed.'}
