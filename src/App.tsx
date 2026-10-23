@@ -125,7 +125,7 @@ function SignedIn({ session, search, setUrl }: { session: Session; search: strin
       <p>Open a shared game link to join a group and game, or ask your organiser for a group invite.</p></div>
   } else if (route.name === 'new-game' && organiser) body = <GameForm group={group} go={go} />
   else if (route.name === 'edit-game' && organiser) body = <GameForm group={group} gameId={route.gameId} go={go} />
-  else if (route.name === 'members') body = <Members group={group} userId={session.user.id} />
+  else if (route.name === 'members') body = <Members group={group} userId={session.user.id} onGroupChanged={loadMe} />
   else if (route.name === 'profile') body = <section className="stack"><h1 className="display">Your profile</h1>
     <ProfileForm initial={me.display_name ?? ''} email={session.user.email ?? ''} submitLabel="Save name" onSaved={async () => { await loadMe(); toast('Name updated.') }} />
     <button className="btn btn-ghost" onClick={signOut}>Sign out</button></section>

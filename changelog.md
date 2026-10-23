@@ -2,6 +2,14 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.7.0] — 2026-10-23 — Admins can rename the group (FR-011)
+
+### Added
+- **Group name** card at the top of Members & invites (admins only): edit, Save name / Cancel; top bar updates immediately.
+- Migration `20261023000009_rename_group.sql`: `rename_group` (admin only, 1–80 characters, extra spaces tidied,
+  `group_renamed` log entry with old and new names; no-op if unchanged). Tests `supabase/tests/rename_group.sql` (14 checks).
+- FAQ: "Can I change the group name?"
+
 ## [0.6.0] — 2026-10-23 — Admins can delete cancelled games (FR-010)
 
 ### Added

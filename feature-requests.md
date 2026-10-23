@@ -21,6 +21,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-008 | Late sign-ups while places are free | Implemented (v0.4.0) | 2026-10-23 | 2026-10-23 |
 | FR-009 | Re-copy invite links; who joined with each link | Implemented (v0.5.0) | 2026-10-23 | 2026-10-23 |
 | FR-010 | Admins can delete cancelled games | Implemented (v0.6.0) | 2026-10-23 | 2026-10-23 |
+| FR-011 | Admins can rename the group | Implemented (v0.7.0) | 2026-10-23 | 2026-10-23 |
 
 ## Details
 
@@ -99,3 +100,9 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Requested:** 2026-10-23 by Jon
 - **Description:** A Delete game button on cancelled games, for group admins only (not organisers).
 - **Notes:** Permanent; removes sign-ups and history for that game. A group-level log entry records the deletion.
+
+### FR-011 — Admins can rename the group
+- **Status:** Implemented in v0.7.0 (2026-10-23).
+- **Requested:** 2026-10-23 by Jon
+- **Description:** Group admins can change the group name from Members & invites. Organisers and players cannot.
+- **Notes:** 1–80 characters; renames are logged with the old and new names. Links are unaffected.
