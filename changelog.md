@@ -2,7 +2,7 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
-## [0.3.1] — unreleased — Inline attendance in the Playing list
+## [0.3.1] — 2026-10-23 — Inline attendance in the Playing list
 
 ### Changed
 - Organisers and admins mark attendance directly in the Playing list once a game starts: Present, Excused and No-show
