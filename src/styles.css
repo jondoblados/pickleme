@@ -219,3 +219,24 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--c
 .faq-item[open] summary::after { content: '–'; }
 .faq-item summary:focus-visible { outline: 3px solid var(--court-3); outline-offset: 2px; border-radius: var(--radius-sm); }
 .faq-answer { padding: 0 .9rem .9rem; color: #2b3a32; }
+
+/* Inline attendance (organisers/admins, once a game has started) */
+.att-head { display: flex; flex-direction: column; gap: .15rem; margin-top: -.3rem; }
+.att-summary { margin: 0; }
+.att-legend { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .9rem; }
+.att-leg { display: inline-flex; align-items: center; gap: .3rem; white-space: nowrap; }
+.att-key { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; }
+.att-key svg { width: 13px; height: 13px; }
+.att-btns { display: inline-flex; gap: .3rem; flex: none; }
+.att-btn { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; color: #9aa39d; cursor: pointer; padding: 0; transition: background .12s, border-color .12s, color .12s; }
+.att-btn:hover:not(:disabled) { border-color: #c9c3b3; color: var(--ink); }
+.att-btn:focus-visible { outline: 3px solid var(--court-3); outline-offset: 1px; }
+.att-btn:disabled { opacity: .35; cursor: not-allowed; }
+.att-key.att-present, .att-btn.att-present.is-on { background: var(--court-3); border-color: var(--court-3); color: #fff; }
+.att-key.att-excused, .att-btn.att-excused.is-on { background: var(--amber); border-color: var(--amber); color: #fff; }
+.att-key.att-no_show, .att-btn.att-no_show.is-on { background: var(--red); border-color: var(--red); color: #fff; }
+.att-row-no_show .name { color: var(--red); }
+.att-row-excused .name { color: #7a4600; }
+.att-note { display: block; font-weight: 500; }
+.att-left-title { margin: .2rem 0 0; border-top: 1px dashed var(--line); padding-top: .5rem; }
+.roster-left .pos { background: #ece8dc; color: #4a554e; }

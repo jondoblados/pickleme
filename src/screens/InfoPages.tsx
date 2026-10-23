@@ -215,12 +215,13 @@ export function Faq({ onNav }: { onNav: Nav }) {
         <p>On the game page, tap <b>Remove</b> next to their name, then tap again to confirm. The next waitlisted player moves in and gets an email.</p>
       </Q>
       <Q q="How do I take attendance?">
-        <p>Open the game once it has started. Below the player lists, <b>Attendance &amp; reports</b> shows everyone who was on the playing list at the start time.
-          Mark each person <b>Present</b> or <b>Excused</b> at any time during the game; <b>No-show</b> can be recorded once the game has ended.
+        <p>Open the game once it has started. In the <b>Playing</b> list, each name gets three buttons: ✓ <b>Present</b>, ⊖ <b>Excused</b> and ✕ <b>No-show</b>.
+          Tap one to mark the player, or tap it again to clear it. Present and Excused work during the game; No-show unlocks once the game has ended.
+          Anyone who was on the list at the start but withdrew later is shown underneath so you can still mark them.
           You can correct a mark later, and every change is logged. Waitlisted players are not included, and unmarked players are never counted as no-shows.</p>
       </Q>
       <Q q="How do I see attendance reports and repeat no-shows?">
-        <p>In the same panel, choose a date range (up to one year) and tap <b>Generate report</b>. You'll see each player's present, no-show, excused and unmarked counts,
+        <p>In <b>Attendance reports</b> at the bottom of the game page, choose a date range (up to one year) and tap <b>Generate report</b>. You'll see each player's present, no-show, excused and unmarked counts,
           and a <b>Repeat no-shows</b> list of anyone at or above the threshold you set (2 by default). Each list can be exported as a CSV file.
           Cancelled games are excluded. Games played before this feature was added have no attendance records.</p>
       </Q>
