@@ -236,6 +236,10 @@ export function Faq({ onNav }: { onNav: Nav }) {
           Under each link, <b>Joined with this link</b> shows who joined with it and when; <b>Joined from a game link</b> lists people who joined from a shared game.
           Links created before 23 October 2026 can't be copied again; create a new one instead.</p>
       </Q>
+      <Q q="Can I delete a game?">
+        <p>Only group admins can, and only once a game has been cancelled. Open the cancelled game and tap <b>Delete game</b> under
+          Admin tools, then tap again to confirm. This permanently removes the game and its sign-up history and can't be undone.</p>
+      </Q>
       <Q q="Who can make someone an organiser?">
         <p>Admins can set a member's role to Player, Organiser or Admin on the Members page. Organisers can create, edit, close and cancel games and remove sign-ups.</p>
       </Q>

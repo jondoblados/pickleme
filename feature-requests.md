@@ -20,6 +20,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-007 | Attendance tracking and no-show reports | Implemented (v0.3.0) | 2026-10-23 | 2026-10-23 |
 | FR-008 | Late sign-ups while places are free | Implemented (v0.4.0) | 2026-10-23 | 2026-10-23 |
 | FR-009 | Re-copy invite links; who joined with each link | Implemented (v0.5.0) | 2026-10-23 | 2026-10-23 |
+| FR-010 | Admins can delete cancelled games | Implemented (v0.6.0) | 2026-10-23 | 2026-10-23 |
 
 ## Details
 
@@ -92,3 +93,9 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Description:** Admins and organisers can copy active invite links again, and see who joined with each link and
   who joined from a game link.
 - **Notes:** Links created before v0.5.0 cannot be re-copied (hash only). Inactive links cannot be copied.
+
+### FR-010 — Admins can delete cancelled games
+- **Status:** Implemented in v0.6.0 (2026-10-23).
+- **Requested:** 2026-10-23 by Jon
+- **Description:** A Delete game button on cancelled games, for group admins only (not organisers).
+- **Notes:** Permanent; removes sign-ups and history for that game. A group-level log entry records the deletion.

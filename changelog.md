@@ -2,6 +2,18 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.6.0] — 2026-10-23 — Admins can delete cancelled games (FR-010)
+
+### Added
+- **Delete game** under Admin tools on a cancelled game (admins only; organisers and players don't see it).
+  Two-tap confirmation; returns to the games list afterwards.
+- Migration `20261023000008_delete_cancelled_game.sql`: `delete_game` (admin + cancelled only). Removes the game, its
+  sign-ups, attendance, emails queue and game log entries; a group-level `game_deleted` entry records title, date and who deleted it.
+- Tests `supabase/tests/delete_cancelled_game.sql` (12 checks). FAQ: "Can I delete a game?"
+
+### Data
+- 2026-10-23: deleted the cancelled game "Tuesday Socials" (3 Nov 2026, 0 sign-ups) directly on request.
+
 ## [0.5.0] — 2026-10-23 — Re-copy invite links and see who joined (FR-009)
 
 ### Added

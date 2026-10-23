@@ -239,6 +239,21 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
         </div>
       </section>
 
+      {my_role === 'admin' && game.status === 'cancelled' && (
+        <section className="organiser card">
+          <h2>Admin tools</h2>
+          <p className="small muted">Deleting removes this cancelled game for everyone, including its sign-up history. This can't be undone.</p>
+          <div className="row wrap">
+            <ConfirmButton className="btn btn-danger-ghost" confirmText="Tap again to delete permanently" disabled={busy}
+              onConfirm={async () => {
+                setBusy(true)
+                try { await api.deleteGame(game.id); toast(`“${game.title}” deleted.`); go({ name: 'home' }) }
+                catch (e) { toast(friendlyError(e), 'error'); setBusy(false) }
+              }}>Delete game</ConfirmButton>
+          </div>
+        </section>
+      )}
+
       {organiser && game.status !== 'cancelled' && (
         <section className="organiser card">
           <h2>Organiser tools</h2>
