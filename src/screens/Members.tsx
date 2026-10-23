@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { APP_URL } from '../lib/supabase'
-import { api, isOrganiser, type Invite, type Me, type Member, type Role } from '../lib/api'
+import { api, isOrganiser, type GameLinkJoin, type Invite, type Me, type Member, type Role } from '../lib/api'
 import { friendlyError } from '../lib/errors'
 import { copyText } from '../lib/clipboard'
 import { ConfirmButton, Notice, Spinner, useToast } from '../components/ui'
@@ -13,6 +13,7 @@ export function Members({ group, userId }: { group: Me['groups'][number]; userId
   const admin = group.role === 'admin'
   const [members, setMembers] = useState<Member[] | null>(null)
   const [invites, setInvites] = useState<Invite[]>([])
+  const [gameJoins, setGameJoins] = useState<GameLinkJoin[]>([])
   const [newLink, setNewLink] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -20,7 +21,10 @@ export function Members({ group, userId }: { group: Me['groups'][number]; userId
   const load = useCallback(async () => {
     try {
       setMembers(await api.listMembers(group.id))
-      if (organiser) setInvites(await api.listInvites(group.id))
+      if (organiser) {
+        const [inv, gj] = await Promise.all([api.listInvites(group.id), api.listGameLinkJoins(group.id)])
+        setInvites(inv); setGameJoins(gj)
+      }
       setError(null)
     } catch (e) { setError(friendlyError(e)) }
   }, [group.id, organiser])
@@ -50,7 +54,7 @@ export function Members({ group, userId }: { group: Me['groups'][number]; userId
           <p className="muted">Share one invite link in your WhatsApp group. Anyone who opens it and signs in joins {group.name}. Links last 30 days (up to 200 people) and can be turned off any time.</p>
           {newLink ? (
             <div className="stack">
-              <Notice tone="ok">New invite link created. Copy it now — for security it is only shown once.</Notice>
+              <Notice tone="ok">New invite link created. You can copy it again later from the list below while it is active.</Notice>
               <code className="linkbox">{newLink}</code>
               <div className="row wrap">
                 <button className="btn" onClick={async () => toast(await copyText(newLink) ? 'Invite link copied.' : 'Could not copy.')}>Copy link</button>
@@ -60,21 +64,45 @@ export function Members({ group, userId }: { group: Me['groups'][number]; userId
             </div>
           ) : <button className="btn btn-primary" disabled={busy} onClick={createInvite}>{busy ? 'Creating…' : 'Create invite link'}</button>}
           {invites.length > 0 && (
-            <ul className="invite-list">
+            <div className="invite-list">
               {invites.map(i => {
                 const expired = new Date(i.expires_at).getTime() < Date.now()
                 const state = i.revoked_at ? 'Turned off' : expired ? 'Expired' : i.use_count >= i.max_uses ? 'Used up' : 'Active'
+                const active = state === 'Active'
+                const isNew = Date.now() - new Date(i.created_at).getTime() < 86400000
+                const tail = i.revoked_at ? `turned off ${fmtDate(i.revoked_at)}` : expired ? `expired ${fmtDate(i.expires_at)}` : `expires ${fmtDate(i.expires_at)}`
+                async function copy(kind: 'link' | 'message') {
+                  try {
+                    const { token } = await api.getInviteLink(i.id)
+                    const link = `${APP_URL}?invite=${token}`
+                    const ok = await copyText(kind === 'link' ? link : inviteMessage(link))
+                    toast(ok ? (kind === 'link' ? 'Invite link copied.' : 'Invite message copied.') : 'Could not copy.')
+                  } catch (e) { toast(friendlyError(e), 'error') }
+                }
                 return (
-                  <li key={i.id}>
-                    <span>Created {new Date(i.created_at).toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })} · used {i.use_count}/{i.max_uses}</span>
-                    <span className={`badge badge-${state === 'Active' ? 'open' : 'closed'}`}>{state}</span>
-                    {state === 'Active' && <ConfirmButton className="btn btn-xs btn-ghost" confirmText="Turn off?"
-                      onConfirm={async () => { try { await api.revokeInvite(i.id); toast('Invite link turned off.'); load() } catch (e) { toast(friendlyError(e), 'error') } }}>Turn off</ConfirmButton>}
-                  </li>
+                  <div className="inv" key={i.id}>
+                    <div className="inv-top">
+                      <span className="inv-meta"><b>Created {fmtDate(i.created_at)}</b>{isNew && <span className="newflag">new</span>}
+                        <span className="inv-sub">by {i.created_by_name} · used {i.use_count}/{i.max_uses} · {tail}</span></span>
+                      <span className={`badge badge-${active ? 'open' : 'closed'}`}>{state}</span>
+                    </div>
+                    {active && <div className="inv-actions">
+                      <button className="btn btn-xs" disabled={!i.copyable} onClick={() => copy('link')}><IconCopy />Copy link</button>
+                      {i.copyable && <button className="btn btn-xs" onClick={() => copy('message')}>Copy WhatsApp message</button>}
+                      <ConfirmButton className="btn btn-xs btn-ghost" confirmText="Turn off?"
+                        onConfirm={async () => { try { await api.revokeInvite(i.id); toast('Invite link turned off.'); load() } catch (e) { toast(friendlyError(e), 'error') } }}>Turn off</ConfirmButton>
+                    </div>}
+                    {active && !i.copyable && <p className="legacy">This link was created before copying was available, so it can't be shown again. It still works for anyone who has it. To share a fresh copy, create a new link (and turn this one off if you like).</p>}
+                    {i.joined.length > 0 && <JoinedList title={`Joined with this link (${i.joined.length})`} open={active}
+                      rows={i.joined.map(j => ({ key: j.user_id + j.joined_at, name: j.name, when: fmtWhen(j.joined_at) }))} />}
+                  </div>
                 )
               })}
-            </ul>
+            </div>
           )}
+          {gameJoins.length > 0 && <JoinedList title={`Joined from a game link (${gameJoins.length})`} open={false}
+            rows={gameJoins.map(j => ({ key: j.user_id + j.joined_at, name: j.name, when: fmtWhen(j.joined_at),
+              sub: j.game + (j.game_starts_at ? ` · ${fmtDate(j.game_starts_at)}` : '') }))} />}
         </div>
       )}
 
@@ -102,4 +130,20 @@ export function Members({ group, userId }: { group: Me['groups'][number]; userId
       </div>
     </section>
   )
+}
+
+const fmtDate = (iso: string) => new Date(iso).toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })
+const fmtWhen = (iso: string) => new Date(iso).toLocaleString('en-SG', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' })
+
+function JoinedList({ title, rows, open }: { title: string; open: boolean; rows: { key: string; name: string; when: string; sub?: string }[] }) {
+  return (
+    <details className="joined" open={open}>
+      <summary>{title}</summary>
+      <ul>{rows.map(r => <li key={r.key}><span>{r.name}{r.sub && <span className="joined-sub">{r.sub}</span>}</span><span className="when">{r.when}</span></li>)}</ul>
+    </details>
+  )
+}
+
+function IconCopy() {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg>
 }

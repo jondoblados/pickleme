@@ -231,8 +231,10 @@ export function Faq({ onNav }: { onNav: Nav }) {
           Cancelled games are excluded. Games played before this feature was added have no attendance records.</p>
       </Q>
       <Q q="How do I invite players?">
-        <p>Go to <b>Members & invites</b> and create an invite link. Copy it straight away — for security it's only shown once.
-          Links last 30 days and can be used up to 200 times. You can turn a link off at any time.</p>
+        <p>Go to <b>Members & invites</b> and create an invite link. While a link is active you can copy it again at any time with
+          <b>Copy link</b> or <b>Copy WhatsApp message</b>. Links last 30 days and can be used up to 200 times, and you can turn a link off at any time.
+          Under each link, <b>Joined with this link</b> shows who joined with it and when; <b>Joined from a game link</b> lists people who joined from a shared game.
+          Links created before 23 October 2026 can't be copied again; create a new one instead.</p>
       </Q>
       <Q q="Who can make someone an organiser?">
         <p>Admins can set a member's role to Player, Organiser or Admin on the Members page. Organisers can create, edit, close and cancel games and remove sign-ups.</p>

@@ -2,6 +2,20 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.5.0] — 2026-10-23 — Re-copy invite links and see who joined (FR-009)
+
+### Added
+- Members & invites: **Copy link** and **Copy WhatsApp message** for every active invite link, any time.
+- Each link shows its creator, uses and expiry, and an expandable **Joined with this link** list (name, date and time).
+- **Joined from a game link** list for people who joined the group from a shared game (game name and date).
+- Migration `20261023000007_invite_copy_history.sql`: private `invite_tokens` table (no client access),
+  `get_invite_link`, `list_invites_detail`, `list_game_link_joins`. Tests `supabase/tests/invite_copy_history.sql` (23 checks).
+
+### Notes
+- Links created before this release were stored only as a hash and cannot be copied again; they show a note
+  and keep working. Join history for them comes from the existing audit trail and matches their use counts.
+- Turned-off, expired and used-up links cannot be copied.
+
 ## [0.4.0] — 2026-10-23 — Late sign-ups (FR-008)
 
 ### Added

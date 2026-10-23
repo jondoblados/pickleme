@@ -27,7 +27,11 @@ export interface GameDetail {
   roster: RosterEntry[]
 }
 export interface Member { user_id: string; display_name: string | null; role: Role; joined_at: string }
-export interface Invite { id: string; expires_at: string; max_uses: number; use_count: number; revoked_at: string | null; created_at: string }
+export interface Invite {
+  id: string; expires_at: string; max_uses: number; use_count: number; revoked_at: string | null; created_at: string
+  created_by_name: string; copyable: boolean; joined: { user_id: string; name: string; joined_at: string }[]
+}
+export interface GameLinkJoin { user_id: string; name: string; joined_at: string; game_id: string | null; game: string; game_starts_at: string | null }
 
 async function rpc<T>(fn: string, args: Record<string, unknown> = {}): Promise<T> {
   const { data, error } = await supabase.rpc(fn, args)
@@ -59,13 +63,9 @@ export const api = {
     rpc<{ id: string; token: string; expires_at: string; max_uses: number }>('create_invite',
       { p_group_id: groupId, p_valid_days: days, p_max_uses: maxUses }),
   revokeInvite: (id: string) => rpc('revoke_invite', { p_invite_id: id }),
-  listInvites: async (groupId: string) => {
-    const { data, error } = await supabase.from('group_invites')
-      .select('id, expires_at, max_uses, use_count, revoked_at, created_at')
-      .eq('group_id', groupId).order('created_at', { ascending: false })
-    if (error) throw error
-    return data as Invite[]
-  },
+  listInvites: (groupId: string) => rpc<Invite[]>('list_invites_detail', { p_group_id: groupId }),
+  getInviteLink: (inviteId: string) => rpc<{ token: string }>('get_invite_link', { p_invite_id: inviteId }),
+  listGameLinkJoins: (groupId: string) => rpc<GameLinkJoin[]>('list_game_link_joins', { p_group_id: groupId }),
 }
 
 export const isOrganiser = (r: Role | undefined) => r === 'organiser' || r === 'admin'
