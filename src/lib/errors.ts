@@ -7,6 +7,7 @@ const MESSAGES: Record<string, string> = {
   registration_closed: 'Registration is closed for this game.',
   game_started: 'This game has already started, so new sign-ups are closed.',
   game_finished: 'This game has finished.',
+  game_full_started: 'This game has started and every place is taken.',
   not_registered: 'You are not on the list for this game.',
   display_name_required: 'Please choose a display name first.',
   invalid_display_name: 'Display names must be 1–40 characters.',

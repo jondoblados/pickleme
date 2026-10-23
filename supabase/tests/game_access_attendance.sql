@@ -230,8 +230,9 @@ begin
   select count(*) into n from public.games g where g.created_at < now() - interval '1 minute' and g.starts_at <= now()
     and not exists (select 1 from public.attendance_sessions s where s.game_id = g.id);
   log := log || format(E'M1 all pre-existing started games marked as no-capture: %s\n', n = 0);
-  select count(*) into n from public.game_attendance a join public.games g on g.id = a.game_id where g.created_at < now() - interval '1 minute';
-  log := log || format(E'M2 no attendance rows invented for pre-existing games: %s\n', n = 0);
+  -- Games that started before the v0.3.0 release (2026-10-23 11:25 UTC) must have no attendance rows.
+  select count(*) into n from public.game_attendance a join public.games g on g.id = a.game_id where g.starts_at < '2026-10-23 11:25+00' and g.created_at < now();
+  log := log || format(E'M2 no attendance rows invented for games started before release: %s\n', n = 0);
 
   select count(*) filter (where l ~ ': (t|true)$'), count(*) filter (where l <> '' and l !~ ': (t|true)$'),
          coalesce(string_agg(l, ' | ') filter (where l <> '' and l !~ ': (t|true)$'), 'none')
