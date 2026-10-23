@@ -13,7 +13,7 @@ begin
     u := u || gen_random_uuid();
     insert into auth.users (id, email, aud, role) values (u[i], 'p'||i||'@test.local', 'authenticated', 'authenticated');
   end loop;
-  select id into grp from public.groups where name = 'Tuesday Socials @CBP1';
+  select id into grp from public.groups order by created_at limit 1; -- seeded group (name can change via rename_group)
   insert into public.group_members (group_id, user_id, role) values (grp, admin, 'admin');
 
   -- act as admin

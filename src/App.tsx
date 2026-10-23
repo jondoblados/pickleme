@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
 import { api, isOrganiser, type Me } from './lib/api'
-import { friendlyError } from './lib/errors'
+import { endDeletedSession, isDeletedAccount, friendlyError } from './lib/errors'
 import { isInfoView, isInviteToken, parseRoute, routeToSearch, withView, type Route } from './lib/route'
 import { ToastProvider, Spinner, Notice, useToast } from './components/ui'
 import { SignIn } from './screens/SignIn'
@@ -29,7 +29,15 @@ function Root() {
   const [search, setSearch] = useState(window.location.search)
   const [hashError] = useState(readHashError)
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session))
+    supabase.auth.getSession().then(async ({ data }) => {
+      // Check the stored session against the server once: the account may have been deleted since sign-in.
+      if (data.session) {
+        const { error } = await supabase.auth.getUser()
+        const status = (error as { status?: number } | null)?.status
+        if (error && (status === 401 || status === 403 || isDeletedAccount(error.message))) { endDeletedSession(); setSession(null); return }
+      }
+      setSession(data.session)
+    })
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s)
       if (s && window.location.hash.includes('access_token')) history.replaceState(null, '', window.location.pathname + window.location.search)
