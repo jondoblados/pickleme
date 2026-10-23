@@ -82,17 +82,7 @@ function AttendancePanel({gameId,groupId}:{gameId:string;groupId:string}) {
     try {setData(await rpc<Attendance>('get_game_attendance',{p_game_id:gameId}));setError('')}
     catch(e){setError(friendlyError(e))}
   },[gameId])
-  useEffect(()=>{
-    void load()
-    const timer=window.setInterval(()=>{if(document.visibilityState==='visible') void load()},30000)
-    window.addEventListener('focus',load)
-    return ()=>{window.clearInterval(timer);window.removeEventListener('focus',load)}
-  },[load])
-  async function mark(userId:string,status:Status){
-    setBusy(true)
-    try {await rpc('mark_game_attendance',{p_game_id:gameId,p_user_id:userId,p_status:status});await load();setReport(null)}
-    catch(e){setError(friendlyError(e))} finally{setBusy(false)}
-  }
+  useEffect(()=>{void load()},[load])
   async function generate(){
     setBusy(true);setError('')
     try {setReport(await rpc<ReportRow[]>('attendance_report',{p_group_id:groupId,p_from:from,p_to:to}))}
@@ -105,20 +95,12 @@ function AttendancePanel({gameId,groupId}:{gameId:string;groupId:string}) {
   }
   const repeat=[...people.values()].filter(p=>p.no_show>=threshold).sort((a,b)=>b.no_show-a.no_show||a.name.localeCompare(b.name))
   return <section className="card stack" aria-label="Attendance and reports">
-    <h2>Attendance & reports</h2>
-    <p className="small muted">Admins and organisers only. The playing list at game start is kept separately from attendance. Unmarked players are not no-shows. No-shows can be recorded only after the game ends.</p>
+    <h2>Attendance reports</h2>
+    <p className="small muted">Admins and organisers only. Mark attendance with the buttons next to each name in the Playing list once the game starts. Unmarked players are not counted as no-shows.</p>
     {error && <Notice tone="error">{error}</Notice>}
-    <button className="btn btn-sm" disabled={busy} onClick={load}>Refresh attendance</button>
-    {!data ? <Spinner/> : data.cancelled ? <p>Attendance is unavailable for cancelled games.</p>
-    : !data.started ? <p>Attendance opens when the game starts.</p> : <>
-      <p>{data.rows.filter(r=>r.status==='present').length} present · {data.rows.filter(r=>r.status==='no_show').length} no-show · {data.rows.filter(r=>r.status==='excused').length} excused · {data.rows.filter(r=>r.status==='unmarked').length} unmarked</p>
-      {data.rows.length===0 && <p>No expected players recorded.</p>}
-      {data.rows.map(r=><label className="field" key={r.user_id}><span>{r.name}</span>
-        <select aria-label={`Attendance for ${r.name}`} value={r.status} disabled={busy} onChange={e=>mark(r.user_id,e.target.value as Status)}>
-          {(Object.keys(labels) as Status[]).map(s=><option key={s} value={s} disabled={s==='no_show'&&!data.ended}>{labels[s]}</option>)}
-        </select></label>)}
-      <button className="btn" onClick={()=>saveCsv('game-attendance.csv',['User ID','Name','Attendance','Marked at'],data.rows.map(r=>[r.user_id,r.name,labels[r.status],r.marked_at]))}>Export this game's attendance</button>
-    </>}
+    {data && data.started && !data.cancelled && data.rows.length>0 &&
+      <button className="btn" onClick={async()=>{await load();const d=await rpc<Attendance>('get_game_attendance',{p_game_id:gameId})
+        saveCsv('game-attendance.csv',['User ID','Name','Attendance','Marked at'],d.rows.map(r=>[r.user_id,r.name,labels[r.status],r.marked_at]))}}>Export this game's attendance</button>}
     <h3>Group attendance report</h3>
     <p className="small muted">Dates use the group's timezone. Reports include captured playing lists only; cancelled games and waitlisted players are excluded. Older games are not automatically classified as no-shows.</p>
     <div className="row wrap">

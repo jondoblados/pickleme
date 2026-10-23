@@ -2,6 +2,15 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.3.1] — unreleased — Inline attendance in the Playing list
+
+### Changed
+- Organisers and admins mark attendance directly in the Playing list once a game starts: Present, Excused and No-show
+  buttons next to each name (tap again to clear). A live summary and legend sit under the Playing heading.
+- Players who were on the list at the start but withdrew or were removed later appear below the list so they can still be marked.
+- The bottom panel is now Attendance reports only (export this game, group report, repeat no-shows); the per-player dropdowns are gone.
+- Remove buttons are hidden in the Playing list after the game starts (the waitlist still has them until the game ends).
+
 ## [0.3.0] — 2026-10-23 — Join from game link (FR-006), attendance and no-show reports (FR-007)
 
 ### Added
