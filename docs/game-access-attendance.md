@@ -1,6 +1,6 @@
 # Shared game onboarding and attendance — draft implementation
 
-Status: Prepared on feature/game-link-onboarding-attendance. Not deployed or runtime-tested.
+Status: Released in v0.3.0 (2026-10-23). Build passes; database acceptance tests in supabase/tests/game_access_attendance.sql pass (52/52) and existing acceptance.sql passes with the migration applied.
 
 ## Requested features
 - FR-006: An existing WhatsApp game URL carries a new player through verified email sign-in, display-name setup, and a single Join group & game action. Membership and queue insertion are atomic.

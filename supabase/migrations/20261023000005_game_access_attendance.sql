@@ -5,7 +5,7 @@ declare g public.games; gr public.groups;
 begin
   perform private.require_uid();
   select * into g from public.games where id=p_game_id;
-  if not found then raise exception 'game_not_found'; end if;
+  if not found then raise exception 'game_not_found' using errcode='P0002'; end if;
   select * into gr from public.groups where id=g.group_id;
   return jsonb_build_object('id',g.id,'group_id',g.group_id,'title',g.title,
     'group_name',gr.name,'starts_at',g.starts_at,'capacity',g.capacity,
@@ -21,9 +21,11 @@ declare u uuid:=private.require_uid(); g public.games; added int; result jsonb;
 begin
   g:=private.lock_game(p_game_id);
   if not exists(select 1 from auth.users where id=u and email_confirmed_at is not null) then
-    raise exception 'verified_email_required';
+    raise exception 'verified_email_required' using errcode='42501';
   end if;
-  if g.status<>'open' or g.starts_at<=now() then raise exception 'registration_closed'; end if;
+  if g.status='cancelled' then raise exception 'game_cancelled'; end if;
+  if g.status<>'open' then raise exception 'registration_closed'; end if;
+  if g.starts_at<=now() then raise exception 'game_started'; end if;
   insert into public.group_members(group_id,user_id,role) values(g.group_id,u,'player') on conflict do nothing;
   get diagnostics added=row_count;
   result:=public.join_game(p_game_id);
@@ -87,9 +89,13 @@ returns jsonb language plpgsql security definer set search_path = '' as $$
 declare g public.games;
 begin
   perform private.require_uid();
-  g:=private.lock_game(p_game_id);
+  select * into g from public.games where id=p_game_id;
+  if not found then raise exception 'game_not_found' using errcode='P0002'; end if;
   if not private.has_role(g.group_id,array['organiser','admin']::public.member_role[]) then raise exception 'forbidden' using errcode='42501'; end if;
-  perform private.capture_attendance(g.id);
+  -- Lock and capture only once, so 30-second polling does not hold the game row lock.
+  if g.starts_at<=now() and not exists(select 1 from public.attendance_sessions s where s.game_id=g.id) then
+    perform private.capture_attendance(g.id);
+  end if;
   return jsonb_build_object('started',g.starts_at<=now(),'ended',g.ends_at<=now(),
     'cancelled',g.status='cancelled','rows',coalesce((
       select jsonb_agg(jsonb_build_object('user_id',a.user_id,'name',coalesce(p.display_name,'Player'),
@@ -117,14 +123,23 @@ begin
 end $$;
 
 -- Dates use the group's timezone; the end date is inclusive.
+-- Games in range whose playing list was never captured (nobody opened the panel) are captured first,
+-- so reports include them as Unmarked rather than silently omitting them.
 create or replace function public.attendance_report(p_group_id uuid,p_from date,p_to date)
-returns jsonb language plpgsql stable security definer set search_path = '' as $$
-declare tz text;
+returns jsonb language plpgsql security definer set search_path = '' as $$
+declare tz text; gid uuid;
 begin
   perform private.require_uid();
   if not private.has_role(p_group_id,array['organiser','admin']::public.member_role[]) then raise exception 'forbidden' using errcode='42501'; end if;
   if p_from is null or p_to is null or p_to<p_from then raise exception 'invalid_date_range'; end if;
+  if p_to-p_from>366 then raise exception 'invalid_date_range'; end if;
   select timezone into tz from public.groups where id=p_group_id;
+  for gid in select g.id from public.games g
+    where g.group_id=p_group_id and g.status<>'cancelled' and g.starts_at<=now()
+      and (g.starts_at at time zone tz)::date between p_from and p_to
+      and not exists(select 1 from public.attendance_sessions s where s.game_id=g.id)
+    order by g.id
+  loop perform private.capture_attendance(gid); end loop;
   return coalesce((select jsonb_agg(jsonb_build_object('game_id',g.id,'game',g.title,
     'starts_at',g.starts_at,'user_id',a.user_id,'name',coalesce(p.display_name,'Player'),
     'status',a.status,'marked_at',a.marked_at) order by g.starts_at,a.user_id)
