@@ -17,6 +17,7 @@ const MESSAGES: Record<string, string> = {
   invite_revoked: 'That invite link has been turned off. Ask an organiser for a new one.',
   invite_expired: 'That invite link has expired. Ask an organiser for a new one.',
   invite_used_up: 'That invite link has reached its limit. Ask an organiser for a new one.',
+  only_cancelled_games: 'Only cancelled games can be deleted. Cancel the game first.',
   invite_inactive: 'That invite link is no longer active.',
   invite_not_copyable: 'This link was created before copying was available. Create a new link instead.',
   invalid_invite_settings: 'Invite settings are out of range.',
