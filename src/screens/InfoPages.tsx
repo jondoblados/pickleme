@@ -240,6 +240,10 @@ export function Faq({ onNav }: { onNav: Nav }) {
         <p>Only group admins can, and only once a game has been cancelled. Open the cancelled game and tap <b>Delete game</b> under
           Admin tools, then tap again to confirm. This permanently removes the game and its sign-up history and can't be undone.</p>
       </Q>
+      <Q q="Can I change the group name?">
+        <p>Group admins can. Go to <b>Members & invites</b>, edit <b>Group name</b> and tap <b>Save name</b>. Everyone in the group sees the new name straight away.
+          Invite links and game links keep working.</p>
+      </Q>
       <Q q="Who can make someone an organiser?">
         <p>Admins can set a member's role to Player, Organiser or Admin on the Members page. Organisers can create, edit, close and cancel games and remove sign-ups.</p>
       </Q>

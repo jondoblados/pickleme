@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { APP_URL } from '../lib/supabase'
 import { api, isOrganiser, type GameLinkJoin, type Invite, type Me, type Member, type Role } from '../lib/api'
 import { friendlyError } from '../lib/errors'
@@ -7,7 +7,7 @@ import { ConfirmButton, Notice, Spinner, useToast } from '../components/ui'
 
 const ROLE_LABEL: Record<Role, string> = { player: 'Player', organiser: 'Organiser', admin: 'Admin' }
 
-export function Members({ group, userId }: { group: Me['groups'][number]; userId: string }) {
+export function Members({ group, userId, onGroupChanged }: { group: Me['groups'][number]; userId: string; onGroupChanged?: () => void | Promise<void> }) {
   const toast = useToast()
   const organiser = isOrganiser(group.role)
   const admin = group.role === 'admin'
@@ -47,6 +47,8 @@ export function Members({ group, userId }: { group: Me['groups'][number]; userId
     <section className="stack-lg">
       <h1 className="display">{organiser ? 'Members & invites' : 'Members'}</h1>
       {error && <Notice tone="error">{error}</Notice>}
+
+      {admin && <GroupNameCard group={group} onSaved={onGroupChanged} />}
 
       {organiser && (
         <div className="card stack">
@@ -146,4 +148,37 @@ function JoinedList({ title, rows, open }: { title: string; open: boolean; rows:
 
 function IconCopy() {
   return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg>
+}
+
+function GroupNameCard({ group, onSaved }: { group: Me['groups'][number]; onSaved?: () => void | Promise<void> }) {
+  const toast = useToast()
+  const [name, setName] = useState(group.name)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  useEffect(() => { setName(group.name) }, [group.name])
+  const tidy = name.trim().replace(/\s+/g, ' ')
+  const unchanged = tidy === group.name
+  async function submit(e: FormEvent) {
+    e.preventDefault()
+    if (!tidy) { setError('Please enter a group name.'); return }
+    setBusy(true); setError(null)
+    try { const r = await api.renameGroup(group.id, tidy); await onSaved?.(); toast(r.changed ? 'Group name updated.' : 'No change.') }
+    catch (err) { setError(friendlyError(err)) }
+    setBusy(false)
+  }
+  return (
+    <form className="card stack" onSubmit={submit}>
+      <h2>Group name</h2>
+      <label className="field">
+        <span>Name</span>
+        <input value={name} onChange={e => setName(e.target.value)} maxLength={80} required aria-describedby="group-name-help" />
+        <small id="group-name-help" className="muted">Admins only. Shown to all members at the top of the app, on game pages and in invite messages.</small>
+      </label>
+      {error && <Notice tone="error">{error}</Notice>}
+      <div className="row wrap">
+        <button className="btn btn-primary" type="submit" disabled={busy || unchanged}>{busy ? 'Saving…' : 'Save name'}</button>
+        {!unchanged && <button className="btn btn-ghost" type="button" disabled={busy} onClick={() => { setName(group.name); setError(null) }}>Cancel</button>}
+      </div>
+    </form>
+  )
 }

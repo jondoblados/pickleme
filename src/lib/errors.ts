@@ -20,6 +20,7 @@ const MESSAGES: Record<string, string> = {
   only_cancelled_games: 'Only cancelled games can be deleted. Cancel the game first.',
   invite_inactive: 'That invite link is no longer active.',
   invite_not_copyable: 'This link was created before copying was available. Create a new link instead.',
+  invalid_group_name: 'Group names must be 1–80 characters.',
   invalid_invite_settings: 'Invite settings are out of range.',
   cannot_change_own_role: 'You cannot change your own role.',
   member_not_found: 'That member was not found.',

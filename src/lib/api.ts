@@ -55,6 +55,7 @@ export const api = {
   updateGame: (id: string, g: { title: string; startsAt: string; endsAt: string; location: string; capacity: number; notes: string }) =>
     rpc<{ promoted: number }>('update_game', { p_game_id: id, p_title: g.title, p_starts_at: g.startsAt, p_ends_at: g.endsAt,
       p_location: g.location, p_capacity: g.capacity, p_notes: g.notes }),
+  renameGroup: (groupId: string, name: string) => rpc<{ id: string; name: string; changed: boolean }>('rename_group', { p_group_id: groupId, p_name: name }),
   deleteGame: (id: string) => rpc<{ deleted: boolean; title: string }>('delete_game', { p_game_id: id }),
   setStatus: (id: string, status: GameStatus) => rpc('set_game_status', { p_game_id: id, p_status: status }),
   listMembers: (groupId: string) => rpc<Member[]>('list_members', { p_group_id: groupId }),
