@@ -19,6 +19,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-006 | Join group and game from a shared game link | Implemented (v0.3.0) | 2026-10-23 | 2026-10-23 |
 | FR-007 | Attendance tracking and no-show reports | Implemented (v0.3.0) | 2026-10-23 | 2026-10-23 |
 | FR-008 | Late sign-ups while places are free | Implemented (v0.4.0) | 2026-10-23 | 2026-10-23 |
+| FR-009 | Re-copy invite links; who joined with each link | Implemented (v0.5.0) | 2026-10-23 | 2026-10-23 |
 
 ## Details
 
@@ -84,3 +85,10 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Description:** Allow sign-ups after a game starts (all games) while a playing place is free, until the game ends.
 - **Notes:** No waitlist after the start. Late joiners start as Unmarked in attendance and are processed like
   everyone else at the end. Registration already stops at the end time (join and withdraw are blocked).
+
+### FR-009 — Re-copy invite links; who joined with each link
+- **Status:** Implemented in v0.5.0 (2026-10-23).
+- **Requested:** 2026-10-23 by Jon
+- **Description:** Admins and organisers can copy active invite links again, and see who joined with each link and
+  who joined from a game link.
+- **Notes:** Links created before v0.5.0 cannot be re-copied (hash only). Inactive links cannot be copied.

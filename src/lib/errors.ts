@@ -17,6 +17,8 @@ const MESSAGES: Record<string, string> = {
   invite_revoked: 'That invite link has been turned off. Ask an organiser for a new one.',
   invite_expired: 'That invite link has expired. Ask an organiser for a new one.',
   invite_used_up: 'That invite link has reached its limit. Ask an organiser for a new one.',
+  invite_inactive: 'That invite link is no longer active.',
+  invite_not_copyable: 'This link was created before copying was available. Create a new link instead.',
   invalid_invite_settings: 'Invite settings are out of range.',
   cannot_change_own_role: 'You cannot change your own role.',
   member_not_found: 'That member was not found.',
