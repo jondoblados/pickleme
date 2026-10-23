@@ -2,6 +2,15 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.7.2] — 2026-10-23 — Branded sign-up email, links to PickleMe, simpler game-link join
+
+### Changed
+- New `supabase/templates/confirm_signup.html` (Confirm signup) and refreshed `magic_link.html`, both in the same style
+  as the waitlist-promotion email. Both link to jon.doblados.net/pickleme; the app verifies the token with Supabase.
+  (Previously Confirm signup still used Supabase's default text and linked to supabase.co.)
+- Confirmation page says "Welcome. / Confirm your email" for new users (`flow=signup`).
+- Removed the **All games** button from the join screen for people opening a game link before joining the group.
+
 ## [0.7.1] — 2026-10-23 — Fix: stale sign-in after an account is deleted
 
 ### Fixed

@@ -29,8 +29,11 @@ API Keys → Create → permission **Sending access**, domain `pickleme.doblados
   sender email `signin@pickleme.doblados.net`, sender name `PickleMe`, host `smtp.resend.com`, port `465`,
   username `resend`, password = Resend API key. Save.
 - Authentication → Rate Limits: emails per hour starts at 30; raise to ~60 for game nights if needed.
-- Authentication → Email Templates → **Magic Link** and **Confirm signup**: subject `Your PickleMe sign-in link`,
-  body = `supabase/templates/magic_link.html`.
+- Authentication → Email Templates:
+  - **Confirm signup** (sent to new users): subject `Confirm your email for PickleMe`, body = `supabase/templates/confirm_signup.html`.
+  - **Magic Link** (returning users): subject `Your PickleMe sign-in link`, body = `supabase/templates/magic_link.html`.
+  Both link to `https://jon.doblados.net/pickleme/?…&auth=confirm&token_hash=…`; the app verifies the token with Supabase
+  (`verifyOtp`), so emails never link to supabase.co.
 - Authentication → URL Configuration: Site URL `https://jon.doblados.net/pickleme/`, Redirect URL `https://jon.doblados.net/pickleme/**`.
 
 ## 5. Promotion emails (FR-004)
