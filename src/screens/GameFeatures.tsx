@@ -52,7 +52,6 @@ export function GameFeatures({ gameId,userId,go,onJoined }: {
     {error && <Notice tone="error">{error}</Notice>}
     <button className="btn btn-primary" disabled={busy || !preview.can_join} onClick={join}>{busy?'Joining…':'Join group & game'}</button>
     {!preview.can_join && <p>Sign-ups for this game are closed: it is full and already in progress, finished, closed or cancelled. Ask an organiser for a group invite if you still need access.</p>}
-    <button className="btn btn-ghost" onClick={()=>go({name:'home'})}>All games</button>
   </section>
   return <div className="stack-lg"><GamePage gameId={gameId} userId={userId} go={go}/>
     {organiser && <AttendancePanel gameId={gameId} groupId={preview.group_id}/>}</div>

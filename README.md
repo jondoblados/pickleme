@@ -22,7 +22,8 @@ and automatic promotion when someone withdraws.
 | `src/` | React app (screens, Supabase client, RPC wrappers) |
 | `supabase/migrations/` | Schema, RLS, functions, seed group — already applied to the project |
 | `supabase/tests/acceptance.sql` | Database acceptance tests (self-rolling-back) |
-| `supabase/templates/magic_link.html` | Custom email template for magic links |
+| `supabase/templates/magic_link.html` | Email template: Magic Link (returning users) |
+| `supabase/templates/confirm_signup.html` | Email template: Confirm signup (new users) |
 | `changelog.md` | Log of work done |
 | `feature-requests.md` | Requested features and their status |
 
@@ -40,4 +41,4 @@ The Supabase URL and publishable key in `.env` are public by design (protected b
 
 - Authentication → URL Configuration: Site URL `https://jon.doblados.net/pickleme/`; Redirect URLs `https://jon.doblados.net/pickleme/**` and `http://localhost:5173/pickleme/**`
 - Authentication → Emails → SMTP: Resend (`smtp.resend.com`, port 465, user `resend`, password = Resend API key)
-- Authentication → Email Templates: paste `supabase/templates/magic_link.html` into **Magic Link** and **Confirm signup**
+- Authentication → Email Templates: paste `supabase/templates/magic_link.html` into **Magic Link** and `supabase/templates/confirm_signup.html` into **Confirm signup**
