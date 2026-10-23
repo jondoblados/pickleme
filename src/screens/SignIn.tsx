@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { supabase, APP_URL } from '../lib/supabase'
-import { friendlyError } from '../lib/errors'
+import { friendlyError, DELETED_ACCOUNT_FLAG } from '../lib/errors'
 import { safeNext } from '../lib/route'
 import { Notice } from '../components/ui'
 import { Wordmark } from '../components/Wordmark'
@@ -11,7 +11,15 @@ export function SignIn({ search, initialError, footer }: { search: string; initi
   const [email, setEmail] = useState(() => localStorage.getItem('pm:last-email') ?? '')
   const [sentTo, setSentTo] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(initialError)
+  const [error, setError] = useState<string | null>(() => {
+    try {
+      if (sessionStorage.getItem(DELETED_ACCOUNT_FLAG)) {
+        sessionStorage.removeItem(DELETED_ACCOUNT_FLAG)
+        return 'Your previous sign-in was for an account that no longer exists. Enter your email to sign in again.'
+      }
+    } catch { /* private mode */ }
+    return initialError
+  })
   const [cooldown, setCooldown] = useState(0)
   const next = safeNext(search)
   const q = new URLSearchParams(next)

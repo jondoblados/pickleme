@@ -2,6 +2,19 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.7.1] — 2026-10-23 — Fix: stale sign-in after an account is deleted
+
+### Fixed
+- If an account is deleted (e.g. in the Supabase dashboard) while a browser is still signed in, the app showed the
+  Welcome screen and failed with `profiles_user_id_fkey` on Continue. The app now checks the session with the server on
+  load, signs out, and shows "Your previous sign-in was for an account that no longer exists…" on the sign-in screen
+  (any game link in the URL is kept).
+- Migration `20261023000010_deleted_account_session.sql`: `require_uid` reports `account_not_found` for sessions whose
+  account no longer exists; `get_me` now requires a valid account. Tests `supabase/tests/deleted_account_session.sql` (7 checks).
+
+### Changed
+- `acceptance.sql` finds the seeded group by creation order instead of by name (the group was renamed).
+
 ## [0.7.0] — 2026-10-23 — Admins can rename the group (FR-011)
 
 ### Added

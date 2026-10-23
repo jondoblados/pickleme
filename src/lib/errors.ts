@@ -1,5 +1,7 @@
+import { supabase } from './supabase'
 const MESSAGES: Record<string, string> = {
   not_signed_in: 'Please sign in again.',
+  account_not_found: 'This account no longer exists. Please sign in again with your email.',
   not_member: 'You are not a member of this group yet. Ask an organiser for the group invite link.',
   forbidden: 'Only organisers can do that.',
   game_not_found: 'That game no longer exists.',
@@ -39,6 +41,7 @@ export function friendlyError(e: unknown): string {
   }
   if (code === 'over_request_rate_limit') return 'Too many attempts from this device. Please wait a few minutes and try again.'
   const raw = (e && typeof e === 'object' && 'message' in e) ? String((e as { message: unknown }).message) : String(e)
+  if (isDeletedAccount(raw)) { endDeletedSession(); return MESSAGES.account_not_found }
   if (MESSAGES[raw]) return MESSAGES[raw]
   if (/failed to fetch|network/i.test(raw)) return 'Connection problem — check your internet and try again. Nothing was changed.'
   if (/email rate limit/i.test(raw)) return 'PickleMe has reached its sign-in email limit for now. Please try again in about an hour, or ask an organiser.'
@@ -46,4 +49,15 @@ export function friendlyError(e: unknown): string {
   if (/rate limit|too many/i.test(raw)) return 'Too many attempts. Please wait a few minutes and try again.'
   if (/expired|invalid.*(token|otp)|otp.*(expired|invalid)/i.test(raw)) return 'This sign-in link has expired or was already used. Request a new one below.'
   return raw || 'Something went wrong. Please try again.'
+}
+
+// A browser can keep a sign-in session for up to an hour after its account was deleted.
+// When the server reports that, sign out and explain on the sign-in screen.
+export const DELETED_ACCOUNT_FLAG = 'pm:account-removed'
+export function isDeletedAccount(raw: string) {
+  return raw === 'account_not_found' || /profiles_user_id_fkey|user_not_found|user from sub claim in jwt does not exist/i.test(raw)
+}
+export function endDeletedSession() {
+  try { sessionStorage.setItem(DELETED_ACCOUNT_FLAG, '1') } catch { /* private mode */ }
+  void supabase.auth.signOut({ scope: 'local' })
 }
