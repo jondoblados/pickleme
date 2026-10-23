@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export const PRIVACY_CONTACT = 'jon@doblados.net'
-export const POLICY_UPDATED = '20 October 2026'
+export const POLICY_UPDATED = '23 October 2026'
 
 type Nav = (view: 'privacy' | 'faq') => void
 
@@ -44,6 +44,7 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         <li><b>Display name</b> — the name other members of your group see on game lists.</li>
         <li><b>Group membership and role</b> — for example player, organiser or admin.</li>
         <li><b>Game sign-up records</b> — games you join, your playing or waitlist position, withdrawals, removals by an organiser, and when these happened.</li>
+        <li><b>Attendance records</b> — whether an organiser marked you Present, No-show or Excused for a game you were on the playing list for, who marked it and when.</li>
         <li><b>Technical information</b> needed to run and secure the service, such as sign-in records, session information, error logs and security logs.</li>
       </ul>
       <p>PickleMe does not use passwords. Your email and account details are still personal information, and we treat them that way.</p>
@@ -55,6 +56,7 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         <li>Process sign-ups, withdrawals and waitlist positions.</li>
         <li>Show game lists to members of your group.</li>
         <li>Email you when you move from the waitlist into the playing list.</li>
+        <li>Let organisers record attendance and review attendance and repeat no-show reports for their group, so places go to people who turn up.</li>
         <li>Investigate problems, prevent misuse and keep the service secure.</li>
         <li>Answer questions and privacy requests, and meet legal requirements.</li>
       </ul>
@@ -63,6 +65,10 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
       <h2>4. What other users can see</h2>
       <p>Members of your group can see your display name, your role, and your status in that group's games (playing or waitlist, and your position).
         Organisers can also remove a player from a game.</p>
+      <p>Attendance records are visible only to that group's organisers and admins, not to other players. Organisers and admins can
+        export attendance and repeat no-show reports for their group as spreadsheet (CSV) files; once exported, those files are their responsibility.</p>
+      <p>Anyone who receives a game link (including a forwarded one) can sign in with a verified email and join that game's group in one step.
+        Once they join, they become a group member and can see the group's game lists like any other member.</p>
       <p>Your email address is not shown to other players, organisers or admins anywhere in the app. Only the operator can see it,
         through the back-end systems used to run PickleMe, and only to operate and support the service.</p>
       <p>People outside your group can't see its games or player lists. If someone copies a list into WhatsApp or elsewhere,
@@ -92,6 +98,7 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
       <ul>
         <li><b>Account, profile and membership:</b> while you have an account. Deleted when you ask us to close it.</li>
         <li><b>Game sign-up history:</b> the app shows past games for 60 days. We keep identifiable sign-up records for up to 12 months after a game, then delete or anonymise them.</li>
+        <li><b>Attendance records:</b> kept for up to 12 months after a game, then deleted or anonymised together with sign-up records.</li>
         <li><b>Security, audit and email-delivery records:</b> only as long as needed for security, troubleshooting and legal needs, in line with our providers' log retention.</li>
         <li><b>Backups:</b> deleted information may remain in restricted backups until those backups expire.</li>
       </ul>
@@ -151,8 +158,9 @@ export function Faq({ onNav }: { onNav: Nav }) {
         <p>That's fine — sign-in links work in whichever browser opens the email. Keep using that browser afterwards so you stay signed in.</p>
       </Q>
       <Q q="How do I join my group?">
-        <p>Open the invite link an organiser shared in your WhatsApp group, then sign in. You'll be added to the group automatically.
-          If you're signed in but see no games, ask for the invite link.</p>
+        <p>The easiest way: open a game link shared in your WhatsApp group, sign in with your email, choose a display name, then tap
+          <b>Join group &amp; game</b>. You're added to the group and to the game (or its waitlist, if it's full) in one step.
+          An organiser's group invite link also works. If you're signed in but see no games, ask for a game or invite link.</p>
       </Q>
       <Q q="What name will other players see?">
         <p>The display name you choose the first time you sign in (up to 40 characters). Change it any time from the tab with your name.
@@ -189,7 +197,7 @@ export function Faq({ onNav }: { onNav: Nav }) {
       </Q>
       <Q q="How do I share a game?">
         <p>On the game page use <b>Copy game link</b>, <b>Copy WhatsApp message</b> or <b>Open in WhatsApp</b>.
-          Only members of your group can open it.</p>
+          Anyone with the link can sign in and join your group and the game, so share it only with your group.</p>
       </Q>
 
       <h2>For organisers</h2>
@@ -205,6 +213,16 @@ export function Faq({ onNav }: { onNav: Nav }) {
       </Q>
       <Q q="How do I remove a player?">
         <p>On the game page, tap <b>Remove</b> next to their name, then tap again to confirm. The next waitlisted player moves in and gets an email.</p>
+      </Q>
+      <Q q="How do I take attendance?">
+        <p>Open the game once it has started. Below the player lists, <b>Attendance &amp; reports</b> shows everyone who was on the playing list at the start time.
+          Mark each person <b>Present</b> or <b>Excused</b> at any time during the game; <b>No-show</b> can be recorded once the game has ended.
+          You can correct a mark later, and every change is logged. Waitlisted players are not included, and unmarked players are never counted as no-shows.</p>
+      </Q>
+      <Q q="How do I see attendance reports and repeat no-shows?">
+        <p>In the same panel, choose a date range (up to one year) and tap <b>Generate report</b>. You'll see each player's present, no-show, excused and unmarked counts,
+          and a <b>Repeat no-shows</b> list of anyone at or above the threshold you set (2 by default). Each list can be exported as a CSV file.
+          Cancelled games are excluded. Games played before this feature was added have no attendance records.</p>
       </Q>
       <Q q="How do I invite players?">
         <p>Go to <b>Members & invites</b> and create an invite link. Copy it straight away — for security it's only shown once.

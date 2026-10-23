@@ -16,6 +16,8 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-003 | Group-aware invites and game links | Requested | 2026-10-19 | — |
 | FR-004 | Promotion emails | Implemented (v0.2.0, live) | 2026-10-19 | 2026-10-19 |
 | FR-005 | Sign-in CAPTCHA | Requested | 2026-10-19 | — |
+| FR-006 | Join group and game from a shared game link | Implemented (v0.3.0) | 2026-10-23 | 2026-10-23 |
+| FR-007 | Attendance tracking and no-show reports | Implemented (v0.3.0) | 2026-10-23 | 2026-10-23 |
 
 ## Details
 
@@ -57,3 +59,20 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Description:** Add a bot check (e.g. Cloudflare Turnstile or hCaptcha via Supabase Auth) to the sign-in form so
   automated requests can't use up the sign-in email allowance.
 - **Notes:** Recommended before wider rollout beyond the first group.
+
+### FR-006 — Join group and game from a shared game link
+- **Status:** Implemented in v0.3.0 (2026-10-23).
+- **Requested:** 2026-10-23 by Jon
+- **Description:** A new user who opens a game link shared in WhatsApp can register with their email, choose a display
+  name and, with one tap, join the game's group and the game (playing list or waitlist, depending on capacity).
+- **Notes:** A game link now acts as an invitation to its group (forwarded links included). Requires a verified email.
+  Membership and sign-up happen in one transaction, reusing the existing queue so capacity, order and duplicate
+  protection are unchanged. Overlaps with FR-003 for the case of a game from a group the user isn't in yet.
+
+### FR-007 — Attendance tracking and no-show reports
+- **Status:** Implemented in v0.3.0 (2026-10-23).
+- **Requested:** 2026-10-23 by Jon
+- **Description:** Organisers and admins mark players Present, No-show or Excused, and generate attendance and repeat
+  no-show reports with CSV export.
+- **Notes:** Expected players are the playing list at start time. No-show only after the game ends. Changes are audited.
+  Games that started before the release have no attendance records.

@@ -2,6 +2,30 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.3.0] — 2026-10-23 — Join from game link (FR-006), attendance and no-show reports (FR-007)
+
+### Added
+- Opening a shared game link while not in the group now shows the game, then **Join group & game**: sign in with email,
+  choose a display name, and join the group and the game (or waitlist) in one step. Works for forwarded links too.
+- Attendance & reports panel on the game page (organisers and admins only): Present / No-show / Excused / Unmarked,
+  per-game CSV export, date-range group attendance report, repeat no-show list (threshold default 2) with CSV export.
+- Migration `20261023000005_game_access_attendance.sql`: `preview_shared_game`, `join_shared_game`,
+  `attendance_sessions`, `game_attendance`, `get_game_attendance`, `mark_game_attendance`, `attendance_report`, and
+  triggers that freeze the playing list at start time before any later roster change.
+- `supabase/tests/game_access_attendance.sql`: 52 database acceptance checks (all pass); existing `acceptance.sql`
+  (25 checks) still passes with the migration applied.
+- Privacy Policy (updated 23 Oct 2026) and FAQ cover joining from game links, attendance records, exports and retention.
+
+### Changed
+- Reports capture any started game in range that no one had opened yet, so those games appear as Unmarked instead of
+  being left out. Date ranges are limited to one year.
+- Attendance polling no longer locks the game row once the playing list has been captured.
+
+### Follow-ups
+- [ ] The 12-month deletion/anonymisation job (from 0.2.1) must also cover attendance records and audit details.
+- [ ] Two-device race for the last place was not run as a live concurrent test; joins lock the game row the same way
+  as the existing join, which was already tested.
+
 ## [0.2.1] — 2026-10-20 — Privacy notice, Privacy Policy and FAQ
 
 ### Added
