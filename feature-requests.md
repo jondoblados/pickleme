@@ -18,6 +18,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-005 | Sign-in CAPTCHA | Requested | 2026-10-19 | — |
 | FR-006 | Join group and game from a shared game link | Implemented (v0.3.0) | 2026-10-23 | 2026-10-23 |
 | FR-007 | Attendance tracking and no-show reports | Implemented (v0.3.0) | 2026-10-23 | 2026-10-23 |
+| FR-008 | Late sign-ups while places are free | Implemented (v0.4.0) | 2026-10-23 | 2026-10-23 |
 
 ## Details
 
@@ -76,3 +77,10 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
   no-show reports with CSV export.
 - **Notes:** Expected players are the playing list at start time. No-show only after the game ends. Changes are audited.
   Games that started before the release have no attendance records.
+
+### FR-008 — Late sign-ups while places are free
+- **Status:** Implemented in v0.4.0 (2026-10-23).
+- **Requested:** 2026-10-23 by Jon
+- **Description:** Allow sign-ups after a game starts (all games) while a playing place is free, until the game ends.
+- **Notes:** No waitlist after the start. Late joiners start as Unmarked in attendance and are processed like
+  everyone else at the end. Registration already stops at the end time (join and withdraw are blocked).

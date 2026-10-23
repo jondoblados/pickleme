@@ -2,6 +2,20 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.4.0] — 2026-10-23 — Late sign-ups (FR-008)
+
+### Added
+- Players can join a game after it starts, until it ends, while a playing place is free (every game). After the start
+  there is no waitlist: a full in-progress game rejects new sign-ups. Works from the WhatsApp game link too.
+- Late joiners, and waitlisted players promoted after the start, are added to attendance as Unmarked and handled like
+  everyone else when the game ends. Late joins are audited as `joined_late`.
+- Migration `20261023000006_late_signups.sql`; tests `supabase/tests/late_signups.sql` (27 checks, all pass).
+- FAQ: "Can I join a game that has already started?"
+
+### Changed
+- Game page shows **Join now** and "Game in progress — N spots still free" during a game with free places.
+- `game_access_attendance.sql` check M2 now only covers games that started before the v0.3.0 release.
+
 ## [0.3.1] — 2026-10-23 — Inline attendance in the Playing list
 
 ### Changed

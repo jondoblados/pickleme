@@ -47,11 +47,11 @@ export function GameFeatures({ gameId,userId,go,onJoined }: {
   if(!preview) return error ? <Notice tone="error">{error}</Notice> : <Spinner/>
   if(!preview.member) return <section className="stack card">
     <h1 className="display">{preview.title}</h1><p>{preview.group_name}</p>
-    <p>Join this group and add your name to the game. If the game is full, you will join the waitlist in order.</p>
+    <p>Join this group and add your name to the game. If the game is full, you will join the waitlist in order. Once a game has started you can still join while a place is free.</p>
     <p className="small muted">Joining makes your display name and registration visible to this group's members. A place is assigned only when you join, not when you sign in.</p>
     {error && <Notice tone="error">{error}</Notice>}
     <button className="btn btn-primary" disabled={busy || !preview.can_join} onClick={join}>{busy?'Joining…':'Join group & game'}</button>
-    {!preview.can_join && <p>Registration is closed or the game has started. Ask an organiser for a group invite if you still need access.</p>}
+    {!preview.can_join && <p>Sign-ups for this game are closed: it is full and already in progress, finished, closed or cancelled. Ask an organiser for a group invite if you still need access.</p>}
     <button className="btn btn-ghost" onClick={()=>go({name:'home'})}>All games</button>
   </section>
   return <div className="stack-lg"><GamePage gameId={gameId} userId={userId} go={go}/>

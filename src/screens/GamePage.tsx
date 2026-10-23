@@ -120,7 +120,7 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
   const now = Date.now()
   const started = new Date(game.starts_at).getTime() <= now
   const ended = new Date(game.ends_at).getTime() <= now
-  const canJoin = !me.status && game.status === 'open' && !started
+  const canJoin = !me.status && game.status === 'open' && !ended && (!started || playing.length < game.capacity)
   const canWithdraw = !!me.status && !ended && game.status !== 'cancelled'
   const spotsLeft = Math.max(0, game.capacity - playing.length)
   const url = `${APP_URL}?game=${game.id}`
@@ -168,7 +168,9 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
           <p className="small me-help">
             {me.status === 'waitlist' ? 'If someone withdraws, you move up automatically and we’ll email you.'
               : me.status === 'playing' ? 'Can’t make it? Withdraw so the next person on the waitlist gets your spot.'
-              : canJoin ? (spotsLeft > 0 ? `${spotsLeft} ${spotsLeft === 1 ? 'spot' : 'spots'} left.` : 'Game is full — you’ll join the waitlist.')
+              : canJoin ? (started ? `Game in progress — ${spotsLeft} ${spotsLeft === 1 ? 'spot' : 'spots'} still free. Join if you can get there.`
+                : spotsLeft > 0 ? `${spotsLeft} ${spotsLeft === 1 ? 'spot' : 'spots'} left.` : 'Game is full — you’ll join the waitlist.')
+              : started && !ended && game.status === 'open' ? 'Game in progress and full.'
               : game.status === 'cancelled' ? 'This game was cancelled.' : 'Sign-ups are closed.'}
           </p>
         </div>
@@ -176,7 +178,7 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
           {canJoin && <button className="btn btn-primary btn-lg" disabled={busy} onClick={() => act(() => api.join(game.id), r => {
             const s = r as { status: string; position: number }
             return s.status === 'playing' ? `You're in — #${s.position}` : `You're on the waitlist — #${s.position}`
-          })}>{busy ? 'Joining…' : spotsLeft > 0 ? 'Join game' : 'Join waitlist'}</button>}
+          })}>{busy ? 'Joining…' : started ? 'Join now' : spotsLeft > 0 ? 'Join game' : 'Join waitlist'}</button>}
           {canWithdraw && <ConfirmButton className="btn btn-danger-ghost" disabled={busy} confirmText="Tap again to withdraw"
             onConfirm={() => act(() => api.withdraw(game.id), () => 'You have withdrawn.')}>Withdraw</ConfirmButton>}
         </div>

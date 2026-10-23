@@ -214,10 +214,15 @@ export function Faq({ onNav }: { onNav: Nav }) {
       <Q q="How do I remove a player?">
         <p>On the game page, tap <b>Remove</b> next to their name, then tap again to confirm. The next waitlisted player moves in and gets an email.</p>
       </Q>
+      <Q q="Can I join a game that has already started?">
+        <p>Yes, as long as a place is still free. Open the game (or the WhatsApp link) and tap <b>Join now</b>; sign-ups stay open until the game ends.
+          Once a game has started there is no waitlist: if every place is taken, you can't join. Organisers can still close registration at any time.</p>
+      </Q>
       <Q q="How do I take attendance?">
         <p>Open the game once it has started. In the <b>Playing</b> list, each name gets three buttons: ✓ <b>Present</b>, ⊖ <b>Excused</b> and ✕ <b>No-show</b>.
           Tap one to mark the player, or tap it again to clear it. Present and Excused work during the game; No-show unlocks once the game has ended.
           Anyone who was on the list at the start but withdrew later is shown underneath so you can still mark them.
+          Late joiners are added to the list as Unmarked, so mark them the same way as everyone else.
           You can correct a mark later, and every change is logged. Waitlisted players are not included, and unmarked players are never counted as no-shows.</p>
       </Q>
       <Q q="How do I see attendance reports and repeat no-shows?">
