@@ -5,6 +5,7 @@ import { friendlyError } from '../lib/errors'
 import type { Route } from '../lib/route'
 import { Notice, Spinner, useToast } from '../components/ui'
 import { GamePage } from './GamePage'
+import { RosterImageShare } from './RosterImageShare'
 
 type Preview = { title: string; group_id: string; group_name: string; member: boolean; can_join: boolean }
 type Status = 'unmarked' | 'present' | 'no_show' | 'excused'
@@ -54,6 +55,7 @@ export function GameFeatures({ gameId,userId,go,onJoined }: {
     {!preview.can_join && <p>Sign-ups for this game are closed: it is full and already in progress, finished, closed or cancelled. Ask an organiser for a group invite if you still need access.</p>}
   </section>
   return <div className="stack-lg"><GamePage gameId={gameId} userId={userId} go={go}/>
+    {organiser && <RosterImageShare key={gameId} gameId={gameId}/>}
     {organiser && <AttendancePanel gameId={gameId} groupId={preview.group_id}/>}</div>
 }
 
