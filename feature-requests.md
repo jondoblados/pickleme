@@ -22,6 +22,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-009 | Re-copy invite links; who joined with each link | Implemented (v0.5.0) | 2026-10-23 | 2026-10-23 |
 | FR-010 | Admins can delete cancelled games | Implemented (v0.6.0) | 2026-10-23 | 2026-10-23 |
 | FR-011 | Admins can rename the group | Implemented (v0.7.0) | 2026-10-23 | 2026-10-23 |
+| FR-012 | WhatsApp roster image sharing | Requested | 2026-10-24 | — |
 
 ## Details
 
@@ -106,3 +107,22 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Requested:** 2026-10-23 by Jon
 - **Description:** Group admins can change the group name from Members & invites. Organisers and players cannot.
 - **Notes:** 1–80 characters; renames are logged with the old and new names. Links are unaffected.
+
+### FR-012 — WhatsApp roster image sharing
+- **Status:** Requested — for later implementation; no implementation started.
+- **Requested:** 2026-10-24 by Jon
+- **Description:** Generate a branded PNG showing the game details, Playing roster and ordered Waitlist, so WhatsApp
+  group members can see who has signed up before opening the game link.
+- **Layout:** Four columns by four rows for a 16-player game, with available places labelled; four columns by two rows
+  for the first eight waitlist slots below. Number entries left-to-right, then top-to-bottom. Expand rows for other
+  capacities or more than eight waitlisted players rather than omitting names.
+- **Sharing:** Preview, share through the device share sheet where supported, and download PNG as a fallback. Keep the
+  existing copyable WhatsApp message and clickable game link for the caption; test image/caption handling on mobile
+  and WhatsApp Web before release.
+- **Freshness:** Fetch the latest authorised roster before generation and include a snapshot timestamp with timezone.
+  Clearly state that the shared image does not update and the game link has the latest list.
+- **Privacy:** Initially organiser/admin-only generation. Include display names, signup positions and counts only;
+  exclude email addresses, attendance/no-show information, personal YOU labels and admin controls. Warn that images
+  can be forwarded. Prefer browser-side generation without publicly hosted roster images.
+- **Prototype:** A sample PNG based on Jon's supplied screenshot was generated on 2026-10-24, with 10 players, six
+  available places and an empty waitlist. It was labelled Test preview, not connected to live roster data or app code.
