@@ -1,7 +1,7 @@
 name: FR-012 build and renderer tests
 on:
   push:
-    branches: [feature/whatsapp-roster-image, fix/fr012-compact-roster]
+    branches: [feature/whatsapp-roster-image, fix/fr012-compact-roster, feature/fr012-900px-three-column]
   pull_request:
     branches: [main]
 permissions:
