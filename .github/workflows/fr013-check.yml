@@ -1,0 +1,81 @@
+name: FR-013 isolated database and build checks
+on:
+  push:
+    branches: [feature/fr013-admin-activity-log]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  database:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fr013_isolated
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fr013_isolated"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: fr013_isolated
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Bootstrap disposable database and load relevant baseline
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/fr013_bootstrap.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261018000001_core_schema.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261018000002_rpc_functions.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261023000007_invite_copy_history.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261023000008_delete_cancelled_game.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261026000011_admin_activity_log.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261026000012_activity_filter_options.sql
+      - name: Run FR-013 integration assertions (fixtures roll back)
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/admin_activity_log.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/activity_filter_options.sql
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs
+      - run: npm run build
+  browser:
+    runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: http://127.0.0.1:4173
+      VITE_SUPABASE_PUBLISHABLE_KEY: fr013-test-key
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked application dependencies
+        run: npm ci
+      - name: Install browser-test tooling in the CI workspace only
+        run: npm install --no-save --package-lock=false @playwright/test@1.56.1
+      - name: Install Chromium and operating-system dependencies
+        run: npx playwright install --with-deps chromium
+      - name: Run browser tests with failure annotations and traces
+        run: npx playwright test --config tests/activity-log.playwright.config.ts --reporter=line,github --trace=retain-on-failure
+      - name: Retain browser test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fr013-browser-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/
+          if-no-files-found: warn
+          retention-days: 7

@@ -12,13 +12,12 @@ import { Home } from './screens/Home'
 import { GameFeatures } from './screens/GameFeatures'
 import { GameForm } from './screens/GameForm'
 import { Members } from './screens/Members'
+import { ActivityLog } from './screens/ActivityLog'
 import { Wordmark } from './components/Wordmark'
 import { Faq, Footer, PrivacyPolicy } from './screens/InfoPages'
-
 function readHashError(): string | null {
   if (!window.location.hash.includes('error')) return null
-  const h = new URLSearchParams(window.location.hash.slice(1))
-  const code = h.get('error_code') || h.get('error')
+  const h = new URLSearchParams(window.location.hash.slice(1)), code = h.get('error_code') || h.get('error')
   history.replaceState(null, '', window.location.pathname + window.location.search)
   if (code === 'otp_expired') return 'That sign-in link has expired or was already used. Enter your email to get a new one.'
   return h.get('error_description')?.replace(/\+/g, ' ') || 'Sign-in failed. Please request a new link.'
@@ -30,7 +29,6 @@ function Root() {
   const [hashError] = useState(readHashError)
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
-      // Check the stored session against the server once: the account may have been deleted since sign-in.
       if (data.session) {
         const { error } = await supabase.auth.getUser()
         const status = (error as { status?: number } | null)?.status
@@ -49,11 +47,9 @@ function Root() {
   const setUrl = useCallback((s: string, replace = false) => {
     const url = window.location.pathname + s
     if (replace) history.replaceState(null, '', url); else history.pushState(null, '', url)
-    setSearch(s)
-    if (!replace) window.scrollTo(0, 0)
+    setSearch(s); if (!replace) window.scrollTo(0, 0)
   }, [])
-  const q = new URLSearchParams(search)
-  if (q.get('auth') === 'confirm') return <AuthConfirm search={search} onDone={next => setUrl(next, true)} />
+  if (new URLSearchParams(search).get('auth') === 'confirm') return <AuthConfirm search={search} onDone={next => setUrl(next, true)} />
   if (session === undefined) return <div className="page center"><Spinner /></div>
   const openInfo = (view: 'privacy' | 'faq') => setUrl(withView(search, view))
   if (!session) {
@@ -82,21 +78,18 @@ function SignedIn({ session, search, setUrl }: { session: Session; search: strin
   useEffect(() => {
     let active=true
     void (async () => {
-      const q = new URLSearchParams(search)
-      const invite = q.get('invite')
+      const q = new URLSearchParams(search), invite = q.get('invite')
       if (isInviteToken(invite) && inviteHandled.current!==invite) {
         inviteHandled.current=invite
         try {
           const r = await api.redeemInvite(invite)
           if(active) toast(r.already_member ? 'You are already in this group.' : 'Welcome — you have joined the group.')
-          q.delete('invite')
-          if(active) setUrl(q.toString() ? `?${q}` : '', true)
+          q.delete('invite'); if(active) setUrl(q.toString() ? `?${q}` : '', true)
         } catch (e) { if(active) toast(friendlyError(e), 'error') }
       }
       if(active) await loadMe()
     })()
     return ()=>{active=false}
-  // Existing invite links are handled on entry; shared games use GameFeatures.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const route = parseRoute(search)
@@ -126,12 +119,12 @@ function SignedIn({ session, search, setUrl }: { session: Session; search: strin
   if (route.name === 'privacy' || route.name === 'faq') {
     body = route.name === 'faq' ? <Faq onNav={v => setUrl(withView(search,v))} /> : <PrivacyPolicy onNav={v => setUrl(withView(search,v))} />
   } else if (route.name === 'game') {
-    // Game access must precede the no-membership screen for first-time players.
     body = <GameFeatures key={route.gameId} gameId={route.gameId} userId={session.user.id} go={go} onJoined={loadMe} />
   } else if (!group) {
     body = <div className="empty"><h1 className="display">You're signed in</h1>
       <p>Open a shared game link to join a group and game, or ask your organiser for a group invite.</p></div>
-  } else if (route.name === 'new-game' && organiser) body = <GameForm group={group} go={go} />
+  } else if (route.name === 'activity') body = <ActivityLog key={group.id} group={group} />
+  else if (route.name === 'new-game' && organiser) body = <GameForm group={group} go={go} />
   else if (route.name === 'edit-game' && organiser) body = <GameForm group={group} gameId={route.gameId} go={go} />
   else if (route.name === 'members') body = <Members group={group} userId={session.user.id} onGroupChanged={loadMe} />
   else if (route.name === 'profile') body = <section className="stack"><h1 className="display">Your profile</h1>
@@ -151,6 +144,7 @@ function Shell({ me, group, go, signOut, route, organiser, children }: {
   </div>{me && <nav className="tabs" aria-label="Main">
     <button className={tab === 'home' || tab === 'game' ? 'active' : ''} onClick={() => go({ name: 'home' })}>Games</button>
     {group && <button className={tab === 'members' ? 'active' : ''} onClick={() => go({ name: 'members' })}>{organiser ? 'Members & invites' : 'Members'}</button>}
+    {group?.role === 'admin' && <button className={tab === 'activity' ? 'active' : ''} onClick={() => go({ name: 'activity' })}>Activity log</button>}
     <button className={tab === 'profile' ? 'active' : ''} onClick={() => go({ name: 'profile' })}>{me.display_name ?? 'Profile'}</button>
   </nav>}{!me && <button className="btn btn-ghost btn-sm" onClick={signOut}>Sign out</button>}</header>
   <main className="page">{children}</main><Footer onNav={v => go({ name: v })} /></div>
