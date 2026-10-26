@@ -1,0 +1,20 @@
+.activity-log h1 { margin-bottom: 0; }
+.activity-filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; align-items: end; }
+.activity-filters select, .activity-filters input { width: 100%; min-width: 0; }
+.activity-filter-note { grid-column: 1 / -1; margin: 0; }
+.activity-toolbar { justify-content: space-between; }
+.activity-table-wrap { overflow-x: auto; }
+.activity-table { border-collapse: collapse; width: 100%; min-width: 900px; text-align: left; }
+.activity-table caption { text-align: left; padding-bottom: 12px; }
+.activity-table th, .activity-table td { padding: 14px 12px; border-bottom: 1px solid #d9dfd6; vertical-align: top; }
+.activity-table th { background: #f6f7f2; font-size: .85rem; }
+.activity-table td { font-size: .9rem; overflow-wrap: anywhere; max-width: 260px; }
+.activity-sub { display: block; margin-top: 6px; }
+.activity-action { display: inline-block; border-radius: 8px; padding: 4px 8px; background: #e5f1e8; color: #14382b; }
+.activity-warning { background: #faf1de; color: #654617; }
+.activity-expanded td { background: #f8faf6; white-space: pre-wrap; }
+.activity-changes { margin: 0 0 12px; }
+.activity-changes > div { display: grid; grid-template-columns: 130px 1fr; gap: 12px; margin-bottom: 10px; }
+.activity-changes dt { font-weight: 600; }
+.activity-changes dd { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) { .activity-filters { grid-template-columns: 1fr; } .activity-changes dd { grid-template-columns: 1fr; gap: 6px; } }
