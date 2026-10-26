@@ -23,6 +23,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-010 | Admins can delete cancelled games | Implemented (v0.6.0) | 2026-10-23 | 2026-10-23 |
 | FR-011 | Admins can rename the group | Implemented (v0.7.0) | 2026-10-23 | 2026-10-23 |
 | FR-012 | WhatsApp roster image sharing | Requested | 2026-10-24 | — |
+| FR-013 | Admin-only activity log | Requested | 2026-10-26 | — |
 
 ## Details
 
@@ -126,3 +127,24 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
   can be forwarded. Prefer browser-side generation without publicly hosted roster images.
 - **Prototype:** A sample PNG based on Jon's supplied screenshot was generated on 2026-10-24, with 10 players, six
   available places and an empty waitlist. It was labelled Test preview, not connected to live roster data or app code.
+
+### FR-013 — Admin-only activity log
+- **Status:** Requested — no implementation started.
+- **Requested:** 2026-10-26 by Jon
+- **Description:** An admin-only Activity log screen showing player joins, withdrawals and organiser removals, plus
+  game creation, edits, registration closing/reopening, cancellation and deletion. Reuse existing audit events.
+- **Display:** Show event date/time in the group's timezone, the actor, action, affected player when applicable,
+  game and recorded details. Clearly distinguish a player's withdrawal from an organiser removing that player.
+- **Browsing:** Newest-first pagination, filters by date range, game, actor/affected player and action, with CSV export.
+- **Access:** Group admins only, enforced by database policies and the query function as well as the UI. Remove the
+  existing organiser read access to raw audit events; deny players, organisers and admins of other groups. Review
+  dependent invite-history functions so their intended access is not accidentally broken or used to expose the log.
+- **Edit history:** Record field-level previous/new values for future game edits, including title, date/time, location,
+  capacity and notes. Do not invent historical values or positions that were not logged.
+- **Deleted games:** Preserve future game audit history when a game is permanently deleted, with enough game context
+  to understand retained entries. Existing cascade-deleted records cannot be recovered by this feature.
+- **Integrity and retention:** Read-only in the app; no editing/deleting individual events. Preserve useful attribution
+  when names change or accounts are deleted, while respecting the app's retention/anonymisation policy. Do not expose
+  auth tokens, invite secrets or unnecessary personal data in log responses or exports.
+- **Acceptance:** Test direct API/table access for all roles and cross-group isolation, filter/pagination/export
+  correctness, before/after edit details, deleted-game history and clear handling of incomplete historical records.
