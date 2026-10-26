@@ -38,7 +38,9 @@ jobs:
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261026000011_admin_activity_log.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261026000012_activity_filter_options.sql
       - name: Run FR-013 integration assertions (fixtures roll back)
-        run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/admin_activity_log.sql
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/admin_activity_log.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/activity_filter_options.sql
   build:
     runs-on: ubuntu-latest
     steps:
@@ -50,3 +52,18 @@ jobs:
       - run: npm ci
       - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs
       - run: npm run build
+  browser:
+    runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: http://127.0.0.1:4173
+      VITE_SUPABASE_PUBLISHABLE_KEY: fr013-test-key
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm install --no-save --package-lock=false @playwright/test@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --config tests/activity-log.playwright.config.ts
