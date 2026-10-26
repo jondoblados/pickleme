@@ -1,0 +1,51 @@
+name: FR-013 isolated database and build checks
+on:
+  push:
+    branches: [feature/fr013-admin-activity-log]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  database:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fr013_isolated
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fr013_isolated"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: fr013_isolated
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Bootstrap disposable database and load relevant baseline
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/fr013_bootstrap.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261018000001_core_schema.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261018000002_rpc_functions.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261023000007_invite_copy_history.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261023000008_delete_cancelled_game.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261026000011_admin_activity_log.sql
+      - name: Run FR-013 integration assertions (fixtures roll back)
+        run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/admin_activity_log.sql
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs
+      - run: npm run build
