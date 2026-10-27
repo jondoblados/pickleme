@@ -24,8 +24,8 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-011 | Admins can rename the group | Implemented (v0.7.0) | 2026-10-23 | 2026-10-23 |
 | FR-012 | WhatsApp roster image sharing | Implemented | 2026-10-24 | 2026-10-25 |
 | FR-013 | Admin-only activity log | Implemented | 2026-10-26 | 2026-10-26 |
-| FR-014 | 6-digit sign-in code in the sign-in email | In progress | 2026-10-27 | — |
-| FR-015 | Admins see unconfirmed sign-ups and resend confirmation | In progress | 2026-10-27 | — |
+| FR-014 | 6-digit sign-in code in the sign-in email | Implemented (v0.8.0, live) | 2026-10-27 | 2026-10-27 |
+| FR-015 | Admins see unconfirmed sign-ups and resend confirmation | Implemented (v0.9.0, live) | 2026-10-27 | 2026-10-27 |
 
 ## Details
 
@@ -132,6 +132,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 
 ### FR-013 — Admin-only activity log
 - **Status:** Implemented (PR #4, merged 2026-10-26).
+- **Fix (v0.9.1):** group-link joins now record the joiner's name (the invite is redeemed after the first name is saved; `set_display_name` fills earlier unnamed rows by user ID). The log labels self actions, member actions and system actions; waitlist promotions are system actions with `triggered_by`. Existing rows repaired by user ID with the current profile name, marked as such.
 - **Requested:** 2026-10-26 by Jon
 - **Description:** An admin-only Activity log screen showing player joins, withdrawals and organiser removals, plus
   game creation, edits, registration closing/reopening, cancellation and deletion. Reuse existing audit events.
@@ -152,7 +153,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
   correctness, before/after edit details, deleted-game history and clear handling of incomplete historical records.
 
 ### FR-014 — 6-digit sign-in code
-- **Status:** In progress (v0.8.0).
+- **Status:** Implemented (v0.8.0, live 2026-10-27).
 - **Requested:** 2026-10-27 by Jon, after a player kept being asked for her email when opening game links from WhatsApp.
 - **Problem:** WhatsApp and mail apps on iOS open links in their own in-app browsers, each with separate storage. Tapping the
   email link signs the player in to the mail app's browser, not the one WhatsApp opens.
@@ -162,7 +163,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Configuration:** Supabase Auth → Email OTP length must be 6 (the UI accepts 6–10 digits to be safe).
 
 ### FR-015 — Unconfirmed sign-ups for admins
-- **Status:** In progress (v0.9.0).
+- **Status:** Implemented (v0.9.0, live 2026-10-27).
 - **Requested:** 2026-10-27 by Jon.
 - **Design:** The sign-in screen sends `pm_pending_game` or `pm_pending_invite_hash` (SHA-256 of the invite token) as user metadata,
   stored by Supabase only for new accounts. `list_pending_signups` (admin-only) returns unconfirmed, non-dismissed accounts from the

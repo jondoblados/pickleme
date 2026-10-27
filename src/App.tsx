@@ -77,19 +77,28 @@ function SignedIn({ session, search, setUrl }: { session: Session; search: strin
   const loadMe = useCallback(async () => {
     try { setMe(await api.getMe()); setError(null) } catch (e) { setError(friendlyError(e)) }
   }, [])
+  // Redeem a group invite only once the user has a display name, so the activity log
+  // records who joined. The ?invite= parameter stays in the URL until then.
+  const redeemInvite = useCallback(async (currentSearch: string) => {
+    const q = new URLSearchParams(currentSearch), invite = q.get('invite')
+    if (!isInviteToken(invite) || inviteHandled.current===invite) return false
+    inviteHandled.current=invite
+    try {
+      const r = await api.redeemInvite(invite)
+      toast(r.already_member ? 'You are already in this group.' : 'Welcome — you have joined the group.')
+      q.delete('invite'); setUrl(q.toString() ? `?${q}` : '', true)
+      return true
+    } catch (e) { toast(friendlyError(e), 'error'); return false }
+  }, [setUrl, toast])
   useEffect(() => {
     let active=true
     void (async () => {
-      const q = new URLSearchParams(search), invite = q.get('invite')
-      if (isInviteToken(invite) && inviteHandled.current!==invite) {
-        inviteHandled.current=invite
-        try {
-          const r = await api.redeemInvite(invite)
-          if(active) toast(r.already_member ? 'You are already in this group.' : 'Welcome — you have joined the group.')
-          q.delete('invite'); if(active) setUrl(q.toString() ? `?${q}` : '', true)
-        } catch (e) { if(active) toast(friendlyError(e), 'error') }
-      }
-      if(active) await loadMe()
+      try {
+        const m = await api.getMe()
+        if (!active) return
+        if (m.display_name && await redeemInvite(search)) { if (active) await loadMe(); return }
+        setMe(m); setError(null)
+      } catch (e) { if (active) setError(friendlyError(e)) }
     })()
     return ()=>{active=false}
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,8 +120,8 @@ function SignedIn({ session, search, setUrl }: { session: Session; search: strin
   if (!me) return <div className="page center"><Spinner /></div>
   if (!me.display_name && route.name !== 'privacy' && route.name !== 'faq') {
     return <div className="page narrow onboarding"><Wordmark /><h1 className="display">Welcome to PickleMe</h1>
-      <p className="lede">Choose the name other players will see on the game lists.</p>
-      <ProfileForm initial="" email={session.user.email ?? ''} onSaved={loadMe} submitLabel="Continue" />
+      <p className="lede">Choose the name other players will see on the game lists.{isInviteToken(new URLSearchParams(search).get('invite')) ? ' You will join the group after you continue.' : ''}</p>
+      <ProfileForm initial="" email={session.user.email ?? ''} onSaved={async () => { await redeemInvite(search); await loadMe() }} submitLabel="Continue" />
       <Footer onNav={v => setUrl(withView(search,v))} /></div>
   }
   const group = gameGroup ? me.groups.find(g=>g.id===gameGroup.groupId) : me.groups[0]

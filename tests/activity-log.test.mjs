@@ -21,9 +21,20 @@ test('CSV neutralises formula and control-character name prefixes',()=>{
     assert.ok(csv.includes('"\''+actor_name.replace(/"/g,'""')+'"'))
   }
 })
-test('empty export still has headers; unknown identity does not pretend to know actor',()=>{
+test('empty export still has headers; rows without an actor are system actions',()=>{
   assert.ok(activityCsv([]).includes('Event ID'))
-  assert.ok(activityCsv([{id:'1',action:'joined'}]).includes('System or unknown'))
+  assert.ok(activityCsv([{id:'1',action:'promoted',actor_kind:'system',triggered_by_name:'Mario'}]).includes('"System (triggered by Mario)"'))
+})
+test('actor labels distinguish self-join, admin action and system',async()=>{
+  const {activityActor,activityTarget}=await import('../src/lib/activity-log.js')
+  assert.equal(activityActor({actor_kind:'self',actor_id:'u',actor_name:'Viv N',target_user_id:'u'}),'Viv N (self)')
+  assert.equal(activityActor({actor_kind:'self',actor_id:'u',actor_name:'Zhi Xuan',actor_name_origin:'repaired_current_profile'}),'Zhi Xuan (self, current name)')
+  assert.equal(activityActor({actor_kind:'member',actor_id:'a',actor_name:'Jon',target_user_id:'u'}),'Jon')
+  assert.equal(activityActor({actor_kind:'member',actor_id:'a',actor_name:null}),'Name not set')
+  assert.equal(activityActor({actor_kind:'system',actor_id:null}),'System')
+  assert.equal(activityActor({actor_id:'u',target_user_id:'u',actor_name:'Old'}),'Old (self)')
+  assert.equal(activityActor({actor_id:null}),'System')
+  assert.equal(activityTarget({target_name:'Zhi Xuan',target_name_origin:'repaired_current_profile',target_user_id:'u'}),'Zhi Xuan (current name)')
 })
 
 test('activityTarget falls back to the masked email for unconfirmed sign-ups', async () => {

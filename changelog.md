@@ -2,6 +2,21 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.9.1] — 2026-10-27 — Activity log names for group-link joins
+
+### Fixed
+- **Activity log showed "System or unknown" for people who joined from a group link.** The invite was redeemed before the new
+  user had saved a name, so the log stored no name. The invite is now redeemed after the name screen, and saving a first name
+  fills in that user's earlier unnamed entries (matched by user ID).
+- Existing affected entries repaired by user ID with the person's current profile name, labelled **(current name)**.
+
+### Changed
+- **Performed by** distinguishes **Name (self)**, a member acting on someone else, and **System**. Waitlist promotions are
+  recorded as system actions with the person whose action triggered them ("System (triggered by …)"). Same labels in the CSV.
+- Name screen tells invited users they will join the group after continuing.
+- FAQ and privacy policy wording for the activity log; FR-014 and FR-015 marked Implemented.
+- Migration `20261027000014_activity_join_names.sql`; tests `supabase/tests/activity_join_names.sql` (+ seed of pre-fix history).
+
 ## [0.9.0] — 2026-10-27 — Unconfirmed sign-ups for admins (FR-015)
 
 ### Added

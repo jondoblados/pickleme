@@ -7,6 +7,8 @@ export interface ActivityEvent {
   target_user_id: string | null; target_name: string | null; game_id: string | null;
   game_title: string | null; game_starts_at: string | null; context_origin: string;
   details: ActivityDetails;
+  actor_kind?: 'self' | 'member' | 'system';
+  actor_name_origin?: string | null; target_name_origin?: string | null; triggered_by_name?: string | null;
 }
 export interface ActivityCursor { at: string; id: string }
 export interface ActivityPage {
@@ -17,4 +19,6 @@ export function activityLabel(action: string): string;
 export function activityChanges(details: ActivityDetails): { field: string; before: unknown; after: unknown }[];
 export function activityCsv(rows: ActivityEvent[]): string;
 
-export function activityTarget(row: { target_name?: string | null; target_user_id?: string | null; details?: Record<string, unknown> | null }): string | null
+export function activityTarget(row: { target_name?: string | null; target_name_origin?: string | null; target_user_id?: string | null; details?: Record<string, unknown> | null }): string | null
+export function activityActorKind(row: Partial<ActivityEvent>): 'self' | 'member' | 'system'
+export function activityActor(row: Partial<ActivityEvent>): string
