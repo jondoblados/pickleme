@@ -38,11 +38,14 @@ jobs:
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261026000011_admin_activity_log.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261026000012_activity_filter_options.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261027000013_pending_signups.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/activity_join_names_seed.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261027000014_activity_join_names.sql
       - name: Run FR-013 integration assertions (fixtures roll back)
         run: |
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/admin_activity_log.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/activity_filter_options.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/pending_signups.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/activity_join_names.sql
   build:
     runs-on: ubuntu-latest
     steps:

@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, useState, type FormEvent } from 'react'
 import type { Me } from '../lib/api'
 import { friendlyError } from '../lib/errors'
-import { activityLabels, activityLabel, activityChanges, activityCsv, type ActivityCursor, type ActivityEvent, type ActivityPage, activityTarget } from '../lib/activity-log.js'
+import { activityLabels, activityLabel, activityChanges, activityCsv, type ActivityCursor, type ActivityEvent, type ActivityPage, activityTarget, activityActor } from '../lib/activity-log.js'
 import { getActivityChoices, getActivityPage, type ActivityChoices, type ActivityFilters } from '../lib/activity-api'
 import { Notice, Spinner } from '../components/ui'
 import './ActivityLog.css'
@@ -138,7 +138,7 @@ function ActivityLogContent({ group }: { group: Group }) {
         <caption className="small muted">Newest first · {page.timezone}</caption>
         <thead><tr><th>Date &amp; time</th><th>Performed by</th><th>Action</th><th>Affected player</th><th>Game</th><th>Details</th></tr></thead>
         <tbody>{page.rows.map(row => <Fragment key={row.id}>
-          <tr><td>{stamp(row.created_at, group.timezone)}</td><td>{row.actor_name ?? 'System or unknown'}</td>
+          <tr><td>{stamp(row.created_at, group.timezone)}</td><td>{activityActor(row)}</td>
             <td><span className={`activity-action activity-${row.action.startsWith('status_cancelled') || row.action === 'removed' ? 'warning' : 'neutral'}`}>{activityLabel(row.action)}</span></td>
             <td>{activityTarget(row) ?? '—'}</td>
             <td>{row.game_title ?? (row.game_id ? 'Unknown game' : 'Group activity')}{row.game_starts_at && <span className="small muted activity-sub">{stamp(row.game_starts_at, group.timezone)}</span>}</td>

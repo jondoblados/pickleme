@@ -50,7 +50,8 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         <li><b>Game sign-up records</b> — games you join, your playing or waitlist position, withdrawals, removals by an organiser, and when these happened.</li>
         <li><b>Attendance records</b> — whether an organiser marked you Present, No-show or Excused for a game you were on the playing list for, who marked it and when.</li>
         <li><b>Group activity log</b> — a record of actions in a group, such as joining the group or a game, withdrawing, removals, game changes,
-          role changes, invite links and confirmation emails resent by an admin, with who did it, who it affected, the names shown at the time, and when.</li>
+          role changes, invite links and confirmation emails resent by an admin, with who did it, who it affected, the names shown at the time, and when. Automatic actions, such as waitlist promotions, record whose
+          action triggered them.</li>
         <li><b>Technical information</b> needed to run and secure the service, such as sign-in records, session information, error logs and security logs.</li>
       </ul>
       <p>PickleMe does not use passwords. Your email and account details are still personal information, and we treat them that way.</p>
@@ -268,7 +269,9 @@ export function Faq({ onNav }: { onNav: Nav }) {
       <Q q="What is the Activity log?">
         <p>Admins only. The <b>Activity log</b> tab lists what happened in your group: who joined the group or a game, withdrew or was removed, game edits,
           status and role changes, invite links and resent confirmation emails. Filter by date, game, person or action, open <b>View details</b> for
-          before-and-after values, or download it as a CSV file. Names are shown as they were at the time.</p>
+          before-and-after values, or download it as a CSV file. Names are shown as they were at the time. <b>(self)</b> means the person did it themselves, such as
+          joining from a group link; <b>System</b> means it happened automatically, such as a waitlist promotion, with the person whose action
+          triggered it. A few early group-link joins show the person's current name, marked <b>(current name)</b>.</p>
       </Q>
       <Q q="Someone says they can't confirm their email. What can I do?">
         <p>Admins: go to <b>Members & invites</b>. If they started signing in from one of your group's game or invite links, they appear under
