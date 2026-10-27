@@ -14,6 +14,19 @@ function savePending(email: string | null) {
 }
 
 const COOLDOWN = 60
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+async function pendingContext(q: URLSearchParams): Promise<Record<string, string>> {
+  const game = q.get('game'); const invite = q.get('invite')
+  if (game && UUID.test(game)) return { pm_pending_game: game.toLowerCase() }
+  if (invite && crypto?.subtle) {
+    try {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(invite))
+      return { pm_pending_invite_hash: [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('') }
+    } catch { /* not a secure context */ }
+  }
+  return {}
+}
 
 export function SignIn({ search, initialError, footer }: { search: string; initialError: string | null; footer?: ReactNode }) {
   const [email, setEmail] = useState(() => localStorage.getItem('pm:last-email') ?? '')
@@ -48,7 +61,10 @@ export function SignIn({ search, initialError, footer }: { search: string; initi
     setBusy(true); setError(null)
     // The destination travels inside the link itself, so it works even if the email opens in another browser.
     const redirect = `${APP_URL}?from=email${next ? '&' + next.slice(1) : ''}`
-    const { error } = await supabase.auth.signInWithOtp({ email: addr, options: { emailRedirectTo: redirect, shouldCreateUser: true } })
+    // FR-015: tell the server which group link this came from, so its admins can resend a confirmation if needed.
+    // Stored by Supabase only for brand-new accounts. Invite tokens are hashed so the secret never leaves the browser.
+    const data = await pendingContext(q)
+    const { error } = await supabase.auth.signInWithOtp({ email: addr, options: { emailRedirectTo: redirect, shouldCreateUser: true, data } })
     setBusy(false)
     if (error) { setError(friendlyError(error)); return }
     localStorage.setItem('pm:last-email', addr)

@@ -26,12 +26,18 @@ const MESSAGES: Record<string, string> = {
   invalid_invite_settings: 'Invite settings are out of range.',
   cannot_change_own_role: 'You cannot change your own role.',
   member_not_found: 'That member was not found.',
-  verified_email_required: 'Please confirm your email address with the sign-in link before joining.',
+  verified_email_required: 'Please confirm your email address with the code or link from your sign-in email before joining.',
   attendance_unavailable: 'Attendance opens when the game starts, and is not available for cancelled games.',
   no_show_after_game_only: 'No-shows can be recorded only after the game ends.',
   not_expected_player: 'That player was not on the playing list when the game started.',
   invalid_attendance_status: 'That attendance option is not valid.',
   invalid_date_range: 'Choose a valid date range of up to one year.',
+  resend_too_soon: 'A confirmation email was sent to this person in the last 10 minutes. Please wait before sending another.',
+  pending_signup_not_found: 'This person has already confirmed, or is no longer waiting to join this group.',
+  already_confirmed: 'This person has already confirmed their email.',
+  invalid_request: 'Something went wrong. Please refresh and try again.',
+  send_failed: 'The confirmation email could not be sent right now. Please try again later.',
+  over_email_send_rate_limit: 'PickleMe has reached its email limit for now. Please try again in about an hour.',
 }
 
 export function friendlyError(e: unknown): string {
