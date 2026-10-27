@@ -2,6 +2,21 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.10.0] — 2026-10-28 — FR-016 profile photos
+
+### Added
+- **Optional profile photo** under the tab with your name: choose, drag and zoom to a circle, save, change or remove.
+  The browser crops to 512×512 and re-encodes to WebP (JPEG fallback), which strips EXIF/GPS. Max 300 KB stored.
+- Photos (or initials on a colour from the user ID) on member lists, game rosters, invite and game-link join lists, and the activity log.
+  Roster images stay text-only.
+- Private `avatars` storage bucket. Only the owner can upload or delete; only people who share a group with the owner can read.
+  Shown through signed URLs that expire after an hour, requested in batches and cached.
+- Weekly Edge Function `avatar-cleanup` removes files no profile references (failed deletes, closed accounts).
+- Migration `20261027000015_profile_avatars.sql`; tests `supabase/tests/profile_avatars.sql`, `tests/avatar.test.mjs`.
+
+### Changed
+- Privacy policy (28 October 2026) and FAQ: profile photos, who can see them, storage in Singapore, retention and deletion.
+
 ## [0.9.1] — 2026-10-27 — Activity log names for group-link joins
 
 ### Fixed

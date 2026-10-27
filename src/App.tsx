@@ -9,6 +9,7 @@ import { ToastProvider, Spinner, Notice, useToast } from './components/ui'
 import { SignIn } from './screens/SignIn'
 import { AuthConfirm } from './screens/AuthConfirm'
 import { ProfileForm } from './screens/ProfileForm'
+import { ProfilePhoto } from './screens/ProfilePhoto'
 import { Home } from './screens/Home'
 import { GameFeatures } from './screens/GameFeatures'
 import { GameForm } from './screens/GameForm'
@@ -139,6 +140,7 @@ function SignedIn({ session, search, setUrl }: { session: Session; search: strin
   else if (route.name === 'edit-game' && organiser) body = <GameForm group={group} gameId={route.gameId} go={go} />
   else if (route.name === 'members') body = <Members group={group} userId={session.user.id} onGroupChanged={loadMe} />
   else if (route.name === 'profile') body = <section className="stack"><h1 className="display">Your profile</h1>
+    <ProfilePhoto userId={me.user_id} name={me.display_name} path={me.avatar_path ?? null} onChanged={loadMe} />
     <ProfileForm initial={me.display_name ?? ''} email={session.user.email ?? ''} submitLabel="Save name" onSaved={async () => { await loadMe(); toast('Name updated.') }} />
     <button className="btn btn-ghost" onClick={signOut}>Sign out</button></section>
   else body = <Home group={group} go={go} />

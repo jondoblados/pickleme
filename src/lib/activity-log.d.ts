@@ -9,6 +9,7 @@ export interface ActivityEvent {
   details: ActivityDetails;
   actor_kind?: 'self' | 'member' | 'system';
   actor_name_origin?: string | null; target_name_origin?: string | null; triggered_by_name?: string | null;
+  actor_avatar_path?: string | null; target_avatar_path?: string | null;
 }
 export interface ActivityCursor { at: string; id: string }
 export interface ActivityPage {

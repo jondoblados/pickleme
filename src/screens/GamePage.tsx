@@ -6,6 +6,7 @@ import type { Route } from '../lib/route'
 import { fmtDay, fmtRange } from '../lib/time'
 import { copyText } from '../lib/clipboard'
 import { ConfirmButton, Notice, Spinner, useToast } from '../components/ui'
+import { Avatar } from '../components/Avatar'
 
 export function shareMessage(d: GameDetail, url: string) {
   const tz = d.group.timezone
@@ -202,7 +203,7 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
             <ol className="roster">
               {playing.map(p => {
                 const ctl = attControls(p.user_id, p.display_name)
-                return <RosterRow key={p.user_id} n={p.position} name={p.display_name} me={p.user_id === userId}
+                return <RosterRow key={p.user_id} n={p.position} name={p.display_name} userId={p.user_id} avatar={p.avatar_path} me={p.user_id === userId}
                   status={attOn ? attBy.get(p.user_id)?.status : undefined}
                   note={attOn && !ctl ? 'joined after start' : undefined}
                   controls={ctl}
@@ -213,7 +214,7 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
           {leftAfterStart.length > 0 && <>
             <p className="small muted att-left-title">On the list at start, since withdrawn or removed</p>
             <ol className="roster roster-left">
-              {leftAfterStart.map(r => <RosterRow key={r.user_id} n={0} name={r.name} me={r.user_id === userId}
+              {leftAfterStart.map(r => <RosterRow key={r.user_id} n={0} name={r.name} userId={r.user_id} me={r.user_id === userId}
                 status={r.status} controls={attControls(r.user_id, r.name)} />)}
             </ol>
           </>}
@@ -223,7 +224,7 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
           <h2>Waitlist <span className="count">{waitlist.length}</span></h2>
           {waitlist.length === 0 ? <p className="muted">Nobody waiting.</p> : (
             <ol className="roster roster-wait">
-              {waitlist.map(p => <RosterRow key={p.user_id} n={p.position} name={p.display_name} me={p.user_id === userId}
+              {waitlist.map(p => <RosterRow key={p.user_id} n={p.position} name={p.display_name} userId={p.user_id} avatar={p.avatar_path} me={p.user_id === userId}
                 onRemove={organiser && !ended ? () => act(() => api.removeRegistration(game.id, p.user_id), () => `${p.display_name} removed.`) : undefined} />)}
             </ol>
           )}
@@ -274,13 +275,14 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
   )
 }
 
-function RosterRow({ n, name, me, onRemove, controls, status, note }: {
-  n: number; name: string; me: boolean; onRemove?: () => void
+function RosterRow({ n, name, userId, avatar, me, onRemove, controls, status, note }: {
+  n: number; name: string; userId: string; avatar?: string | null; me: boolean; onRemove?: () => void
   controls?: ReactNode; status?: AttStatus; note?: string
 }) {
   return (
     <li className={[me ? 'is-me' : '', status ? `att-row att-row-${status}` : ''].join(' ').trim()}>
       <span className="pos">{n > 0 ? n : '–'}</span>
+      <Avatar userId={userId} name={name} path={avatar} size={32} />
       <span className="name">{name}{me && <span className="you">you</span>}
         {note && <span className="small muted att-note">{note}</span>}</span>
       {controls}

@@ -4,6 +4,7 @@ import { api, isOrganiser, type GameLinkJoin, type Invite, type Me, type Member,
 import { friendlyError } from '../lib/errors'
 import { copyText } from '../lib/clipboard'
 import { ConfirmButton, Notice, Spinner, useToast } from '../components/ui'
+import { Avatar } from '../components/Avatar'
 
 const ROLE_LABEL: Record<Role, string> = { player: 'Player', organiser: 'Organiser', admin: 'Admin' }
 
@@ -96,14 +97,14 @@ export function Members({ group, userId, onGroupChanged }: { group: Me['groups']
                     </div>}
                     {active && !i.copyable && <p className="legacy">This link was created before copying was available, so it can't be shown again. It still works for anyone who has it. To share a fresh copy, create a new link (and turn this one off if you like).</p>}
                     {i.joined.length > 0 && <JoinedList title={`Joined with this link (${i.joined.length})`} open={active}
-                      rows={i.joined.map(j => ({ key: j.user_id + j.joined_at, name: j.name, when: fmtWhen(j.joined_at) }))} />}
+                      rows={i.joined.map(j => ({ key: j.user_id + j.joined_at, userId: j.user_id, avatar: j.avatar_path, name: j.name, when: fmtWhen(j.joined_at) }))} />}
                   </div>
                 )
               })}
             </div>
           )}
           {gameJoins.length > 0 && <JoinedList title={`Joined from a game link (${gameJoins.length})`} open={false}
-            rows={gameJoins.map(j => ({ key: j.user_id + j.joined_at, name: j.name, when: fmtWhen(j.joined_at),
+            rows={gameJoins.map(j => ({ key: j.user_id + j.joined_at, userId: j.user_id, avatar: j.avatar_path, name: j.name, when: fmtWhen(j.joined_at),
               sub: j.game + (j.game_starts_at ? ` · ${fmtDate(j.game_starts_at)}` : '') }))} />}
         </div>
       )}
@@ -117,6 +118,7 @@ export function Members({ group, userId, onGroupChanged }: { group: Me['groups']
           <ul className="member-list">
             {members.map(m => (
               <li key={m.user_id}>
+                <Avatar userId={m.user_id} name={m.display_name} path={m.avatar_path} size={32} />
                 <span className="name">{m.display_name ?? 'New member'}{m.user_id === userId && <span className="you">you</span>}
                   {admin && m.email_confirmed === false && <span className="badge badge-unconfirmed" title="This member has not confirmed their email address">Not confirmed</span>}</span>
                 {admin && m.user_id !== userId ? (
@@ -188,11 +190,11 @@ function PendingSignupsCard({ groupId }: { groupId: string }) {
   )
 }
 
-function JoinedList({ title, rows, open }: { title: string; open: boolean; rows: { key: string; name: string; when: string; sub?: string }[] }) {
+function JoinedList({ title, rows, open }: { title: string; open: boolean; rows: { key: string; userId?: string; avatar?: string | null; name: string; when: string; sub?: string }[] }) {
   return (
     <details className="joined" open={open}>
       <summary>{title}</summary>
-      <ul>{rows.map(r => <li key={r.key}><span>{r.name}{r.sub && <span className="joined-sub">{r.sub}</span>}</span><span className="when">{r.when}</span></li>)}</ul>
+      <ul>{rows.map(r => <li key={r.key}><span className="joined-who"><Avatar userId={r.userId} name={r.name} path={r.avatar} size={24} /><span>{r.name}{r.sub && <span className="joined-sub">{r.sub}</span>}</span></span><span className="when">{r.when}</span></li>)}</ul>
     </details>
   )
 }

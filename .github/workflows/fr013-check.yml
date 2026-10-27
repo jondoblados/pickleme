@@ -31,6 +31,7 @@ jobs:
       - name: Bootstrap disposable database and load relevant baseline
         run: |
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/fr013_bootstrap.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/storage_bootstrap.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261018000001_core_schema.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261018000002_rpc_functions.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261023000007_invite_copy_history.sql
@@ -40,12 +41,14 @@ jobs:
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261027000013_pending_signups.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/activity_join_names_seed.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261027000014_activity_join_names.sql
+          psql -X -v ON_ERROR_STOP=1 -1 -f supabase/migrations/20261027000015_profile_avatars.sql
       - name: Run FR-013 integration assertions (fixtures roll back)
         run: |
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/admin_activity_log.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/activity_filter_options.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/pending_signups.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/activity_join_names.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/profile_avatars.sql
   build:
     runs-on: ubuntu-latest
     steps:
@@ -55,7 +58,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs tests/otp.test.mjs
+      - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs tests/otp.test.mjs tests/avatar.test.mjs
       - run: npm run build
   browser:
     runs-on: ubuntu-latest
