@@ -50,7 +50,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs
+      - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs tests/otp.test.mjs
       - run: npm run build
   browser:
     runs-on: ubuntu-latest

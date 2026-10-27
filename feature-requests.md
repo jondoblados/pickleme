@@ -24,6 +24,8 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-011 | Admins can rename the group | Implemented (v0.7.0) | 2026-10-23 | 2026-10-23 |
 | FR-012 | WhatsApp roster image sharing | Requested | 2026-10-24 | — |
 | FR-013 | Admin-only activity log | Requested | 2026-10-26 | — |
+| FR-014 | 6-digit sign-in code in the sign-in email | In progress | 2026-10-27 | — |
+| FR-015 | Admins see unconfirmed sign-ups and resend confirmation | In progress | 2026-10-27 | — |
 
 ## Details
 
@@ -148,3 +150,20 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
   auth tokens, invite secrets or unnecessary personal data in log responses or exports.
 - **Acceptance:** Test direct API/table access for all roles and cross-group isolation, filter/pagination/export
   correctness, before/after edit details, deleted-game history and clear handling of incomplete historical records.
+
+### FR-014 — 6-digit sign-in code
+- **Status:** In progress (v0.8.0).
+- **Requested:** 2026-10-27 by Jon, after a player kept being asked for her email when opening game links from WhatsApp.
+- **Problem:** WhatsApp and mail apps on iOS open links in their own in-app browsers, each with separate storage. Tapping the
+  email link signs the player in to the mail app's browser, not the one WhatsApp opens.
+- **Description:** Sign-in emails (Magic Link and Confirm signup templates) show a 6-digit code (`{{ .Token }}`) alongside the
+  existing button. The sign-in screen offers a code box after sending, verifying with `verifyOtp({ email, token, type: 'email' })`
+  in the same browser. The "code sent" state survives a reload or app switch for up to an hour.
+- **Configuration:** Supabase Auth → Email OTP length must be 6 (the UI accepts 6–10 digits to be safe).
+
+### FR-015 — Unconfirmed sign-ups for admins
+- **Status:** In progress.
+- **Requested:** 2026-10-27 by Jon.
+- **Description:** Admins see people who requested sign-in from their group's game or invite link but haven't confirmed their
+  email, with a partly hidden email address, and can send a fresh confirmation email. Members with an unconfirmed email get a
+  **Not confirmed** badge. Admin-only, enforced in the database. The full email is never sent to the browser.

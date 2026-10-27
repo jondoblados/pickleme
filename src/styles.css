@@ -260,3 +260,6 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--c
 .joined li:first-child { border-top: 0; }
 .joined .when { color: var(--muted); font-size: .85rem; white-space: nowrap; }
 .joined-sub { display: block; color: var(--muted); font-size: .82rem; }
+
+/* FR-014: sign-in code entry */
+.code-input { font-size: 1.6rem; letter-spacing: .35em; text-align: center; font-variant-numeric: tabular-nums; }
