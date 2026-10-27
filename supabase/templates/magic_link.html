@@ -8,6 +8,12 @@
     <h1 style="margin:0;font-size:24px;line-height:1.2">Your PickleMe sign-in link.</h1>
     <p style="margin:10px 0 0;color:#cfe0d6">Tap the button to sign in as <strong style="color:#d9f24a">{{ .Email }}</strong> and get back to your game.</p>
   </div>
-  <p style="margin:22px 0 22px"><a href="{{ .RedirectTo }}&auth=confirm&token_hash={{ .TokenHash }}&type=email" style="background:#14382b;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:bold;display:inline-block">Sign in to PickleMe</a></p>
-  <p style="margin:16px 0 0;font-size:12px;color:#5a675f">This link works once and expires in 1 hour. If you didn't ask to sign in, you can ignore this email.<br>PickleMe · pickleball game sign-ups · jon.doblados.net/pickleme</p>
+  <div style="background:#ffffff;border:1px solid #e3ddcf;border-radius:14px;padding:18px 20px;margin:22px 0 0;text-align:center">
+    <p style="margin:0 0 6px;font-size:13px;color:#5a675f">Your sign-in code</p>
+    <p style="margin:0;font-size:32px;line-height:1.2;font-weight:bold;letter-spacing:6px;color:#14382b;font-family:'Courier New',Courier,monospace">{{ .Token }}</p>
+    <p style="margin:8px 0 0;font-size:13px;color:#5a675f">Type this code into PickleMe on the screen that asked for your email. It keeps you signed in in that same browser, even inside WhatsApp.</p>
+  </div>
+  <p style="margin:18px 0 6px;font-size:13px;color:#5a675f">Or tap the button:</p>
+  <p style="margin:0 0 22px"><a href="{{ .RedirectTo }}&auth=confirm&token_hash={{ .TokenHash }}&type=email" style="background:#14382b;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:bold;display:inline-block">Sign in to PickleMe</a></p>
+  <p style="margin:16px 0 0;font-size:12px;color:#5a675f">The code and link work once and expire in 1 hour. If you didn't ask to sign in, you can ignore this email.<br>PickleMe · pickleball game sign-ups · jon.doblados.net/pickleme</p>
 </div></body></html>

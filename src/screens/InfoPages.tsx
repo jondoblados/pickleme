@@ -144,18 +144,21 @@ export function Faq({ onNav }: { onNav: Nav }) {
 
       <h2>Getting started</h2>
       <Q q="How do I sign in?">
-        <p>Enter your email and tap <b>Email me a sign-in link</b>. Open the email and tap the link — no password needed.
-          The link works once and expires after an hour.</p>
+        <p>Enter your email and tap <b>Email me a sign-in code</b>. The email has a 6-digit code and a sign-in button — no password needed.
+          Type the code into the PickleMe screen that asked for your email, or tap the button. The code and button work once and expire after an hour.</p>
       </Q>
       <Q q="I didn't get the sign-in email.">
         <p>Wait a minute, then check your spam or promotions folder. You can request a new link after 60 seconds.
           If you see a message about the email limit, try again later or let an organiser know.</p>
       </Q>
-      <Q q="The link says it has expired or was already used.">
-        <p>Each link works only once. Go back to PickleMe and request a new one.</p>
+      <Q q="The code or link says it has expired or was already used.">
+        <p>Each code and link works only once, and only the newest email counts. Go back to PickleMe and tap <b>Send a new code</b>.</p>
       </Q>
-      <Q q="I opened the link from WhatsApp and ended up in a different browser.">
-        <p>That's fine — sign-in links work in whichever browser opens the email. Keep using that browser afterwards so you stay signed in.</p>
+      <Q q="Every time I open a game link from WhatsApp, it asks for my email again.">
+        <p>WhatsApp, Yahoo Mail, Gmail and some other apps open links in their own built-in browser, and each one keeps its own sign-in.
+          If you sign in by tapping the email button, you end up signed in to whichever browser the mail app used, not the one WhatsApp opens.</p>
+        <p>Fix: the next time PickleMe asks for your email inside WhatsApp, enter it, then type the <b>6-digit code</b> from the email into that same screen.
+          You'll stay signed in there. Alternatively, long-press the game link in WhatsApp, choose <b>Open in Safari</b> (or Chrome), and sign in there once.</p>
       </Q>
       <Q q="How do I join my group?">
         <p>The easiest way: open a game link shared in your WhatsApp group, sign in with your email, choose a display name, then tap

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
+import { PENDING_KEY } from './lib/otp.js'
 import { api, isOrganiser, type Me } from './lib/api'
 import { endDeletedSession, isDeletedAccount, friendlyError } from './lib/errors'
 import { isInfoView, isInviteToken, parseRoute, routeToSearch, withView, type Route } from './lib/route'
@@ -37,6 +38,7 @@ function Root() {
       setSession(data.session)
     })
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      if (s) { try { localStorage.removeItem(PENDING_KEY) } catch { /* private mode */ } }
       setSession(s)
       if (s && window.location.hash.includes('access_token')) history.replaceState(null, '', window.location.pathname + window.location.search)
     })

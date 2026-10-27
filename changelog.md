@@ -2,6 +2,18 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.8.0] — 2026-10-27 — 6-digit sign-in code (FR-014)
+
+### Added
+- Sign-in and confirm-signup emails show a 6-digit code next to the button. After **Email me a sign-in code**, the sign-in
+  screen shows a code box, so players can sign in inside WhatsApp or any in-app browser without switching browsers.
+- The code screen is remembered for an hour, so switching to the mail app and back (or a reload) keeps it.
+- FAQ: updated sign-in answers and a new entry for "Every time I open a game link from WhatsApp, it asks for my email again".
+
+### Deployment
+- Paste the updated `supabase/templates/magic_link.html` and `confirm_signup.html` into Supabase Auth → Email Templates,
+  and check Auth → Providers → Email → Email OTP length is 6.
+
 ## [0.7.2] — 2026-10-23 — Branded sign-up email, links to PickleMe, simpler game-link join
 
 ### Changed
