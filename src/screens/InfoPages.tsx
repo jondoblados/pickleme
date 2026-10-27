@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export const PRIVACY_CONTACT = 'jon@doblados.net'
-export const POLICY_UPDATED = '23 October 2026'
+export const POLICY_UPDATED = '27 October 2026'
 
 type Nav = (view: 'privacy' | 'faq') => void
 
@@ -32,7 +32,8 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
       <h1 className="display">Privacy Policy</h1>
       <p className="muted small">Last updated: {POLICY_UPDATED}</p>
       <p className="lede">The short version: we use your email to sign you in and your display name to show you on game lists.
-        Other players never see your email. We don't sell your information or use it for advertising.</p>
+        Other players never see your email. If you start signing in but don't confirm, your group's admins may see a partly hidden
+        version of it so they can resend the email. We don't sell your information or use it for advertising.</p>
 
       <h2>1. Who we are</h2>
       <p>PickleMe is a web app run by Jon Doblados to help pickleball groups organise games, manage sign-ups and keep waitlists.
@@ -40,23 +41,30 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
 
       <h2>2. Information we collect</h2>
       <ul>
-        <li><b>Email address</b> — to create your account and send you passwordless sign-in links.</li>
+        <li><b>Email address</b> — to create your account and send you passwordless sign-in emails (a 6-digit code and a sign-in link).</li>
+        <li><b>Where you started signing in</b> — if you request a sign-in email from a game or group invite link and are new to PickleMe,
+          we record which game or invite it came from (an invite is recorded as a one-way code, not the link itself). This lets that group's admins
+          see that you are waiting to confirm and resend the email.</li>
         <li><b>Display name</b> — the name other members of your group see on game lists.</li>
         <li><b>Group membership and role</b> — for example player, organiser or admin.</li>
         <li><b>Game sign-up records</b> — games you join, your playing or waitlist position, withdrawals, removals by an organiser, and when these happened.</li>
         <li><b>Attendance records</b> — whether an organiser marked you Present, No-show or Excused for a game you were on the playing list for, who marked it and when.</li>
+        <li><b>Group activity log</b> — a record of actions in a group, such as joining the group or a game, withdrawing, removals, game changes,
+          role changes, invite links and confirmation emails resent by an admin, with who did it, who it affected, the names shown at the time, and when.</li>
         <li><b>Technical information</b> needed to run and secure the service, such as sign-in records, session information, error logs and security logs.</li>
       </ul>
       <p>PickleMe does not use passwords. Your email and account details are still personal information, and we treat them that way.</p>
 
       <h2>3. How we use it</h2>
       <ul>
-        <li>Send sign-in links and keep you signed in.</li>
+        <li>Send sign-in codes and links, and keep you signed in.</li>
+        <li>Let group admins see who is still waiting to confirm their email and send them a fresh confirmation email.</li>
         <li>Manage group membership and what each role can do.</li>
         <li>Process sign-ups, withdrawals and waitlist positions.</li>
         <li>Show game lists to members of your group.</li>
         <li>Email you when you move from the waitlist into the playing list.</li>
         <li>Let organisers record attendance and review attendance and repeat no-show reports for their group, so places go to people who turn up.</li>
+        <li>Keep a group activity log so admins can see who changed what and resolve disputes.</li>
         <li>Investigate problems, prevent misuse and keep the service secure.</li>
         <li>Answer questions and privacy requests, and meet legal requirements.</li>
       </ul>
@@ -69,15 +77,22 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         export attendance and repeat no-show reports for their group as spreadsheet (CSV) files; once exported, those files are their responsibility.</p>
       <p>Anyone who receives a game link (including a forwarded one) can sign in with a verified email and join that game's group in one step.
         Once they join, they become a group member and can see the group's game lists like any other member.</p>
-      <p>Your email address is not shown to other players, organisers or admins anywhere in the app. Only the operator can see it,
+      <p>Organisers and admins can make a roster image (a picture of the Playing and Waitlist lists with display names) to share in WhatsApp.
+        It doesn't include emails or attendance, but once shared it can be forwarded and won't update.</p>
+      <p>The group activity log is visible only to that group's admins, who can export it as a spreadsheet (CSV) file; once exported, that file is their responsibility.</p>
+      <p>Your full email address is not shown to other players, organisers or admins anywhere in the app. Only the operator can see it,
         through the back-end systems used to run PickleMe, and only to operate and support the service.</p>
+      <p>One exception, for admins only: if you asked for a sign-in email from one of a group's game or invite links but haven't confirmed it yet,
+        that group's admins see a partly hidden address (for example <b>ec•••@yahoo.com.sg</b>: the first one or two characters and the domain),
+        when you started, and which link you used. They can ask PickleMe to send you a fresh confirmation email; the full address stays on our servers.
+        Admins of other groups never see it. Once you confirm, you drop off that list. Admins can also see whether a member's email is confirmed.</p>
       <p>People outside your group can't see its games or player lists. If someone copies a list into WhatsApp or elsewhere,
         that copy is outside PickleMe — please respect other players' privacy when sharing.</p>
 
       <h2>5. Service providers</h2>
       <ul>
         <li><b>Supabase</b> — sign-in, database and back-end services (database hosted in Singapore).</li>
-        <li><b>Resend</b> — delivers sign-in emails and waitlist emails.</li>
+        <li><b>Resend</b> — delivers sign-in, confirmation and waitlist emails.</li>
         <li><b>GitHub Pages</b> — hosts the web app.</li>
         <li><b>Google Fonts</b> — supplies the fonts the app displays, so your browser connects to Google when you open PickleMe.</li>
       </ul>
@@ -91,6 +106,7 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
 
       <h2>7. Browser storage</h2>
       <p>PickleMe stores your signed-in session in your browser and remembers the last email you used to sign in on that device.
+        After sending a sign-in email it also remembers, for up to an hour, which address it was sent to, so the code box is still there when you come back.
         We don't use analytics, advertising trackers or advertising cookies.</p>
       <p>Signing out ends your session on that device. Clearing your browser data also removes it, but doesn't delete your PickleMe account.</p>
 
@@ -99,6 +115,9 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         <li><b>Account, profile and membership:</b> while you have an account. Deleted when you ask us to close it.</li>
         <li><b>Game sign-up history:</b> the app shows past games for 60 days. We keep identifiable sign-up records for up to 12 months after a game, then delete or anonymise them.</li>
         <li><b>Attendance records:</b> kept for up to 12 months after a game, then deleted or anonymised together with sign-up records.</li>
+        <li><b>Unconfirmed sign-ups:</b> shown to the group's admins for up to 30 days. If you never confirm, the operator may delete the unconfirmed account.</li>
+        <li><b>Group activity log:</b> kept while the group exists, including after a game is deleted, so admins can review past changes.
+          It keeps the names shown at the time. If you close your account, ask us and we'll remove or anonymise your name in it.</li>
         <li><b>Security, audit and email-delivery records:</b> only as long as needed for security, troubleshooting and legal needs, in line with our providers' log retention.</li>
         <li><b>Backups:</b> deleted information may remain in restricted backups until those backups expire.</li>
       </ul>
@@ -117,7 +136,7 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
 
       <h2>10. Security</h2>
       <p>We use access controls, row-level security and authentication checks to protect your information. No online service can guarantee absolute security.
-        Don't forward your sign-in links, and sign out on shared devices.</p>
+        Don't share your sign-in codes or forward your sign-in emails, and sign out on shared devices. PickleMe will never ask you for your code by message or phone.</p>
 
       <h2>11. Changes to this policy</h2>
       <p>We'll publish any updates here with a new date. If we want to use your information for a new purpose, we'll tell you and ask for consent where required.</p>
@@ -148,7 +167,8 @@ export function Faq({ onNav }: { onNav: Nav }) {
           Type the code into the PickleMe screen that asked for your email, or tap the button. The code and button work once and expire after an hour.</p>
       </Q>
       <Q q="I didn't get the sign-in email.">
-        <p>Wait a minute, then check your spam or promotions folder. You can request a new link after 60 seconds.
+        <p>Wait a minute, then check your spam or promotions folder. You can request a new code after 60 seconds.
+          Work email addresses sometimes hold or block sign-in emails; try a personal address, or ask a group admin to resend it.
           If you see a message about the email limit, try again later or let an organiser know.</p>
       </Q>
       <Q q="The code or link says it has expired or was already used.">
@@ -163,7 +183,8 @@ export function Faq({ onNav }: { onNav: Nav }) {
       <Q q="How do I join my group?">
         <p>The easiest way: open a game link shared in your WhatsApp group, sign in with your email, choose a display name, then tap
           <b>Join group &amp; game</b>. You're added to the group and to the game (or its waitlist, if it's full) in one step.
-          An organiser's group invite link also works. If you're signed in but see no games, ask for a game or invite link.</p>
+          An organiser's group invite link also works: sign in, choose your display name, and you're added to the group.
+          If you're signed in but see no games, ask for a game or invite link.</p>
       </Q>
       <Q q="What name will other players see?">
         <p>The display name you choose the first time you sign in (up to 40 characters). Change it any time from the tab with your name.
@@ -239,6 +260,22 @@ export function Faq({ onNav }: { onNav: Nav }) {
           Under each link, <b>Joined with this link</b> shows who joined with it and when; <b>Joined from a game link</b> lists people who joined from a shared game.
           Links created before 23 October 2026 can't be copied again; create a new one instead.</p>
       </Q>
+      <Q q="How do I share the roster as an image?">
+        <p>Organisers and admins: open the game and use <b>Share roster image</b>. Tap <b>Generate roster preview</b>, check it, then share it to
+          WhatsApp or download the PNG and paste the caption. The image is a snapshot and doesn't update; the caption includes the game link for the latest list.
+          It shows display names only, so share it with your group.</p>
+      </Q>
+      <Q q="What is the Activity log?">
+        <p>Admins only. The <b>Activity log</b> tab lists what happened in your group: who joined the group or a game, withdrew or was removed, game edits,
+          status and role changes, invite links and resent confirmation emails. Filter by date, game, person or action, open <b>View details</b> for
+          before-and-after values, or download it as a CSV file. Names are shown as they were at the time.</p>
+      </Q>
+      <Q q="Someone says they can't confirm their email. What can I do?">
+        <p>Admins: go to <b>Members & invites</b>. If they started signing in from one of your group's game or invite links, they appear under
+          <b>Waiting for email confirmation</b> with a partly hidden address. Tap <b>Resend email</b> to send them a fresh code and link
+          (once every 10 minutes), or <b>Dismiss</b> if you don't recognise them. Members whose email isn't confirmed show a <b>Not confirmed</b> badge.
+          If they're stuck inside WhatsApp, point them to the 6-digit code tip above.</p>
+      </Q>
       <Q q="Can I delete a game?">
         <p>Only group admins can, and only once a game has been cancelled. Open the cancelled game and tap <b>Delete game</b> under
           Admin tools, then tap again to confirm. This permanently removes the game and its sign-up history and can't be undone.</p>
@@ -253,7 +290,9 @@ export function Faq({ onNav }: { onNav: Nav }) {
 
       <h2>Privacy and your account</h2>
       <Q q="Who can see my email address?">
-        <p>No other player, organiser or admin can see it in the app. It's used only to sign you in and send game emails.</p>
+        <p>No other player or organiser can see it in the app. It's used only to sign you in and send game emails.
+          The one exception: if you started signing in from a group's link but haven't confirmed yet, that group's admins see a partly hidden
+          version (like <b>ec•••@yahoo.com.sg</b>) so they can resend your confirmation email.</p>
       </Q>
       <Q q="How do I sign out or delete my account?">
         <p>Sign out from the tab with your name. To close your account and delete your information, email <Mail />.</p>

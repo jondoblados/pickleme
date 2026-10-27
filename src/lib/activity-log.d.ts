@@ -16,3 +16,5 @@ export const activityLabels: Readonly<Record<string, string>>;
 export function activityLabel(action: string): string;
 export function activityChanges(details: ActivityDetails): { field: string; before: unknown; after: unknown }[];
 export function activityCsv(rows: ActivityEvent[]): string;
+
+export function activityTarget(row: { target_name?: string | null; target_user_id?: string | null; details?: Record<string, unknown> | null }): string | null

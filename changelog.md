@@ -2,6 +2,25 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.9.0] — 2026-10-27 — Unconfirmed sign-ups for admins (FR-015)
+
+### Added
+- **Members & invites → Waiting for email confirmation** (admins only): people who asked to sign in from this group's game or invite
+  link but haven't confirmed, with a partly hidden email, where they came from, and **Resend email** (once per 10 minutes) / **Dismiss**.
+- **Not confirmed** badge next to members whose email isn't confirmed (admins only).
+- Activity log actions: *Resent confirmation email*, *Dismissed unconfirmed sign-up* (affected player shows the masked email).
+- Edge Function `admin-resend-verification`; migration `20261027000013_pending_signups.sql`; tests `supabase/tests/pending_signups.sql`.
+
+### Changed
+- Privacy policy (dated 27 October 2026): sign-in codes, where sign-in started, masked email shown to admins, group activity log,
+  roster images, unconfirmed sign-up and activity log retention.
+- FAQ: roster image, activity log, helping someone who can't confirm, work-email filtering, invite-join steps.
+- Invite WhatsApp message now mentions the 6-digit code.
+- `feature-requests.md`: FR-012 and FR-013 marked Implemented.
+
+### Deployment
+- Apply the migration, then deploy `admin-resend-verification` with `verify_jwt = false`.
+
 ## [0.8.0] — 2026-10-27 — 6-digit sign-in code (FR-014)
 
 ### Added

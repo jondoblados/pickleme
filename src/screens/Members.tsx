@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { APP_URL } from '../lib/supabase'
-import { api, isOrganiser, type GameLinkJoin, type Invite, type Me, type Member, type Role } from '../lib/api'
+import { api, isOrganiser, type GameLinkJoin, type Invite, type Me, type Member, type PendingSignup, type Role } from '../lib/api'
 import { friendlyError } from '../lib/errors'
 import { copyText } from '../lib/clipboard'
 import { ConfirmButton, Notice, Spinner, useToast } from '../components/ui'
@@ -41,7 +41,7 @@ export function Members({ group, userId, onGroupChanged }: { group: Me['groups']
   }
 
   const inviteMessage = (link: string) =>
-    `Join ${group.name} on PickleMe to sign up for games:\n${link}\n\nOpen the link, enter your email, and tap the sign-in link we send you. No password needed.`
+    `Join ${group.name} on PickleMe to sign up for games:\n${link}\n\nOpen the link, enter your email, then type the 6-digit code we email you (or tap the button in the email). No password needed.`
 
   return (
     <section className="stack-lg">
@@ -108,6 +108,8 @@ export function Members({ group, userId, onGroupChanged }: { group: Me['groups']
         </div>
       )}
 
+      {admin && <PendingSignupsCard groupId={group.id} />}
+
       <div className="card stack">
         <h2>Members {members && <span className="count">{members.length}</span>}</h2>
         {admin && <p className="small muted">As an admin you can make members organisers. Organisers can create, edit, close and cancel games and remove sign-ups.</p>}
@@ -115,7 +117,8 @@ export function Members({ group, userId, onGroupChanged }: { group: Me['groups']
           <ul className="member-list">
             {members.map(m => (
               <li key={m.user_id}>
-                <span className="name">{m.display_name ?? 'New member'}{m.user_id === userId && <span className="you">you</span>}</span>
+                <span className="name">{m.display_name ?? 'New member'}{m.user_id === userId && <span className="you">you</span>}
+                  {admin && m.email_confirmed === false && <span className="badge badge-unconfirmed" title="This member has not confirmed their email address">Not confirmed</span>}</span>
                 {admin && m.user_id !== userId ? (
                   <select aria-label={`Role for ${m.display_name ?? 'member'}`} value={m.role}
                     onChange={async e => {
@@ -136,6 +139,54 @@ export function Members({ group, userId, onGroupChanged }: { group: Me['groups']
 
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })
 const fmtWhen = (iso: string) => new Date(iso).toLocaleString('en-SG', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' })
+
+// FR-015: admins only. Lists people who asked to sign in from this group's links but never confirmed their email.
+function PendingSignupsCard({ groupId }: { groupId: string }) {
+  const toast = useToast()
+  const [rows, setRows] = useState<PendingSignup[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [sending, setSending] = useState<string | null>(null)
+  const load = useCallback(async () => {
+    try { setRows(await api.listPendingSignups(groupId)); setError(null) } catch (e) { setError(friendlyError(e)) }
+  }, [groupId])
+  useEffect(() => { load() }, [load])
+  if (!rows && !error) return null
+  if (rows && rows.length === 0) return null
+  async function resend(r: PendingSignup) {
+    setSending(r.user_id)
+    try { await api.resendVerification(groupId, r.user_id); toast(`Confirmation email sent to ${r.masked_email}.`); await load() }
+    catch (e) { toast(friendlyError(e), 'error') }
+    setSending(null)
+  }
+  return (
+    <div className="card stack">
+      <h2>Waiting for email confirmation {rows && <span className="count">{rows.length}</span>}</h2>
+      <p className="small muted">These people opened one of this group's links and asked to sign in, but haven't used the code or link
+        from their email yet. Only part of each email address is shown. Resending sends a fresh code and link to their address.
+        Entries disappear once they confirm, and after 30 days.</p>
+      {error && <Notice tone="error">{error}</Notice>}
+      {rows && <ul className="member-list pending-list">
+        {rows.map(r => {
+          const wait = r.resend_available_at && new Date(r.resend_available_at).getTime() > Date.now()
+          return (
+            <li key={r.user_id}>
+              <span className="name">{r.masked_email}
+                <span className="joined-sub">{r.source === 'game' ? `From game link${r.game_title ? ` · ${r.game_title}` : ''}${r.game_starts_at ? ` · ${fmtDate(r.game_starts_at)}` : ''}` : 'From group invite link'}
+                  {' · '}signed up {fmtWhen(r.signed_up_at)}{r.last_email_at ? ` · last email ${fmtWhen(r.last_email_at)}` : ''}</span></span>
+              <span className="row">
+                <button className="btn btn-xs" disabled={!!wait || sending === r.user_id} onClick={() => resend(r)}
+                  title={wait ? 'You can resend 10 minutes after the last confirmation email' : undefined}>
+                  {sending === r.user_id ? 'Sending…' : wait ? 'Sent' : 'Resend email'}</button>
+                <ConfirmButton className="btn btn-xs btn-ghost" confirmText="Dismiss?"
+                  onConfirm={async () => { try { await api.dismissPendingSignup(groupId, r.user_id); toast('Removed from the list.'); load() } catch (e) { toast(friendlyError(e), 'error') } }}>Dismiss</ConfirmButton>
+              </span>
+            </li>
+          )
+        })}
+      </ul>}
+    </div>
+  )
+}
 
 function JoinedList({ title, rows, open }: { title: string; open: boolean; rows: { key: string; name: string; when: string; sub?: string }[] }) {
   return (

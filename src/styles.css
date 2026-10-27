@@ -263,3 +263,10 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--c
 
 /* FR-014: sign-in code entry */
 .code-input { font-size: 1.6rem; letter-spacing: .35em; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* FR-015: unconfirmed sign-ups */
+.badge-unconfirmed { background: #fdf0d5; color: #6b4a00; margin-left: .45rem; font-size: .72rem; vertical-align: 2px; }
+.pending-list li { flex-wrap: wrap; align-items: flex-start; padding: .7rem 0; }
+.pending-list .name { display: flex; flex-direction: column; flex: 1 1 16rem; min-width: 0; overflow-wrap: anywhere; font-weight: 700; }
+.pending-list .joined-sub { font-weight: 400; }
+.pending-list .row { flex-shrink: 0; gap: .4rem; margin-left: auto; }

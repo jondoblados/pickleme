@@ -26,7 +26,13 @@ export interface GameDetail {
   me: MyStatus
   roster: RosterEntry[]
 }
-export interface Member { user_id: string; display_name: string | null; role: Role; joined_at: string }
+export interface Member { user_id: string; display_name: string | null; role: Role; joined_at: string
+  /** Admins only: false when the member's email is not confirmed. null for everyone else. */
+  email_confirmed?: boolean | null }
+export interface PendingSignup {
+  user_id: string; masked_email: string; signed_up_at: string; last_email_at: string | null
+  resend_available_at: string | null; source: 'game' | 'invite'; game_title: string | null; game_starts_at: string | null
+}
 export interface Invite {
   id: string; expires_at: string; max_uses: number; use_count: number; revoked_at: string | null; created_at: string
   created_by_name: string; copyable: boolean; joined: { user_id: string; name: string; joined_at: string }[]
@@ -68,6 +74,22 @@ export const api = {
   listInvites: (groupId: string) => rpc<Invite[]>('list_invites_detail', { p_group_id: groupId }),
   getInviteLink: (inviteId: string) => rpc<{ token: string }>('get_invite_link', { p_invite_id: inviteId }),
   listGameLinkJoins: (groupId: string) => rpc<GameLinkJoin[]>('list_game_link_joins', { p_group_id: groupId }),
+  listPendingSignups: (groupId: string) => rpc<PendingSignup[]>('list_pending_signups', { p_group_id: groupId }),
+  dismissPendingSignup: (groupId: string, userId: string) =>
+    rpc('dismiss_pending_signup', { p_group_id: groupId, p_user_id: userId }),
+  /** Admin-only; the Edge Function looks up the address server-side, so the browser never sees it. */
+  resendVerification: async (groupId: string, userId: string) => {
+    const { data, error } = await supabase.functions.invoke('admin-resend-verification',
+      { body: { group_id: groupId, user_id: userId } })
+    if (error) {
+      // FunctionsHttpError carries the response; surface the server's machine-readable code.
+      const ctx = (error as { context?: Response }).context
+      let code = ''
+      try { code = (await ctx?.json())?.error ?? '' } catch { /* not JSON */ }
+      throw new Error(code || error.message)
+    }
+    return data as { sent: true }
+  },
 }
 
 export const isOrganiser = (r: Role | undefined) => r === 'organiser' || r === 'admin'

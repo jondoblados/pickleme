@@ -22,8 +22,8 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-009 | Re-copy invite links; who joined with each link | Implemented (v0.5.0) | 2026-10-23 | 2026-10-23 |
 | FR-010 | Admins can delete cancelled games | Implemented (v0.6.0) | 2026-10-23 | 2026-10-23 |
 | FR-011 | Admins can rename the group | Implemented (v0.7.0) | 2026-10-23 | 2026-10-23 |
-| FR-012 | WhatsApp roster image sharing | Requested | 2026-10-24 | — |
-| FR-013 | Admin-only activity log | Requested | 2026-10-26 | — |
+| FR-012 | WhatsApp roster image sharing | Implemented | 2026-10-24 | 2026-10-25 |
+| FR-013 | Admin-only activity log | Implemented | 2026-10-26 | 2026-10-26 |
 | FR-014 | 6-digit sign-in code in the sign-in email | In progress | 2026-10-27 | — |
 | FR-015 | Admins see unconfirmed sign-ups and resend confirmation | In progress | 2026-10-27 | — |
 
@@ -112,7 +112,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Notes:** 1–80 characters; renames are logged with the old and new names. Links are unaffected.
 
 ### FR-012 — WhatsApp roster image sharing
-- **Status:** Requested — for later implementation; no implementation started.
+- **Status:** Implemented (PRs #1–#3, merged 2026-10-24 to 2026-10-25).
 - **Requested:** 2026-10-24 by Jon
 - **Description:** Generate a branded PNG showing the game details, Playing roster and ordered Waitlist, so WhatsApp
   group members can see who has signed up before opening the game link.
@@ -131,7 +131,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
   available places and an empty waitlist. It was labelled Test preview, not connected to live roster data or app code.
 
 ### FR-013 — Admin-only activity log
-- **Status:** Requested — no implementation started.
+- **Status:** Implemented (PR #4, merged 2026-10-26).
 - **Requested:** 2026-10-26 by Jon
 - **Description:** An admin-only Activity log screen showing player joins, withdrawals and organiser removals, plus
   game creation, edits, registration closing/reopening, cancellation and deletion. Reuse existing audit events.
@@ -162,8 +162,14 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Configuration:** Supabase Auth → Email OTP length must be 6 (the UI accepts 6–10 digits to be safe).
 
 ### FR-015 — Unconfirmed sign-ups for admins
-- **Status:** In progress.
+- **Status:** In progress (v0.9.0).
 - **Requested:** 2026-10-27 by Jon.
+- **Design:** The sign-in screen sends `pm_pending_game` or `pm_pending_invite_hash` (SHA-256 of the invite token) as user metadata,
+  stored by Supabase only for new accounts. `list_pending_signups` (admin-only) returns unconfirmed, non-dismissed accounts from the
+  last 30 days attributed to that group, with `private.mask_email` (first 1–2 characters and the domain). The `admin-resend-verification`
+  Edge Function calls `claim_verification_resend` as the admin (authorisation, 10-minute limit, audit `verification_resent`), looks up
+  the address with the service role and calls `auth.resend({ type: 'signup' })`. `list_members` adds `email_confirmed` for admins only.
+- **Privacy:** Privacy policy and FAQ updated to describe the masked address shown to admins.
 - **Description:** Admins see people who requested sign-in from their group's game or invite link but haven't confirmed their
   email, with a partly hidden email address, and can send a fresh confirmation email. Members with an unconfirmed email get a
   **Not confirmed** badge. Admin-only, enforced in the database. The full email is never sent to the browser.

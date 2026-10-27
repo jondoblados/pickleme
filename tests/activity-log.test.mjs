@@ -25,3 +25,11 @@ test('empty export still has headers; unknown identity does not pretend to know 
   assert.ok(activityCsv([]).includes('Event ID'))
   assert.ok(activityCsv([{id:'1',action:'joined'}]).includes('System or unknown'))
 })
+
+test('activityTarget falls back to the masked email for unconfirmed sign-ups', async () => {
+  const { activityTarget } = await import('../src/lib/activity-log.js')
+  assert.equal(activityTarget({ target_name: 'Viv N', target_user_id: 'u' }), 'Viv N')
+  assert.equal(activityTarget({ target_name: null, target_user_id: 'u', details: { masked_email: 'ec•••@yahoo.com.sg' } }), 'ec•••@yahoo.com.sg')
+  assert.equal(activityTarget({ target_name: null, target_user_id: 'u', details: {} }), 'Unknown player')
+  assert.equal(activityTarget({ target_name: null, target_user_id: null, details: {} }), null)
+})

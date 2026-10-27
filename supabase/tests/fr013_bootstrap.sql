@@ -4,7 +4,9 @@ create role authenticated nologin;
 create schema auth;
 create schema extensions;
 create extension pgcrypto with schema extensions;
-create table auth.users(id uuid primary key,email text,aud text,role text,email_confirmed_at timestamptz);
+create table auth.users(id uuid primary key,email text,aud text,role text,email_confirmed_at timestamptz,
+  created_at timestamptz not null default now(),confirmation_sent_at timestamptz,deleted_at timestamptz,
+  raw_user_meta_data jsonb not null default '{}'::jsonb);
 create function auth.uid() returns uuid language sql stable as $$
   select nullif(coalesce(nullif(current_setting('request.jwt.claim.sub',true),''),
     nullif(current_setting('request.jwt.claims',true),'')::jsonb->>'sub'),'')::uuid;
