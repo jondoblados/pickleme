@@ -7,6 +7,7 @@ export type MyStatus = { status: 'playing' | 'waitlist' | null; position?: numbe
 export interface Me {
   user_id: string
   display_name: string | null
+  avatar_path?: string | null
   groups: { id: string; name: string; role: Role; timezone: string; default_capacity: number }[]
 }
 export interface GameSummary {
@@ -15,7 +16,7 @@ export interface GameSummary {
   playing: number; waitlist: number; me: MyStatus
 }
 export interface RosterEntry {
-  user_id: string; display_name: string; joined_at: string; rank: number
+  user_id: string; display_name: string; avatar_path?: string | null; joined_at: string; rank: number
   status: 'playing' | 'waitlist'; position: number
 }
 export interface GameDetail {
@@ -26,7 +27,7 @@ export interface GameDetail {
   me: MyStatus
   roster: RosterEntry[]
 }
-export interface Member { user_id: string; display_name: string | null; role: Role; joined_at: string
+export interface Member { user_id: string; display_name: string | null; avatar_path?: string | null; role: Role; joined_at: string
   /** Admins only: false when the member's email is not confirmed. null for everyone else. */
   email_confirmed?: boolean | null }
 export interface PendingSignup {
@@ -35,9 +36,9 @@ export interface PendingSignup {
 }
 export interface Invite {
   id: string; expires_at: string; max_uses: number; use_count: number; revoked_at: string | null; created_at: string
-  created_by_name: string; copyable: boolean; joined: { user_id: string; name: string; joined_at: string }[]
+  created_by_name: string; copyable: boolean; joined: { user_id: string; name: string; avatar_path?: string | null; joined_at: string }[]
 }
-export interface GameLinkJoin { user_id: string; name: string; joined_at: string; game_id: string | null; game: string; game_starts_at: string | null }
+export interface GameLinkJoin { user_id: string; name: string; avatar_path?: string | null; joined_at: string; game_id: string | null; game: string; game_starts_at: string | null }
 
 async function rpc<T>(fn: string, args: Record<string, unknown> = {}): Promise<T> {
   const { data, error } = await supabase.rpc(fn, args)

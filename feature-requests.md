@@ -26,6 +26,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-013 | Admin-only activity log | Implemented | 2026-10-26 | 2026-10-26 |
 | FR-014 | 6-digit sign-in code in the sign-in email | Implemented (v0.8.0, live) | 2026-10-27 | 2026-10-27 |
 | FR-015 | Admins see unconfirmed sign-ups and resend confirmation | Implemented (v0.9.0, live) | 2026-10-27 | 2026-10-27 |
+| FR-016 | Optional profile photos, visible to group members only | In progress (v0.10.0) | 2026-10-27 | — |
 
 ## Details
 
@@ -174,3 +175,14 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Description:** Admins see people who requested sign-in from their group's game or invite link but haven't confirmed their
   email, with a partly hidden email address, and can send a fresh confirmation email. Members with an unconfirmed email get a
   **Not confirmed** badge. Admin-only, enforced in the database. The full email is never sent to the browser.
+
+### FR-016 — Optional profile photos
+- **Status:** In progress (v0.10.0, PR open).
+- **Requested:** 2026-10-27 by Jon. Decision: visible to group members only.
+- **Description:** Members can add, change or remove a profile photo. Others see it next to the name on member lists, rosters,
+  invite join lists and the admin activity log; without one, initials on a colour derived from the user ID.
+- **Privacy:** private bucket; owner-only writes into `<user_id>/`; reads only by people sharing a group (`private.can_view_avatar`);
+  signed URLs (1 h); EXIF stripped by re-encoding in the browser; not in roster images; weekly orphan clean-up.
+- **Acceptance:** non-members and signed-out visitors cannot read a photo; a user cannot write or delete in another user's folder;
+  replaced photos are deleted; FAQ and privacy policy updated.
+

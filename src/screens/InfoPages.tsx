@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export const PRIVACY_CONTACT = 'jon@doblados.net'
-export const POLICY_UPDATED = '27 October 2026'
+export const POLICY_UPDATED = '28 October 2026'
 
 type Nav = (view: 'privacy' | 'faq') => void
 
@@ -46,6 +46,8 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
           we record which game or invite it came from (an invite is recorded as a one-way code, not the link itself). This lets that group's admins
           see that you are waiting to confirm and resend the email.</li>
         <li><b>Display name</b> — the name other members of your group see on game lists.</li>
+        <li><b>Profile photo (optional)</b> — if you add one. Your browser crops and resizes it to a small square and saves a new copy before
+          uploading, which removes hidden photo details such as location and camera information. If you don't add one, others see your initials.</li>
         <li><b>Group membership and role</b> — for example player, organiser or admin.</li>
         <li><b>Game sign-up records</b> — games you join, your playing or waitlist position, withdrawals, removals by an organiser, and when these happened.</li>
         <li><b>Attendance records</b> — whether an organiser marked you Present, No-show or Excused for a game you were on the playing list for, who marked it and when.</li>
@@ -63,6 +65,7 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         <li>Manage group membership and what each role can do.</li>
         <li>Process sign-ups, withdrawals and waitlist positions.</li>
         <li>Show game lists to members of your group.</li>
+        <li>Show your profile photo, if you add one, next to your name so members of your groups can recognise you.</li>
         <li>Email you when you move from the waitlist into the playing list.</li>
         <li>Let organisers record attendance and review attendance and repeat no-show reports for their group, so places go to people who turn up.</li>
         <li>Keep a group activity log so admins can see who changed what and resolve disputes.</li>
@@ -74,6 +77,9 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
       <h2>4. What other users can see</h2>
       <p>Members of your group can see your display name, your role, and your status in that group's games (playing or waitlist, and your position).
         Organisers can also remove a player from a game.</p>
+      <p>If you add a profile photo, only people who share a group with you can see it — on member lists, game lists, invite lists and, for admins,
+        the activity log. It is stored privately and shown through short-lived links that expire after an hour; it is never public and is not
+        included in roster images. People outside your groups, and anyone who isn't signed in, can't see it.</p>
       <p>Attendance records are visible only to that group's organisers and admins, not to other players. Organisers and admins can
         export attendance and repeat no-show reports for their group as spreadsheet (CSV) files; once exported, those files are their responsibility.</p>
       <p>Anyone who receives a game link (including a forwarded one) can sign in with a verified email and join that game's group in one step.
@@ -92,7 +98,7 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
 
       <h2>5. Service providers</h2>
       <ul>
-        <li><b>Supabase</b> — sign-in, database and back-end services (database hosted in Singapore).</li>
+        <li><b>Supabase</b> — sign-in, database, file storage for profile photos, and back-end services (hosted in Singapore).</li>
         <li><b>Resend</b> — delivers sign-in, confirmation and waitlist emails.</li>
         <li><b>GitHub Pages</b> — hosts the web app.</li>
         <li><b>Google Fonts</b> — supplies the fonts the app displays, so your browser connects to Google when you open PickleMe.</li>
@@ -116,6 +122,8 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         <li><b>Account, profile and membership:</b> while you have an account. Deleted when you ask us to close it.</li>
         <li><b>Game sign-up history:</b> the app shows past games for 60 days. We keep identifiable sign-up records for up to 12 months after a game, then delete or anonymise them.</li>
         <li><b>Attendance records:</b> kept for up to 12 months after a game, then deleted or anonymised together with sign-up records.</li>
+        <li><b>Profile photo:</b> until you change or remove it, or close your account. A replaced or removed photo is deleted straight away;
+          if that fails, or you close your account, a weekly clean-up deletes it within 7 days. No one else can see it in the meantime.</li>
         <li><b>Unconfirmed sign-ups:</b> shown to the group's admins for up to 30 days. If you never confirm, the operator may delete the unconfirmed account.</li>
         <li><b>Group activity log:</b> kept while the group exists, including after a game is deleted, so admins can review past changes.
           It keeps the names shown at the time. If you close your account, ask us and we'll remove or anonymise your name in it.</li>
@@ -127,7 +135,7 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
       <p>Email <Mail /> to:</p>
       <ul>
         <li>Ask what personal information we hold about you and how it has been used or disclosed.</li>
-        <li>Correct inaccurate information (you can change your display name yourself under your profile).</li>
+        <li>Correct inaccurate information (you can change your display name and profile photo yourself under your profile).</li>
         <li>Withdraw consent for us to use your information.</li>
         <li>Close your account and delete your information.</li>
         <li>Raise a privacy concern or complaint.</li>
@@ -186,6 +194,11 @@ export function Faq({ onNav }: { onNav: Nav }) {
           <b>Join group &amp; game</b>. You're added to the group and to the game (or its waitlist, if it's full) in one step.
           An organiser's group invite link also works: sign in, choose your display name, and you're added to the group.
           If you're signed in but see no games, ask for a game or invite link.</p>
+      </Q>
+      <Q q="Can I add a profile photo?">
+        <p>Yes, if you want to. Open the tab with your name and tap <b>Add photo</b>, choose a picture, drag and zoom to fit the circle, then tap
+          <b>Save photo</b>. Tap <b>Change photo</b> or <b>Remove photo</b> any time. Without a photo, others see your initials on a coloured circle.</p>
+        <p>Only people in your groups can see it. It isn't public and isn't shown on shared roster images.</p>
       </Q>
       <Q q="What name will other players see?">
         <p>The display name you choose the first time you sign in (up to 40 characters). Change it any time from the tab with your name.
@@ -296,6 +309,10 @@ export function Faq({ onNav }: { onNav: Nav }) {
         <p>No other player or organiser can see it in the app. It's used only to sign you in and send game emails.
           The one exception: if you started signing in from a group's link but haven't confirmed yet, that group's admins see a partly hidden
           version (like <b>ec•••@yahoo.com.sg</b>) so they can resend your confirmation email.</p>
+      </Q>
+      <Q q="Who can see my profile photo?">
+        <p>Only people who share a group with you, while signed in. It's stored privately, never public, and isn't included in roster images.
+          Location and camera details are removed before it's uploaded. Remove it any time from the tab with your name.</p>
       </Q>
       <Q q="How do I sign out or delete my account?">
         <p>Sign out from the tab with your name. To close your account and delete your information, email <Mail />.</p>
