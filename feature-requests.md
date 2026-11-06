@@ -27,7 +27,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-014 | 6-digit sign-in code in the sign-in email | Implemented (v0.8.0, live) | 2026-10-27 | 2026-10-27 |
 | FR-015 | Admins see unconfirmed sign-ups and resend confirmation | Implemented (v0.9.0, live) | 2026-10-27 | 2026-10-27 |
 | FR-016 | Optional profile photos, visible to group members only | In progress (v0.10.0) | 2026-10-27 | — |
-| FR-017 | Hourly weather forecasts for game venues | In progress (in review) | 2026-11-05 | — |
+| FR-017 | Hourly weather forecasts for game venues | Released (v0.11.0); hourly schedule pending | 2026-11-05 | — |
 
 ## Details
 
@@ -189,7 +189,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 
 
 ### FR-017 — Hourly weather forecasts for game venues
-- **Status:** In progress (in review, PR open; not deployed).
+- **Status:** Released (v0.11.0, 2026-11-07). Hourly schedule off until a test fetch with a configured venue succeeds.
 - **Requested:** 2026-11-05 by Jon. Decisions 2026-11-07: day-before overview covers the complete game date; game-day view runs
   from one hour before the start until one hour after the end; the venue is the address used for the game.
 - **Description:** From 00:00 the day before a game, the game page shows the forecast for the whole game date. On the game day it

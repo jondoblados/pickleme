@@ -1,6 +1,6 @@
 # FR-017 — Changi Business Park weather forecasts
 
-- Status: In progress — implementation on branch `feature/fr017-game-weather`, in review; not deployed.
+- Status: Released (v0.11.0, 2026-11-07); hourly schedule pending a test fetch with a configured venue.
 - Implementation notes: [docs/fr017-weather.md](../docs/fr017-weather.md).
 - Requested: 2026-11-05 by Jon.
 

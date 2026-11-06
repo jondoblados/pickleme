@@ -1,6 +1,6 @@
 # FR-017 — Game weather: design and rollout
 
-Status: implemented on branch `feature/fr017-game-weather`, in review. Nothing has been applied to production.
+Status: released in v0.11.0. Migration and function live; hourly schedule not yet enabled.
 
 ## Decisions (2026-11-07)
 
@@ -58,3 +58,5 @@ venues hides it.
 - 2026-11-07: Step 3 partly done. There were no upcoming games or venues, so `kick_weather_fetch()` correctly exited early.
   A direct call with the shared secret returned 200 `{"claimed":0,"ok":0,"failed":0}`; a wrong secret returned 401. No forecast has
   been fetched in production yet — that needs a configured venue and a game within the window.
+- 2026-11-07: Step 5 done first (merge-first order agreed) — v0.11.0 merged to `main`. Next: set up a venue on the next game, run the
+  test fetch, then enable the schedule (step 4).

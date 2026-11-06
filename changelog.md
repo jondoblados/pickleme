@@ -2,7 +2,9 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
-## Unreleased — FR-017 game weather (in review)
+## [0.11.0] — 2026-11-07 — FR-017 game weather
+
+The database and forecast function are live. The hourly schedule stays off until a test fetch with a real venue succeeds.
 
 ### Added
 - Weather card on the game page from the day before a game: a full-day overview of the game date, then on the game day an hourly
