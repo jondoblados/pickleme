@@ -35,6 +35,8 @@ const MESSAGES: Record<string, string> = {
   resend_too_soon: 'A confirmation email was sent to this person in the last 10 minutes. Please wait before sending another.',
   pending_signup_not_found: 'This person has already confirmed, or is no longer waiting to join this group.',
   already_confirmed: 'This person has already confirmed their email.',
+  weather_location_required: 'Add a location to this game before setting up weather.',
+  invalid_weather_venue: 'Choose an address from the search results, or enter a valid address and coordinates.',
   invalid_request: 'Something went wrong. Please refresh and try again.',
   send_failed: 'The confirmation email could not be sent right now. Please try again later.',
   over_email_send_rate_limit: 'PickleMe has reached its email limit for now. Please try again in about an hour.',
