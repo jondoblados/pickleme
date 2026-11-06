@@ -50,3 +50,11 @@ venues hides it.
 - Open-Meteo's grid point is about 4 km from Changi Business Park, so the card says "Forecast area near …".
 - "CBP1 L6 Multi-purpose Courts" does not match in OneMap; search "Changi Business Park" or the building address and confirm it.
 - Version bump (0.11.0) to be made at release.
+
+## Rollout log
+
+- 2026-11-07: Step 1 done — migration `game_weather` applied to production.
+- 2026-11-07: Step 2 done — `weather-fetch` deployed (version 1, `verify_jwt = false`).
+- 2026-11-07: Step 3 partly done. There were no upcoming games or venues, so `kick_weather_fetch()` correctly exited early.
+  A direct call with the shared secret returned 200 `{"claimed":0,"ok":0,"failed":0}`; a wrong secret returned 401. No forecast has
+  been fetched in production yet — that needs a configured venue and a game within the window.
