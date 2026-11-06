@@ -1,7 +1,15 @@
 # FR-017 — Changi Business Park weather forecasts
 
-- Status: Requested; mockup for review, not implemented.
+- Status: Released (v0.11.0, 2026-11-07); hourly schedule pending a test fetch with a configured venue.
+- Implementation notes: [docs/fr017-weather.md](../docs/fr017-weather.md).
 - Requested: 2026-11-05 by Jon.
+
+## Decisions (2026-11-07)
+
+- Day-before overview: the complete game date, 00:00–24:00 Singapore time.
+- Game-day window: one hour before the start until one hour after the end.
+- Venue: the address used for the game. The game's location text is mapped once, by an organiser or admin, to a
+  confirmed address and coordinates; every game in the group with the same location shares it.
 
 ## Requested behaviour
 

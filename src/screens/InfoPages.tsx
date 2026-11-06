@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export const PRIVACY_CONTACT = 'jon@doblados.net'
-export const POLICY_UPDATED = '28 October 2026'
+export const POLICY_UPDATED = '7 November 2026'
 
 type Nav = (view: 'privacy' | 'faq') => void
 
@@ -101,6 +101,10 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         <li><b>Supabase</b> — sign-in, database, file storage for profile photos, and back-end services (hosted in Singapore).</li>
         <li><b>Resend</b> — delivers sign-in, confirmation and waitlist emails.</li>
         <li><b>GitHub Pages</b> — hosts the web app.</li>
+        <li><b>Open-Meteo</b> — weather forecasts for game venues. PickleMe's server sends it only the venue's map coordinates;
+          no names, emails or game details.</li>
+        <li><b>OneMap</b> (Singapore Land Authority) — address search when an organiser sets up a venue's weather. It receives only the
+          text the organiser types.</li>
         <li><b>Google Fonts</b> — supplies the fonts the app displays, so your browser connects to Google when you open PickleMe.</li>
       </ul>
       <p>These providers only process what they need to deliver their service, such as your email address, sign-in data or technical request details
@@ -232,6 +236,14 @@ export function Faq({ onNav }: { onNav: Nav }) {
       </Q>
       <Q q="Where are past games?">
         <p>Tap <b>Show past games</b> at the bottom of the Games tab to see games from the last 60 days.</p>
+      </Q>
+      <Q q="How does the weather forecast work?">
+        <p>For venues an organiser has set up, the game page shows a forecast from the day before the game: an overview of the whole game day,
+          then on the day itself an hourly view from one hour before the game until one hour after it ends. It updates every hour from
+          Open-Meteo for the area around the venue, so conditions at the court can differ. The forecast is for information only —
+          any cancellation will come from your organiser.</p>
+        <p>Organisers and admins: open a game and tap <b>Set up weather</b>, search for the venue's address and choose the right one.
+          Every game in your group with the same location then shows the forecast. If you change a game's location, set it up again for the new venue.</p>
       </Q>
       <Q q="How do I share a game?">
         <p>On the game page use <b>Copy game link</b>, <b>Copy WhatsApp message</b> or <b>Open in WhatsApp</b>.

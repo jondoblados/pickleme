@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import type { WeatherResponse } from './weather-core.js'
 
 export type Role = 'player' | 'organiser' | 'admin'
 export type GameStatus = 'open' | 'closed' | 'cancelled'
@@ -78,6 +79,11 @@ export const api = {
   listPendingSignups: (groupId: string) => rpc<PendingSignup[]>('list_pending_signups', { p_group_id: groupId }),
   dismissPendingSignup: (groupId: string, userId: string) =>
     rpc('dismiss_pending_signup', { p_group_id: groupId, p_user_id: userId }),
+  /** FR-017: cached forecast for a game (never calls the weather provider). */
+  getWeather: (gameId: string) => rpc<WeatherResponse>('get_game_weather', { p_game_id: gameId }),
+  saveWeatherVenue: (gameId: string, address: string, latitude: number, longitude: number) =>
+    rpc<{ id: string; address: string }>('save_weather_venue', { p_game_id: gameId, p_address: address, p_latitude: latitude, p_longitude: longitude }),
+  removeWeatherVenue: (gameId: string) => rpc<boolean>('remove_weather_venue', { p_game_id: gameId }),
   /** Admin-only; the Edge Function looks up the address server-side, so the browser never sees it. */
   resendVerification: async (groupId: string, userId: string) => {
     const { data, error } = await supabase.functions.invoke('admin-resend-verification',

@@ -7,6 +7,7 @@ import { fmtDay, fmtRange } from '../lib/time'
 import { copyText } from '../lib/clipboard'
 import { ConfirmButton, Notice, Spinner, useToast } from '../components/ui'
 import { Avatar } from '../components/Avatar'
+import { WeatherCard } from '../components/WeatherCard'
 
 export function shareMessage(d: GameDetail, url: string) {
   const tz = d.group.timezone
@@ -184,6 +185,8 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
             onConfirm={() => act(() => api.withdraw(game.id), () => 'You have withdrawn.')}>Withdraw</ConfirmButton>}
         </div>
       </section>
+
+      {game.status !== 'cancelled' && <WeatherCard gameId={game.id} refreshKey={`${game.location}|${game.starts_at}|${game.ends_at}|${game.status}`} />}
 
       <div className="lists">
         <section className="list-block">

@@ -2,6 +2,20 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.11.0] — 2026-11-07 — FR-017 game weather
+
+The database and forecast function are live. The hourly schedule stays off until a test fetch with a real venue succeeds.
+
+### Added
+- Weather card on the game page from the day before a game: a full-day overview of the game date, then on the game day an hourly
+  view from one hour before the start until one hour after the end (Open-Meteo, refreshed hourly).
+- Organisers and admins can set up a venue for a game's location with OneMap address search or coordinates; every game in the
+  group with the same location uses it. Changes are recorded in the activity log.
+- `weather-fetch` Edge Function, `game_weather` migration, database tests and CI checks.
+
+### Changed
+- Privacy policy lists Open-Meteo and OneMap; FAQ explains the forecast.
+
 ## [0.10.0] — 2026-10-28 — FR-016 profile photos
 
 ### Added

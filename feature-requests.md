@@ -27,6 +27,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-014 | 6-digit sign-in code in the sign-in email | Implemented (v0.8.0, live) | 2026-10-27 | 2026-10-27 |
 | FR-015 | Admins see unconfirmed sign-ups and resend confirmation | Implemented (v0.9.0, live) | 2026-10-27 | 2026-10-27 |
 | FR-016 | Optional profile photos, visible to group members only | In progress (v0.10.0) | 2026-10-27 | — |
+| FR-017 | Hourly weather forecasts for game venues | Released (v0.11.0); hourly schedule pending | 2026-11-05 | — |
 
 ## Details
 
@@ -186,3 +187,15 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Acceptance:** non-members and signed-out visitors cannot read a photo; a user cannot write or delete in another user's folder;
   replaced photos are deleted; FAQ and privacy policy updated.
 
+
+### FR-017 — Hourly weather forecasts for game venues
+- **Status:** Released (v0.11.0, 2026-11-07). Hourly schedule off until a test fetch with a configured venue succeeds.
+- **Requested:** 2026-11-05 by Jon. Decisions 2026-11-07: day-before overview covers the complete game date; game-day view runs
+  from one hour before the start until one hour after the end; the venue is the address used for the game.
+- **Description:** From 00:00 the day before a game, the game page shows the forecast for the whole game date. On the game day it
+  shows hourly conditions from one hour before the start until one hour after the end. Data comes from Open-Meteo, refreshed
+  every hour by a scheduled Edge Function (`weather-fetch`) while an eligible game exists. Organisers and admins map a game's
+  location text once to a confirmed address and coordinates (OneMap search or manual entry); all of the group's games with that
+  location share it.
+- **Privacy:** Open-Meteo receives only venue coordinates; OneMap receives only the organiser's search text. Privacy policy and FAQ updated.
+- **Details:** [feature-requests/FR-017-weather.md](feature-requests/FR-017-weather.md), [docs/fr017-weather.md](docs/fr017-weather.md).
