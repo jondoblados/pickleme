@@ -207,6 +207,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Description:** Replace the rectangle table in the roster image with avatar circles and names in a three-column
   list. Free playing places become empty circles numbered `#10`, `#11`, and so on; waitlist places become circles
   labelled `WL1`, `WL2`, with the player's avatar and name when filled.
-- **Open questions:** initials only (as FR-016 keeps photos out of roster images) or real photos; how many open
-  waitlist placeholders to show; one continuous grid or separate Playing and Waitlist groups.
+- **Decisions (2026-11-09):** profile photo where set, otherwise initials (changes the FR-016 rule; privacy policy
+  to be updated); Waitlist section only when someone is waitlisted, showing filled plus open placeholders; separate
+  Playing and Waitlist sections. Mockup for review.
 - **Details:** [feature-requests/FR-018-roster-avatars.md](feature-requests/FR-018-roster-avatars.md).

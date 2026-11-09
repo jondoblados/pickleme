@@ -1,6 +1,6 @@
 # FR-018 — Roster image with avatar circles
 
-- Status: Requested; not implemented.
+- Status: Requested; mockup for review, not implemented.
 - Requested: 2026-11-09 by Jon.
 - Builds on: FR-012 (roster image sharing) and FR-016 (profile photos).
 
@@ -18,24 +18,32 @@ three-column list.
 - Keep everything else in the image: header (title, date, time, location), Playing count and Waitlist count,
   snapshot time with timezone, and the "image does not update" note.
 
+## Decisions (2026-11-09)
+
+- **Avatars:** use the player's profile photo when they have set one, otherwise initials on their user-ID colour.
+  This changes the FR-016 rule that photos are kept out of roster images, so the privacy policy and FAQ must be
+  updated when this ships (the image is shared into WhatsApp, outside the group).
+- **Waitlist:** show the Waitlist section only when at least one player is waitlisted. When shown, list the filled
+  places plus the open placeholders, as today (`WL1`–`WL8`, growing if more than eight are waiting).
+- **Layout:** separate Playing and Waitlist sections, each a three-column list. Mockup:
+  `mockups/fr018-review/` in the project files.
+
 ## Proposed details (for review)
 
-- **Avatar content:** initials on the colour already derived from the user ID (FR-016 fallback). FR-016 decided
-  profile photos are visible to group members only and are not included in roster images, because the image is
-  shared into WhatsApp. Using real photos here would change that decision and needs Jon's confirmation.
 - **Visual distinction:** playing avatars solid; free places as dashed or outlined circles with `#n`; waitlist in
   the existing cream tone with a `WL` label so players can tell the sections apart without colour alone.
-- **Section order:** Playing first, then a separate Waitlist group, or continue the same grid as today.
-  To be decided on the mockup.
-- **Waitlist placeholders:** the current image shows 8 waitlist places (W1–W8). Confirm whether to keep 8, show
-  fewer (e.g. 3), or show only filled waitlist places plus the next open one.
+- **Numbering:** players carry a small number badge (1, 2, ...); open places show `#n` inside a dashed circle with
+  "Open"; waitlisted players carry a `WL1` badge, open waitlist places a dashed amber `WLn` circle.
+- **Photos in the image:** drawn from the signed URL at generation time; if a photo fails to load, fall back to initials
+  rather than failing the image.
 - **Long names:** wrap to two lines, then truncate with an ellipsis; never drop a player.
 - **Large rosters:** the image grows in height as today; no names omitted.
 
 ## Acceptance
 
-- A 16-player game with 16 playing and 1 waitlisted shows 16 named avatars, `WL1` with the waitlisted name, and
-  the agreed number of open `WL` placeholders.
+- A 16-player game with 16 playing and 1 waitlisted shows 16 named avatars, a Waitlist section with `WL1` and the
+  waitlisted name, and open placeholders `WL2`–`WL8`.
+- A game with nobody waitlisted has no Waitlist section.
 - A game with free places shows `#n` circles for each free place, numbered after the last player.
-- No profile photos appear unless Jon approves changing the FR-016 decision.
+- Players with a profile photo appear with it; others with initials. Privacy policy and FAQ updated.
 - Existing roster-image tests updated; mockup reviewed before implementation.
