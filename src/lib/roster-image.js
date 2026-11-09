@@ -3,15 +3,16 @@ import { avatarColour, initials } from './avatar-core.js'
 
 const C = { ink: '#14382b', muted: '#647269', lime: '#d9f280', ball: '#d9f24a', amber: '#8a5a00',
   openRing: '#9fb3a7', openFill: '#f4f8f5', openText: '#4c6b5b', openName: '#8a978f', divider: '#d9dfd6' }
-// Wordmark font matches the app header (--display in styles.css); loaded by index.html from Google Fonts.
+// Fonts match the app (--display and --body in styles.css); loaded by index.html from Google Fonts.
 const BRAND_FONT = "'Bricolage Grotesque', 'Figtree', system-ui, sans-serif"
-const BODY_FONT = 'system-ui, sans-serif'
+const BODY_FONT = "'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif"
 
-/** Make sure the wordmark font is ready before drawing; falls back silently if it can't load in time. */
+/** Make sure the app fonts are ready before drawing; falls back silently if it can't load in time. */
 async function loadBrandFont(timeoutMs = 3000) {
   if (typeof document === 'undefined' || !document.fonts?.load) return
   try {
-    await Promise.race([document.fonts.load("800 36px 'Bricolage Grotesque'", 'PickleMe'), new Promise(r => setTimeout(r, timeoutMs))])
+    const faces = ["800 36px 'Bricolage Grotesque'", "400 24px 'Figtree'", "600 24px 'Figtree'", "700 24px 'Figtree'"]
+    await Promise.race([Promise.all(faces.map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, timeoutMs))])
   } catch { /* fall back to Figtree / system font */ }
 }
 
@@ -80,8 +81,8 @@ export async function renderRosterImage(model, makeCanvas = () => document.creat
   if (!ctx) throw new Error('Image generation is unavailable in this browser.')
   await loadBrandFont()
   const setFont = (size, weight = 400, family = BODY_FONT) => { ctx.font = `${weight} ${size}px ${family}` }
-  const wrap = (value, size, width, weight = 400) => { setFont(size, weight); return lines(ctx, value, width) }
-  const title = wrap(model.title, 44, CONTENT, 700)
+  const wrap = (value, size, width, weight = 400, family = BODY_FONT) => { setFont(size, weight, family); return lines(ctx, value, width) }
+  const title = wrap(model.title, 44, CONTENT, 800, BRAND_FONT)
   const date = wrap(model.date, 29, CONTENT, 600)
   const time = wrap(model.time, 27, CONTENT)
   const location = wrap(model.location || 'Location not specified', 25, CONTENT)
@@ -110,8 +111,8 @@ export async function renderRosterImage(model, makeCanvas = () => document.creat
   }
   const width = (value, size, weight = 400, family = BODY_FONT) => { setFont(size, weight, family); return ctx.measureText(String(value)).width }
   const centred = (value, cx, y, size, fill, weight) => text(value, cx - width(value, size, weight) / 2, y, size, fill, weight)
-  const drawLines = (parts, x, y, size, fill = C.ink, weight = 400, step = size + 7) => {
-    parts.forEach((part, i) => text(part, x, y + i * step, size, fill, weight))
+  const drawLines = (parts, x, y, size, fill = C.ink, weight = 400, step = size + 7, family = BODY_FONT) => {
+    parts.forEach((part, i) => text(part, x, y + i * step, size, fill, weight, family))
   }
   const circle = (cx, cy, r, fill, stroke, lineWidth = 0, dash = null) => {
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.closePath()
@@ -178,20 +179,20 @@ export async function renderRosterImage(model, makeCanvas = () => document.creat
   text('Pickle', LEFT + 54, 42, 36, '#ffffff', 800, BRAND_FONT)
   text('Me', LEFT + 54 + width('Pickle', 36, 800, BRAND_FONT), 42, 36, C.ball, 800, BRAND_FONT)
   if ('letterSpacing' in ctx) ctx.letterSpacing = '0px'
-  drawLines(title, LEFT, 94, 44, '#ffffff', 700)
+  drawLines(title, LEFT, 94, 44, '#ffffff', 800, 51, BRAND_FONT)
   drawLines(date, LEFT, dateTop, 29, '#ffffff', 600)
   drawLines(time, LEFT, timeTop, 27, '#ffffff')
   drawLines(location, LEFT, locationTop, 25, '#ffffff')
 
   const free = model.capacity - model.playing.length
-  text(`PLAYING  ${model.playing.length} / ${model.capacity}`, LEFT, headerBottom + 24, 31, C.ink, 700)
+  text(`PLAYING  ${model.playing.length} / ${model.capacity}`, LEFT, headerBottom + 24, 31, C.ink, 800, BRAND_FONT)
   const status = free ? `${free} ${free === 1 ? 'place' : 'places'} open` : 'Full'
   text(status, RIGHT - width(status, 25), headerBottom + 29, 25, C.muted)
   drawGrid(layout.playing, playingTop)
 
   if (layout.showWaitlist) {
     rect(LEFT, playingEnd + 28, CONTENT, 2, C.divider)
-    text(`WAITLIST  ${model.waitlist.length}`, LEFT, waitHeadTop, 31, C.amber, 700)
+    text(`WAITLIST  ${model.waitlist.length}`, LEFT, waitHeadTop, 31, C.amber, 800, BRAND_FONT)
     const hint = 'In order — first in line gets the next place'
     text(hint, RIGHT - width(hint, 22), waitHeadTop + 7, 22, C.muted)
     drawGrid(layout.waitlist, waitTop)

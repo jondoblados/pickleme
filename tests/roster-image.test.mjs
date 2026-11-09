@@ -3,6 +3,8 @@ import assert from 'node:assert/strict'
 import { rosterLayout, renderRosterImage } from '../src/lib/roster-image.js'
 const names = Array.from({ length: 16 }, (_, i) => `Player ${i+1}`)
 
+const NAME_FONT = "600 25px 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif"
+
 test('playing section has every place in three columns; open places are labelled #n', () => {
   const l = rosterLayout(16, names.slice(0, 9), [])
   assert.equal(l.width, 900); assert.equal(l.columns, 3); assert.equal(l.playingRows, 6)
@@ -53,7 +55,9 @@ test('PNG shows header wordmark, names, initials, number badges and open places 
   assert.equal(blob.type, 'image/png'); assert.equal(c.width, 900)
   const s = strings(c)
   assert.ok(s.includes('Pickle') && s.includes('Me'))
-  assert.ok(c.drawn.some(t => t.s === 'Jon' && t.font === '600 25px system-ui, sans-serif'))
+  assert.ok(c.drawn.some(t => t.s === 'Jon' && t.font === NAME_FONT))
+  assert.ok(c.drawn.some(t => t.s === 'Pickle' && /^800 36px 'Bricolage Grotesque'/.test(t.font)), 'wordmark uses the app display font')
+  assert.ok(c.drawn.some(t => t.s.startsWith('PLAYING') && /^800 31px 'Bricolage Grotesque'/.test(t.font)), 'section heading uses the app display font')
   assert.ok(s.includes('李明')); assert.ok(s.includes('J')); assert.ok(s.includes('1')); assert.ok(s.includes('2'))
   assert.ok(s.includes('#3') && s.includes('#16')); assert.equal(s.filter(x => x === 'Open').length, 14)
   assert.ok(s.includes('14 places open'))
@@ -82,9 +86,9 @@ test('photos are drawn in the circle; a photo that fails to draw falls back to i
 test('long names wrap to two lines and end with an ellipsis; tall rosters grow', async () => {
   const c = canvas()
   await renderRosterImage({ ...model, title: 'Long title '.repeat(12), location: 'Long court '.repeat(15), playing: ['A'.repeat(40)] }, () => c)
-  const pieces = c.drawn.filter(t => /^A+…?$/.test(t.s) && t.font === '600 25px system-ui, sans-serif')
+  const pieces = c.drawn.filter(t => /^A+…?$/.test(t.s) && t.font === NAME_FONT)
   assert.equal(pieces.length, 2); assert.ok(pieces[1].s.endsWith('…'))
-  assert.ok(pieces.every(t => t.font === '600 25px system-ui, sans-serif'))
+  assert.ok(pieces.every(t => t.font === NAME_FONT))
   const short = canvas(); await renderRosterImage(model, () => short)
   const tall = canvas(); await renderRosterImage({ ...model, capacity: 16, playing: names, waitlist: names.slice(0, 10) }, () => tall)
   assert.ok(tall.height > short.height + 4 * 96 - 1)
