@@ -1,6 +1,6 @@
 # FR-018 — Roster image with avatar circles
 
-- Status: Requested; mockup for review, not implemented.
+- Status: Implemented — v0.12.0, released 2026-11-09 (PR #10).
 - Requested: 2026-11-09 by Jon.
 - Builds on: FR-012 (roster image sharing) and FR-016 (profile photos).
 
@@ -24,7 +24,7 @@ three-column list.
   updated when this ships (the image is shared into WhatsApp, outside the group).
 - **Waitlist:** show the Waitlist section only when at least one player is waitlisted, and show exactly the waitlisted
   players (`WL1`, `WL2`, ...) with no open waitlist placeholders: 2 waitlisted shows 2, 10 waitlisted shows all 10.
-- **Header:** show the PickleMe pickleball icon beside the PickleMe wordmark in the image header.
+- **Header:** show the PickleMe pickleball icon beside the PickleMe wordmark in the image header, styled like the app header: Bricolage Grotesque 800, "Pickle" in white and "Me" in ball lime (#d9f24a). The game title and section headings also use Bricolage Grotesque; names and other text use Figtree, as in the app.
 - **Layout:** separate Playing and Waitlist sections, each a three-column list. Mockup:
   `mockups/fr018-review/` in the project files.
 

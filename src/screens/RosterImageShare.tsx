@@ -5,6 +5,7 @@ import { fmtRange } from '../lib/time'
 import { friendlyError } from '../lib/errors'
 import { renderRosterImage } from '../lib/roster-image.js'
 import { copyText } from '../lib/clipboard'
+import { loadAvatarImage } from '../lib/avatar'
 import { Notice } from '../components/ui'
 
 type Prepared = { file: File; url: string; caption: string; snapshot: string }
@@ -32,11 +33,19 @@ export function RosterImageShare({ gameId }: { gameId: string }) {
       const tz = d.group.timezone
       const date = new Intl.DateTimeFormat('en-SG', { timeZone: tz, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(d.game.starts_at))
       const snapshot = new Intl.DateTimeFormat('en-SG', { timeZone: tz, day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(new Date()) + ` (${tz})`
-      const playing = d.roster.filter(r => r.status === 'playing').sort((a,b) => a.position - b.position).map(r => r.display_name)
-      const waitlist = d.roster.filter(r => r.status === 'waitlist').sort((a,b) => a.position - b.position).map(r => r.display_name)
+      const ordered = (status: 'playing' | 'waitlist') => d.roster.filter(r => r.status === status).sort((a,b) => a.position - b.position)
+      // FR-018: profile photos where set (fetched in parallel); any that fail or time out fall back to initials.
+      const withPhotos = (rows: ReturnType<typeof ordered>) => Promise.all(rows.map(async r =>
+        ({ name: r.display_name, userId: r.user_id, photo: await loadAvatarImage(r.avatar_path) })))
+      const [playingRows, waitlistRows] = [ordered('playing'), ordered('waitlist')]
+      const [playingEntries, waitlistEntries] = await Promise.all([withPhotos(playingRows), withPhotos(waitlistRows)])
+      if (request.current !== id) return
+      const playing = playingRows.map(r => r.display_name)
+      const waitlist = waitlistRows.map(r => r.display_name)
       const title = d.game.status === 'cancelled' ? `CANCELLED: ${d.game.title}` : d.game.status === 'closed' ? `REGISTRATION CLOSED: ${d.game.title}` : d.game.title
       const time = `${fmtRange(d.game.starts_at, d.game.ends_at, tz)} (${tz})`
-      const blob = await renderRosterImage({ title, date, time, location: d.game.location, capacity: d.game.capacity, playing, waitlist, snapshot })
+      const blob = await renderRosterImage({ title, date, time, location: d.game.location, capacity: d.game.capacity, playing: playingEntries, waitlist: waitlistEntries, snapshot })
+      for (const e of [...playingEntries, ...waitlistEntries]) e.photo?.close()
       if (request.current !== id) return
       const file = new File([blob], `pickleme-roster-${d.game.id}.png`, { type: 'image/png' })
       const url = URL.createObjectURL(file); imageUrl.current = url
@@ -61,13 +70,13 @@ export function RosterImageShare({ gameId }: { gameId: string }) {
   return <section className="share card stack" aria-label="Share roster image">
     <h2>Share roster image</h2>
     <p>Preview a fresh Playing and Waitlist snapshot before sharing it in WhatsApp.</p>
-    <p className="small muted">Organisers and admins only. Display names will be visible to recipients and the image can be forwarded. Attendance and email addresses are not included. Images are generated on this device, not published to a public image URL.</p>
+    <p className="small muted">Organisers and admins only. Display names and profile photos (where set) will be visible to recipients and the image can be forwarded. Attendance and email addresses are not included. Images are generated on this device, not published to a public image URL.</p>
     <div className="row wrap"><button className="btn btn-primary" disabled={busy} onClick={generate}>{busy ? 'Working…' : prepared ? 'Refresh image from latest roster' : 'Generate roster preview'}</button></div>
     {error && <Notice tone="error">{error}</Notice>}
     {notice && <p role="status">{notice}</p>}
     {prepared && <>
       <p className="small muted">Snapshot: {prepared.snapshot}. This prepared image will not update automatically.</p>
-      <img src={prepared.url} alt="Game roster snapshot with numbered Playing and Waitlist grids" style={{ width: '100%', maxWidth: 600, height: 'auto', display: 'block' }}/>
+      <img src={prepared.url} alt="Game roster snapshot with numbered Playing and Waitlist lists" style={{ width: '100%', maxWidth: 600, height: 'auto', display: 'block' }}/>
       <div className="row wrap">
         {canShare && <button className="btn btn-whatsapp" disabled={busy} onClick={share}>Share prepared image…</button>}
         <a className="btn" href={prepared.url} download={prepared.file.name}>Download PNG</a>

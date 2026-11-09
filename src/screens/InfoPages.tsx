@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export const PRIVACY_CONTACT = 'jon@doblados.net'
-export const POLICY_UPDATED = '7 November 2026'
+export const POLICY_UPDATED = '9 November 2026'
 
 type Nav = (view: 'privacy' | 'faq') => void
 
@@ -78,14 +78,16 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
       <p>Members of your group can see your display name, your role, and your status in that group's games (playing or waitlist, and your position).
         Organisers can also remove a player from a game.</p>
       <p>If you add a profile photo, only people who share a group with you can see it — on member lists, game lists, invite lists and, for admins,
-        the activity log. It is stored privately and shown through short-lived links that expire after an hour; it is never public and is not
-        included in roster images. People outside your groups, and anyone who isn't signed in, can't see it.</p>
+        the activity log. It is stored privately and shown through short-lived links that expire after an hour; it is never public.
+        People outside your groups, and anyone who isn't signed in, can't see it in the app. It does appear in roster images, described below.</p>
       <p>Attendance records are visible only to that group's organisers and admins, not to other players. Organisers and admins can
         export attendance and repeat no-show reports for their group as spreadsheet (CSV) files; once exported, those files are their responsibility.</p>
       <p>Anyone who receives a game link (including a forwarded one) can sign in with a verified email and join that game's group in one step.
         Once they join, they become a group member and can see the group's game lists like any other member.</p>
       <p>Organisers and admins can make a roster image (a picture of the Playing and Waitlist lists with display names) to share in WhatsApp.
-        It doesn't include emails or attendance, but once shared it can be forwarded and won't update.</p>
+        It shows each player's profile photo if they've added one, otherwise their initials. It doesn't include emails or attendance.
+        Once shared, the image — including any photos in it — can be seen by everyone in that chat, can be forwarded, and won't update.
+        If you don't want your photo in shared roster images, remove it from the tab with your name.</p>
       <p>The group activity log is visible only to that group's admins, who can export it as a spreadsheet (CSV) file; once exported, that file is their responsibility.</p>
       <p>Your full email address is not shown to other players, organisers or admins anywhere in the app. Only the operator can see it,
         through the back-end systems used to run PickleMe, and only to operate and support the service.</p>
@@ -202,7 +204,7 @@ export function Faq({ onNav }: { onNav: Nav }) {
       <Q q="Can I add a profile photo?">
         <p>Yes, if you want to. Open the tab with your name and tap <b>Add photo</b>, choose a picture, drag and zoom to fit the circle, then tap
           <b>Save photo</b>. Tap <b>Change photo</b> or <b>Remove photo</b> any time. Without a photo, others see your initials on a coloured circle.</p>
-        <p>Only people in your groups can see it. It isn't public and isn't shown on shared roster images.</p>
+        <p>Only people in your groups can see it in the app. It isn't public, but it does appear on roster images organisers share in WhatsApp.</p>
       </Q>
       <Q q="What name will other players see?">
         <p>The display name you choose the first time you sign in (up to 40 characters). Change it any time from the tab with your name.
@@ -289,7 +291,8 @@ export function Faq({ onNav }: { onNav: Nav }) {
       <Q q="How do I share the roster as an image?">
         <p>Organisers and admins: open the game and use <b>Share roster image</b>. Tap <b>Generate roster preview</b>, check it, then share it to
           WhatsApp or download the PNG and paste the caption. The image is a snapshot and doesn't update; the caption includes the game link for the latest list.
-          It shows display names only, so share it with your group.</p>
+          It shows display names and, for players who've added one, their profile photo (others show initials), so share it with your group.
+          Waitlisted players appear in their own section, and open places are shown as numbered circles.</p>
       </Q>
       <Q q="What is the Activity log?">
         <p>Admins only. The <b>Activity log</b> tab lists what happened in your group: who joined the group or a game, withdrew or was removed, game edits,
@@ -323,7 +326,8 @@ export function Faq({ onNav }: { onNav: Nav }) {
           version (like <b>ec•••@yahoo.com.sg</b>) so they can resend your confirmation email.</p>
       </Q>
       <Q q="Who can see my profile photo?">
-        <p>Only people who share a group with you, while signed in. It's stored privately, never public, and isn't included in roster images.
+        <p>In the app, only people who share a group with you, while signed in. It's stored privately and never public. It is also included in
+          roster images that organisers and admins share in WhatsApp, where anyone in that chat can see it and the image can be forwarded.
           Location and camera details are removed before it's uploaded. Remove it any time from the tab with your name.</p>
       </Q>
       <Q q="How do I sign out or delete my account?">
