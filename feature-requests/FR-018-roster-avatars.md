@@ -24,7 +24,7 @@ three-column list.
   updated when this ships (the image is shared into WhatsApp, outside the group).
 - **Waitlist:** show the Waitlist section only when at least one player is waitlisted, and show exactly the waitlisted
   players (`WL1`, `WL2`, ...) with no open waitlist placeholders: 2 waitlisted shows 2, 10 waitlisted shows all 10.
-- **Header:** show the PickleMe pickleball icon beside the PickleMe wordmark in the image header.
+- **Header:** show the PickleMe pickleball icon beside the PickleMe wordmark in the image header, styled like the app header: Bricolage Grotesque 800, "Pickle" in white and "Me" in ball lime (#d9f24a).
 - **Layout:** separate Playing and Waitlist sections, each a three-column list. Mockup:
   `mockups/fr018-review/` in the project files.
 

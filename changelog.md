@@ -7,7 +7,7 @@ All notable work on PickleMe, newest first. Phases refer to the PickleMe Impleme
 ### Changed
 - **Roster image** redesigned: avatar circles with names in three columns, numbered in signup order. Open places are dashed
   circles labelled `#10`, `#11`, ... A separate Waitlist section appears only when someone is waitlisted and lists exactly
-  those players (`WL1`, `WL2`, ...). The header shows the PickleMe pickleball icon.
+  those players (`WL1`, `WL2`, ...). The header shows the PickleMe pickleball icon and the same wordmark as the app header (Bricolage Grotesque, "Pickle" in white, "Me" in lime).
 - Players' profile photos appear in the roster image where set, otherwise initials on their colour. A photo that can't be
   loaded within 6 seconds falls back to initials.
 - Names and titles wrap at word boundaries; names longer than two lines end with an ellipsis.

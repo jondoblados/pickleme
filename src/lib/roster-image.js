@@ -3,6 +3,18 @@ import { avatarColour, initials } from './avatar-core.js'
 
 const C = { ink: '#14382b', muted: '#647269', lime: '#d9f280', ball: '#d9f24a', amber: '#8a5a00',
   openRing: '#9fb3a7', openFill: '#f4f8f5', openText: '#4c6b5b', openName: '#8a978f', divider: '#d9dfd6' }
+// Wordmark font matches the app header (--display in styles.css); loaded by index.html from Google Fonts.
+const BRAND_FONT = "'Bricolage Grotesque', 'Figtree', system-ui, sans-serif"
+const BODY_FONT = 'system-ui, sans-serif'
+
+/** Make sure the wordmark font is ready before drawing; falls back silently if it can't load in time. */
+async function loadBrandFont(timeoutMs = 3000) {
+  if (typeof document === 'undefined' || !document.fonts?.load) return
+  try {
+    await Promise.race([document.fonts.load("800 36px 'Bricolage Grotesque'", 'PickleMe'), new Promise(r => setTimeout(r, timeoutMs))])
+  } catch { /* fall back to Figtree / system font */ }
+}
+
 const WIDTH = 900, LEFT = 48, RIGHT = 852, CONTENT = RIGHT - LEFT, COLS = 3, COL_GAP = 18
 const CELL_W = (CONTENT - COL_GAP * (COLS - 1)) / COLS
 const AV = 68, NAME_X = AV + 18, NAME_W = CELL_W - NAME_X, NAME_SIZE = 25, NAME_LINE = 30
@@ -66,7 +78,8 @@ export async function renderRosterImage(model, makeCanvas = () => document.creat
   const layout = rosterLayout(model.capacity, model.playing, model.waitlist)
   const canvas = makeCanvas(), ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('Image generation is unavailable in this browser.')
-  const setFont = (size, weight = 400) => { ctx.font = `${weight} ${size}px system-ui, sans-serif` }
+  await loadBrandFont()
+  const setFont = (size, weight = 400, family = BODY_FONT) => { ctx.font = `${weight} ${size}px ${family}` }
   const wrap = (value, size, width, weight = 400) => { setFont(size, weight); return lines(ctx, value, width) }
   const title = wrap(model.title, 44, CONTENT, 700)
   const date = wrap(model.date, 29, CONTENT, 600)
@@ -92,10 +105,10 @@ export async function renderRosterImage(model, makeCanvas = () => document.creat
   canvas.width = WIDTH; canvas.height = height; ctx.textBaseline = 'top'
 
   const rect = (x, y, w, h, fill) => { ctx.fillStyle = fill; ctx.fillRect(x, y, w, h) }
-  const text = (value, x, y, size, fill = C.ink, weight = 400) => {
-    setFont(size, weight); ctx.fillStyle = fill; ctx.fillText(String(value), x, y)
+  const text = (value, x, y, size, fill = C.ink, weight = 400, family = BODY_FONT) => {
+    setFont(size, weight, family); ctx.fillStyle = fill; ctx.fillText(String(value), x, y)
   }
-  const width = (value, size, weight = 400) => { setFont(size, weight); return ctx.measureText(String(value)).width }
+  const width = (value, size, weight = 400, family = BODY_FONT) => { setFont(size, weight, family); return ctx.measureText(String(value)).width }
   const centred = (value, cx, y, size, fill, weight) => text(value, cx - width(value, size, weight) / 2, y, size, fill, weight)
   const drawLines = (parts, x, y, size, fill = C.ink, weight = 400, step = size + 7) => {
     parts.forEach((part, i) => text(part, x, y + i * step, size, fill, weight))
@@ -160,8 +173,11 @@ export async function renderRosterImage(model, makeCanvas = () => document.creat
   rect(20, 24, WIDTH - 40, height - 48, '#ffffff')
   rect(20, 24, WIDTH - 40, headerBottom - 24, C.ink)
   ballIcon(LEFT, 40, 42)
-  text('Pickle', LEFT + 54, 43, 36, C.lime, 600)
-  text('Me', LEFT + 54 + width('Pickle', 36, 600), 43, 36, C.lime, 800)
+  // Same wordmark as the app header: Bricolage Grotesque 800, "Pickle" in white, "Me" in ball lime.
+  if ('letterSpacing' in ctx) ctx.letterSpacing = '-0.72px'
+  text('Pickle', LEFT + 54, 42, 36, '#ffffff', 800, BRAND_FONT)
+  text('Me', LEFT + 54 + width('Pickle', 36, 800, BRAND_FONT), 42, 36, C.ball, 800, BRAND_FONT)
+  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px'
   drawLines(title, LEFT, 94, 44, '#ffffff', 700)
   drawLines(date, LEFT, dateTop, 29, '#ffffff', 600)
   drawLines(time, LEFT, timeTop, 27, '#ffffff')
