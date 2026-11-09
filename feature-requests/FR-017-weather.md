@@ -1,6 +1,6 @@
 # FR-017 — Changi Business Park weather forecasts
 
-- Status: Released (v0.11.0, 2026-11-07); hourly schedule pending a test fetch with a configured venue.
+- Status: Implemented (v0.11.0, released 2026-11-07; hourly schedule on; first live fetch 2026-11-09).
 - Implementation notes: [docs/fr017-weather.md](../docs/fr017-weather.md).
 - Requested: 2026-11-05 by Jon.
 

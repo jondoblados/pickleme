@@ -1,6 +1,6 @@
 # FR-017 — Game weather: design and rollout
 
-Status: released in v0.11.0. Migration and function live; hourly schedule not yet enabled.
+Status: live in v0.11.0. Migration, function and hourly schedule are on.
 
 ## Decisions (2026-11-07)
 
@@ -60,3 +60,5 @@ venues hides it.
   been fetched in production yet — that needs a configured venue and a game within the window.
 - 2026-11-07: Step 5 done first (merge-first order agreed) — v0.11.0 merged to `main`. Next: set up a venue on the next game, run the
   test fetch, then enable the schedule (step 4).
+- 2026-11-07: Venue set up by an organiser in the app (7 Changi Business Park Crescent). Step 4 done — `pickleme-weather-fetch` scheduled (`2 * * * *`).
+- 2026-11-09: First live fetch at 00:02 SGT succeeded on the first attempt; `get_game_weather` returned the day-before view for the 10 Nov game.

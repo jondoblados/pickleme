@@ -27,7 +27,8 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-014 | 6-digit sign-in code in the sign-in email | Implemented (v0.8.0, live) | 2026-10-27 | 2026-10-27 |
 | FR-015 | Admins see unconfirmed sign-ups and resend confirmation | Implemented (v0.9.0, live) | 2026-10-27 | 2026-10-27 |
 | FR-016 | Optional profile photos, visible to group members only | In progress (v0.10.0) | 2026-10-27 | — |
-| FR-017 | Hourly weather forecasts for game venues | Released (v0.11.0); hourly schedule pending | 2026-11-05 | — |
+| FR-017 | Hourly weather forecasts for game venues | Implemented (v0.11.0, live) | 2026-11-05 | 2026-11-09 |
+| FR-018 | Roster image with avatar circles | Requested | 2026-11-09 | — |
 
 ## Details
 
@@ -189,7 +190,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 
 
 ### FR-017 — Hourly weather forecasts for game venues
-- **Status:** Released (v0.11.0, 2026-11-07). Hourly schedule off until a test fetch with a configured venue succeeds.
+- **Status:** Implemented (v0.11.0, released 2026-11-07; hourly schedule on 2026-11-07; first live fetch 2026-11-09).
 - **Requested:** 2026-11-05 by Jon. Decisions 2026-11-07: day-before overview covers the complete game date; game-day view runs
   from one hour before the start until one hour after the end; the venue is the address used for the game.
 - **Description:** From 00:00 the day before a game, the game page shows the forecast for the whole game date. On the game day it
@@ -199,3 +200,13 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
   location share it.
 - **Privacy:** Open-Meteo receives only venue coordinates; OneMap receives only the organiser's search text. Privacy policy and FAQ updated.
 - **Details:** [feature-requests/FR-017-weather.md](feature-requests/FR-017-weather.md), [docs/fr017-weather.md](docs/fr017-weather.md).
+
+### FR-018 — Roster image with avatar circles
+- **Status:** Requested.
+- **Requested:** 2026-11-09 by Jon.
+- **Description:** Replace the rectangle table in the roster image with avatar circles and names in a three-column
+  list. Free playing places become empty circles numbered `#10`, `#11`, and so on; waitlist places become circles
+  labelled `WL1`, `WL2`, with the player's avatar and name when filled.
+- **Open questions:** initials only (as FR-016 keeps photos out of roster images) or real photos; how many open
+  waitlist placeholders to show; one continuous grid or separate Playing and Waitlist groups.
+- **Details:** [feature-requests/FR-018-roster-avatars.md](feature-requests/FR-018-roster-avatars.md).
