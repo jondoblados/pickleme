@@ -90,7 +90,7 @@ export function ProfilePhoto({ userId, name, path, onChanged }:
             {path && <ConfirmButton className="btn btn-ghost" confirmText="Remove photo?" disabled={busy} onConfirm={remove}>Remove photo</ConfirmButton>}
           </div>
         </div>
-        <p className="small muted">Only people in your groups can see your photo. Without one, they see your initials.</p>
+        <p className="small muted">Only people in your groups can see your photo in the app. It also appears on roster images organisers share in WhatsApp. Without one, they see your initials.</p>
       </> : <>
         <p className="small muted">Drag to position, and use the slider to zoom.</p>
         <div className="crop-view" style={{ width: VIEW, height: VIEW }} role="img" aria-label="Photo crop preview"

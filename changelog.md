@@ -2,6 +2,17 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## Unreleased — FR-018 roster image with avatars (in review)
+
+### Changed
+- **Roster image** redesigned: avatar circles with names in three columns, numbered in signup order. Open places are dashed
+  circles labelled `#10`, `#11`, ... A separate Waitlist section appears only when someone is waitlisted and lists exactly
+  those players (`WL1`, `WL2`, ...). The header shows the PickleMe pickleball icon.
+- Players' profile photos appear in the roster image where set, otherwise initials on their colour. A photo that can't be
+  loaded within 6 seconds falls back to initials.
+- Names and titles wrap at word boundaries; names longer than two lines end with an ellipsis.
+- Privacy policy, FAQ and profile photo note updated: profile photos now appear in shared roster images.
+
 ## [0.11.0] — 2026-11-07 — FR-017 game weather
 
 The database and forecast function are live. The hourly schedule stays off until a test fetch with a real venue succeeds.

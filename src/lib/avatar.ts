@@ -112,3 +112,20 @@ export function useAvatarUrl(path: string | null | undefined): string | null {
   }, [valid])
   return url
 }
+
+/** FR-018: decode a profile photo for drawing on the roster image canvas. Returns null (initials fallback) when there is
+ *  no valid photo, the signed URL can't be made, the download fails, or it takes longer than `timeoutMs`. */
+export async function loadAvatarImage(path: string | null | undefined, timeoutMs = 6000): Promise<ImageBitmap | null> {
+  if (!path || !AVATAR_PATH.test(path)) return null
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs)
+  try {
+    const url = await signedAvatarUrl(path)
+    if (!url) return null
+    const res = await fetch(url, { signal: ctrl.signal, mode: 'cors', credentials: 'omit' })
+    if (!res.ok) return null
+    const blob = await res.blob()
+    if (!blob.type.startsWith('image/')) return null
+    return await createImageBitmap(blob)
+  } catch { return null } finally { clearTimeout(timer) }
+}

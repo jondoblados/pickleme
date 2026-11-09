@@ -28,7 +28,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-015 | Admins see unconfirmed sign-ups and resend confirmation | Implemented (v0.9.0, live) | 2026-10-27 | 2026-10-27 |
 | FR-016 | Optional profile photos, visible to group members only | In progress (v0.10.0) | 2026-10-27 | — |
 | FR-017 | Hourly weather forecasts for game venues | Implemented (v0.11.0, live) | 2026-11-05 | 2026-11-09 |
-| FR-018 | Roster image with avatar circles | Requested | 2026-11-09 | — |
+| FR-018 | Roster image with avatar circles | In progress (in review) | 2026-11-09 | — |
 
 ## Details
 
@@ -202,7 +202,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Details:** [feature-requests/FR-017-weather.md](feature-requests/FR-017-weather.md), [docs/fr017-weather.md](docs/fr017-weather.md).
 
 ### FR-018 — Roster image with avatar circles
-- **Status:** Requested.
+- **Status:** In progress (PR open, in review).
 - **Requested:** 2026-11-09 by Jon.
 - **Description:** Replace the rectangle table in the roster image with avatar circles and names in a three-column
   list. Free playing places become empty circles numbered `#10`, `#11`, and so on; waitlisted players get a

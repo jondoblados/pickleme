@@ -1,6 +1,6 @@
 # FR-018 — Roster image with avatar circles
 
-- Status: Requested; mockup for review, not implemented.
+- Status: In progress — implementation on branch `feature/fr018-roster-avatars`, in review.
 - Requested: 2026-11-09 by Jon.
 - Builds on: FR-012 (roster image sharing) and FR-016 (profile photos).
 
