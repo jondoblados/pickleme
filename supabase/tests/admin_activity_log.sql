@@ -76,7 +76,7 @@ begin
   result:=public.list_activity_log(grp,current_date-1,current_date+1,game,null,'game_updated');
   if result->'rows'->0->>'actor_name' is distinct from 'Organiser' then raise exception 'actor name snapshot changed';end if;checks:=checks+1;
   select count(*) into event_count from public.audit_events where game_id=game;
-  perform public.set_game_status(game,'cancelled');perform public.delete_game(game);
+  perform public.cancel_game(game,'other','Test cancellation');perform public.delete_game(game);
   if (select count(*) from public.audit_events where event_context->>'game_ref'=game::text)<event_count then raise exception 'game deletion erased history';end if;checks:=checks+1;
   result:=public.list_activity_log(grp,current_date-1,current_date+1,game,null,'game_updated');
   if result->'rows'->0->>'game_title' is distinct from 'New title' then raise exception 'deleted game context missing';end if;checks:=checks+1;

@@ -31,7 +31,7 @@ function stamp(iso: string, tz: string) {
   if (!Number.isFinite(date.getTime())) return iso
   return new Intl.DateTimeFormat('en-SG', { timeZone: tz, day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit' }).format(date)
 }
-const fields: Record<string, string> = { title: 'Title', starts_at: 'Start time', ends_at: 'End time', location: 'Location', capacity: 'Capacity', notes: 'Notes' }
+const fields: Record<string, string> = { title: 'Title', starts_at: 'Start time', ends_at: 'End time', location: 'Location', capacity: 'Capacity', notes: 'Notes', cancel_reason: 'Cancellation note' }
 function saveCsv(rows: ActivityEvent[]) {
   const blob = new Blob([activityCsv(rows)], { type: 'text/csv;charset=utf-8' })
   const url = URL.createObjectURL(blob), a = document.createElement('a')
@@ -148,7 +148,8 @@ function ActivityLogContent({ group }: { group: Group }) {
           {expanded === row.id && <tr id={`event-${row.id}`} className="activity-expanded"><td colSpan={6}>
             {activityChanges(row.details).length ? <dl className="activity-changes">{activityChanges(row.details).map(c => <div key={c.field}>
               <dt>{fields[c.field] ?? c.field}</dt><dd><span>Before: {show(c.before, group.timezone, c.field)}</span><span>After: {show(c.after, group.timezone, c.field)}</span></dd>
-            </div>)}</dl> : <p>{Object.keys(row.details).length ? JSON.stringify(row.details) : 'No additional details were recorded for this event.'}</p>}
+            </div>)}</dl> : typeof row.details?.reason === 'string' ? <p><b>Reason given:</b> {row.details.reason}</p>
+              : <p>{Object.keys(row.details).length ? JSON.stringify(row.details) : 'No additional details were recorded for this event.'}</p>}
             <p className="small muted">Event {row.id} · {row.context_origin === 'backfilled_current' ? 'Identity and game context backfilled; exact historical values may be unavailable.' : 'Context captured when this event was recorded.'}</p>
           </td></tr>}
         </Fragment>)}</tbody>

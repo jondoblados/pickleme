@@ -43,6 +43,7 @@ jobs:
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261027000014_activity_join_names.sql
           psql -X -v ON_ERROR_STOP=1 -1 -f supabase/migrations/20261027000015_profile_avatars.sql
           psql -X -v ON_ERROR_STOP=1 -1 -f supabase/migrations/20261107000016_game_weather.sql
+          psql -X -v ON_ERROR_STOP=1 -1 -f supabase/migrations/20261110000017_cancel_reasons.sql
       - name: Run FR-013 integration assertions (fixtures roll back)
         run: |
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/admin_activity_log.sql
@@ -51,6 +52,7 @@ jobs:
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/activity_join_names.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/profile_avatars.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/game_weather.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/cancel_reasons.sql
   build:
     runs-on: ubuntu-latest
     steps:
@@ -60,7 +62,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs tests/otp.test.mjs tests/avatar.test.mjs tests/weather.test.mjs
+      - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs tests/otp.test.mjs tests/avatar.test.mjs tests/weather.test.mjs tests/cancel-reasons.test.mjs
       - run: npm run build
   browser:
     # Playwright 1.56 cannot install Chromium on ubuntu-latest (26.04); pin until Playwright is upgraded.

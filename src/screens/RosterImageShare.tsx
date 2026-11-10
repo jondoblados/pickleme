@@ -4,6 +4,7 @@ import { APP_URL } from '../lib/supabase'
 import { fmtRange } from '../lib/time'
 import { friendlyError } from '../lib/errors'
 import { renderRosterImage } from '../lib/roster-image.js'
+import { cancelNoteLine } from '../lib/cancel-reasons.js'
 import { copyText } from '../lib/clipboard'
 import { loadAvatarImage } from '../lib/avatar'
 import { Notice } from '../components/ui'
@@ -44,13 +45,14 @@ export function RosterImageShare({ gameId }: { gameId: string }) {
       const waitlist = waitlistRows.map(r => r.display_name)
       const title = d.game.status === 'cancelled' ? `CANCELLED: ${d.game.title}` : d.game.status === 'closed' ? `REGISTRATION CLOSED: ${d.game.title}` : d.game.title
       const time = `${fmtRange(d.game.starts_at, d.game.ends_at, tz)} (${tz})`
-      const blob = await renderRosterImage({ title, date, time, location: d.game.location, capacity: d.game.capacity, playing: playingEntries, waitlist: waitlistEntries, snapshot })
+      const cancelNote = d.game.status === 'cancelled' ? cancelNoteLine(d.game.cancellation) : null
+      const blob = await renderRosterImage({ title, date, time, location: d.game.location, capacity: d.game.capacity, playing: playingEntries, waitlist: waitlistEntries, snapshot, cancelNote })
       for (const e of [...playingEntries, ...waitlistEntries]) e.photo?.close()
       if (request.current !== id) return
       const file = new File([blob], `pickleme-roster-${d.game.id}.png`, { type: 'image/png' })
       const url = URL.createObjectURL(file); imageUrl.current = url
       const link = `${APP_URL}?game=${d.game.id}`
-      const caption = `${title}\n${date}\n${time}\n${d.game.location}\nPlaying: ${playing.length}/${d.game.capacity} · Waitlist: ${waitlist.length}\nSnapshot: ${snapshot}\n\nLatest list, join or withdraw:\n${link}\n\nThis image is a snapshot and does not update.`
+      const caption = `${title}\n${cancelNote ? `${cancelNote}\n` : ''}${date}\n${time}\n${d.game.location}\nPlaying: ${playing.length}/${d.game.capacity} · Waitlist: ${waitlist.length}\nSnapshot: ${snapshot}\n\nLatest list, join or withdraw:\n${link}\n\nThis image is a snapshot and does not update.`
       setPrepared({ file, url, caption, snapshot })
     } catch (e) {
       if (request.current === id) setError(e instanceof Error ? e.message : friendlyError(e))

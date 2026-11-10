@@ -29,6 +29,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-016 | Optional profile photos, visible to group members only | In progress (v0.10.0) | 2026-10-27 | — |
 | FR-017 | Hourly weather forecasts for game venues | Implemented (v0.11.0, live) | 2026-11-05 | 2026-11-09 |
 | FR-018 | Roster image with avatar circles | Implemented (v0.12.0) | 2026-11-09 | 2026-11-09 |
+| FR-019 | Required cancellation reason, shown as a note from the organiser | In progress (v0.13.0) | 2026-11-10 | — |
 
 ## Details
 
@@ -211,3 +212,13 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
   to be updated); Waitlist section only when someone is waitlisted, showing only the waitlisted players (no open
   placeholders); separate Playing and Waitlist sections; pickleball icon in the header; wordmark and text use the app's fonts and colours.
 - **Details:** [feature-requests/FR-018-roster-avatars.md](feature-requests/FR-018-roster-avatars.md).
+
+### FR-019 — Required cancellation reason, shown as a note from the organiser
+- **Status:** In progress (v0.13.0, PR open for review).
+- **Requested:** 2026-11-10 by Jon (after cancelling the Tuesday game for rain).
+- **Description:** Organisers and admins must give a reason to cancel a game. Players see it as an information note
+  from the person who wrote it ("— Jon (Admin) · Tue 10 Nov, 4:12 pm") instead of only a red Cancelled pill.
+- **Decisions (2026-11-10):** pulldown of five reasons (Rain / wet courts, Lightning risk, Venue unavailable, Not enough
+  players, Organiser unavailable) plus Other; choosing one fills an editable note (3–200 characters). Shown on the game
+  page, games list, WhatsApp message and roster image. Notes can be edited, or added to games cancelled before this release.
+- **Details:** [feature-requests/FR-019-cancel-reasons.md](feature-requests/FR-019-cancel-reasons.md).

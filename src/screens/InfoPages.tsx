@@ -263,6 +263,13 @@ export function Faq({ onNav }: { onNav: Nav }) {
       <Q q="What's the difference between closing and cancelling?">
         <p><b>Close registration</b> stops new sign-ups but still lets players withdraw; you can reopen it. <b>Cancel</b> is permanent.</p>
       </Q>
+      <Q q="How do I cancel a game?">
+        <p>Open the game and tap <b>Cancel game…</b> under Organiser tools. Choose a reason (Rain / wet courts, Lightning risk, Venue unavailable,
+          Not enough players, Organiser unavailable, or Other), adjust the note if you like, then tap <b>Cancel game</b>. A reason is required.
+          Everyone in the group sees your note, with your name and role, on the game page, in the games list, in the WhatsApp message and in the roster image.
+          You can fix a typo later with <b>Edit note</b>; for games cancelled before reasons were required, tap <b>Add a reason</b>.
+          The reason and any edits are kept in the admin activity log.</p>
+      </Q>
       <Q q="How do I remove a player?">
         <p>On the game page, tap <b>Remove</b> next to their name, then tap again to confirm. The next waitlisted player moves in and gets an email.</p>
       </Q>

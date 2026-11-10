@@ -21,7 +21,7 @@ begin
   begin perform public.activity_filter_options(g,'2026-10-26','2026-10-26');raise exception 'player allowed';
   exception when insufficient_privilege then checks:=checks+1;end;
   perform set_config('request.jwt.claims',json_build_object('sub',a)::text,true);
-  perform public.set_game_status(game,'cancelled');perform public.delete_game(game);
+  perform public.cancel_game(game,'other','Test cancellation');perform public.delete_game(game);
   delete from auth.users where id=p;
   result:=public.activity_filter_options(g,'2026-10-26','2026-10-26');
   if (result->'games' @> jsonb_build_array(jsonb_build_object('id',game::text,'name','Retained game'))) is not true then raise exception 'deleted game choice missing';end if;checks:=checks+1;

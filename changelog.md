@@ -2,6 +2,24 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.13.0] — 2026-11-10 — FR-019 cancellation reasons
+
+### Added
+- **A reason is required to cancel a game.** **Cancel game…** opens a short form: pick a reason (Rain / wet courts,
+  Lightning risk, Venue unavailable, Not enough players, Organiser unavailable, or Other), adjust the note (3–200
+  characters), then confirm. The database enforces this, so no client can cancel without a reason.
+- **Cancellation note for players.** The game page shows a blue information note with the reason, who wrote it with their
+  role, and when, instead of the red Cancelled pill. The games list shows an information label with the reason. The WhatsApp
+  message, roster image and caption include "Note from Name (Role): reason".
+- **Edit note / Add a reason** for organisers and admins on cancelled games, including games cancelled before this release.
+- Activity log: the reason is recorded with **Cancelled game**; edits are recorded as **Edited cancellation note** with before and after.
+- Migration `20261110000017_cancel_reasons.sql` (`cancel_game`, `update_cancel_reason`; `get_game` and `list_games` return the note).
+  Tests `supabase/tests/cancel_reasons.sql`, `tests/cancel-reasons.test.mjs`, roster-image test; review harness `tests/cancel-note.harness.html`.
+
+### Changed
+- `set_game_status` no longer accepts `cancelled`; use `cancel_game`.
+- FAQ: how to cancel a game.
+
 ## [0.12.0] — 2026-11-09 — FR-018 roster image with avatars
 
 ### Changed
