@@ -1,6 +1,6 @@
 # FR-019 — Required cancellation reason, shown as a note from the organiser
 
-- Status: In progress — v0.13.0, PR open for review.
+- Status: Implemented — v0.13.0, released 2026-11-10 (PR #11).
 - Requested: 2026-11-10 by Jon, after cancelling the Tuesday game for rain.
 
 ## Requested behaviour
