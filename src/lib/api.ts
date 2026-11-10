@@ -1,5 +1,7 @@
 import { supabase } from './supabase'
 import type { WeatherResponse } from './weather-core.js'
+import type { Cancellation, CancelReasonCode } from './cancel-reasons.js'
+export type { Cancellation, CancelReasonCode }
 
 export type Role = 'player' | 'organiser' | 'admin'
 export type GameStatus = 'open' | 'closed' | 'cancelled'
@@ -14,6 +16,8 @@ export interface Me {
 export interface GameSummary {
   id: string; group_id: string; group_name: string; timezone: string; title: string
   starts_at: string; ends_at: string; location: string; capacity: number; status: GameStatus
+  /** FR-019: the organiser's reason, for cancelled games only. */
+  cancel_reason?: string | null
   playing: number; waitlist: number; me: MyStatus
 }
 export interface RosterEntry {
@@ -22,7 +26,9 @@ export interface RosterEntry {
 }
 export interface GameDetail {
   game: { id: string; title: string; starts_at: string; ends_at: string; location: string; capacity: number
-          notes: string; status: GameStatus; updated_at: string }
+          notes: string; status: GameStatus; updated_at: string
+          /** FR-019: null unless cancelled. reason is null for games cancelled before reasons were required. */
+          cancellation?: Cancellation | null }
   group: { id: string; name: string; timezone: string }
   my_role: Role
   me: MyStatus
@@ -65,7 +71,12 @@ export const api = {
       p_location: g.location, p_capacity: g.capacity, p_notes: g.notes }),
   renameGroup: (groupId: string, name: string) => rpc<{ id: string; name: string; changed: boolean }>('rename_group', { p_group_id: groupId, p_name: name }),
   deleteGame: (id: string) => rpc<{ deleted: boolean; title: string }>('delete_game', { p_game_id: id }),
-  setStatus: (id: string, status: GameStatus) => rpc('set_game_status', { p_game_id: id, p_status: status }),
+  /** FR-019: cancelling always needs a reason; setStatus only opens and closes registration. */
+  cancelGame: (id: string, code: CancelReasonCode, reason: string) =>
+    rpc<{ cancelled: boolean; reason: string }>('cancel_game', { p_game_id: id, p_reason_code: code, p_reason: reason }),
+  updateCancelReason: (id: string, code: CancelReasonCode, reason: string) =>
+    rpc<{ changed: boolean; reason: string }>('update_cancel_reason', { p_game_id: id, p_reason_code: code, p_reason: reason }),
+  setStatus: (id: string, status: Exclude<GameStatus, 'cancelled'>) => rpc('set_game_status', { p_game_id: id, p_status: status }),
   listMembers: (groupId: string) => rpc<Member[]>('list_members', { p_group_id: groupId }),
   setRole: (groupId: string, userId: string, role: Role) =>
     rpc('set_member_role', { p_group_id: groupId, p_user_id: userId, p_role: role }),

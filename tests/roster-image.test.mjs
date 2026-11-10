@@ -97,3 +97,17 @@ test('unsupported canvas and failed encoding report errors', async () => {
   await assert.rejects(renderRosterImage(model, () => ({ getContext() { return null } })), /unavailable/)
   await assert.rejects(renderRosterImage(model, () => canvas(true)), /Could not create/)
 })
+
+test('FR-019: cancelled games show the organiser note in an information band; others do not', async () => {
+  const plain = canvas(); await renderRosterImage(model, () => plain)
+  assert.ok(!strings(plain).includes('GAME CANCELLED'))
+  const c = canvas()
+  await renderRosterImage({ ...model, title: 'CANCELLED: Weekly game', cancelNote: 'Note from Jon (Admin): Rain / wet courts.' }, () => c)
+  const s = strings(c)
+  assert.ok(s.includes('GAME CANCELLED'))
+  assert.ok(s.some(t => t.includes('Rain / wet courts.')))
+  assert.ok(c.height > plain.height, 'image grows to fit the note')
+  const heading = c.drawn.find(t => t.s.startsWith('PLAYING'))
+  const note = c.drawn.find(t => t.s.includes('Rain'))
+  assert.ok(note.y < heading.y, 'note sits above the playing list')
+})

@@ -2,7 +2,8 @@
 import { avatarColour, initials } from './avatar-core.js'
 
 const C = { ink: '#14382b', muted: '#647269', lime: '#d9f280', ball: '#d9f24a', amber: '#8a5a00',
-  openRing: '#9fb3a7', openFill: '#f4f8f5', openText: '#4c6b5b', openName: '#8a978f', divider: '#d9dfd6' }
+  openRing: '#9fb3a7', openFill: '#f4f8f5', openText: '#4c6b5b', openName: '#8a978f', divider: '#d9dfd6',
+  info: '#2f5f9e', infoBg: '#eef3fb', infoInk: '#18324f' }
 // Fonts match the app (--display and --body in styles.css); loaded by index.html from Google Fonts.
 const BRAND_FONT = "'Bricolage Grotesque', 'Figtree', system-ui, sans-serif"
 const BODY_FONT = "'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif"
@@ -90,7 +91,11 @@ export async function renderRosterImage(model, makeCanvas = () => document.creat
   const timeTop = dateTop + date.length * 36 + 8
   const locationTop = timeTop + time.length * 34 + 7
   const headerBottom = locationTop + location.length * 32 + 37
-  const playingTop = headerBottom + 80
+  // FR-019: a cancelled game's note from the organiser sits in an information band under the header.
+  const cancelLines = model.cancelNote ? wrap(model.cancelNote, 24, CONTENT - 40, 600) : []
+  const cancelHeight = cancelLines.length ? 34 + cancelLines.length * 32 + 22 : 0
+  const sectionTop = headerBottom + (cancelHeight ? cancelHeight + 24 : 0)
+  const playingTop = sectionTop + 80
   const playingEnd = playingTop + sectionHeight(layout.playing.length)
   const waitHeadTop = playingEnd + 58
   const waitTop = waitHeadTop + 58
@@ -184,10 +189,17 @@ export async function renderRosterImage(model, makeCanvas = () => document.creat
   drawLines(time, LEFT, timeTop, 27, '#ffffff')
   drawLines(location, LEFT, locationTop, 25, '#ffffff')
 
+  if (cancelHeight) {
+    const top = headerBottom + 24
+    rect(LEFT, top, CONTENT, cancelHeight, C.infoBg)
+    rect(LEFT, top, 6, cancelHeight, C.info)
+    text('GAME CANCELLED', LEFT + 24, top + 16, 20, C.info, 800, BRAND_FONT)
+    drawLines(cancelLines, LEFT + 24, top + 46, 24, C.infoInk, 600, 32)
+  }
   const free = model.capacity - model.playing.length
-  text(`PLAYING  ${model.playing.length} / ${model.capacity}`, LEFT, headerBottom + 24, 31, C.ink, 800, BRAND_FONT)
+  text(`PLAYING  ${model.playing.length} / ${model.capacity}`, LEFT, sectionTop + 24, 31, C.ink, 800, BRAND_FONT)
   const status = free ? `${free} ${free === 1 ? 'place' : 'places'} open` : 'Full'
-  text(status, RIGHT - width(status, 25), headerBottom + 29, 25, C.muted)
+  text(status, RIGHT - width(status, 25), sectionTop + 29, 25, C.muted)
   drawGrid(layout.playing, playingTop)
 
   if (layout.showWaitlist) {

@@ -56,6 +56,7 @@ export function Home({ group, go }: { group: Me['groups'][number]; go: (r: Route
                   <div className="game-card-body">
                     <strong className="title">{g.title}</strong>
                     {g.location && <span className="muted">{g.location}</span>}
+                    {g.status === 'cancelled' && g.cancel_reason && <span className="cancel-card-reason">{g.cancel_reason}</span>}
                     <div className="meter" aria-label={`${g.playing} of ${g.capacity} places taken`}>
                       <span style={{ width: `${Math.min(100, (g.playing / g.capacity) * 100)}%` }} />
                     </div>
@@ -64,7 +65,9 @@ export function Home({ group, go }: { group: Me['groups'][number]; go: (r: Route
                     </span>
                   </div>
                   <div className="game-card-status">
-                    {g.status !== 'open' ? <span className={`badge badge-${g.status}`}>{g.status === 'closed' ? 'Closed' : 'Cancelled'}</span>
+                    {g.status === 'cancelled'
+                      ? <span className="cancel-label"><span aria-hidden="true" className="cancel-label-i">i</span>Cancelled</span>
+                      : g.status !== 'open' ? <span className="badge badge-closed">Closed</span>
                       : <StatusChip me={g.me} />}
                   </div>
                 </button>

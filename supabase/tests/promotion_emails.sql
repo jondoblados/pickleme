@@ -61,7 +61,7 @@ begin
   -- cancelled game -> skipped
   update public.notification_outbox set next_attempt_at = now() - interval '1 second' where user_id = u[4];
   perform set_config('request.jwt.claims', json_build_object('sub', admin, 'role', 'authenticated')::text, true);
-  perform public.set_game_status(game, 'cancelled');
+  perform public.cancel_game(game,'other','Test cancellation');
   r := public.claim_promotion_emails(sec, 20);
   select skipped_reason into st from public.notification_outbox where user_id = u[4];
   log := log || format(E'E9 cancelled game -> skipped (%s), none claimed: %s\n', st, jsonb_array_length(r) = 0 and st = 'game_cancelled');

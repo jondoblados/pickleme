@@ -19,7 +19,7 @@ begin
   perform set_config('request.jwt.claims', json_build_object('sub',player,'role','authenticated')::text, true);
   perform public.join_game(g); perform public.join_game(g_keep);
   perform set_config('request.jwt.claims', json_build_object('sub',admin,'role','authenticated')::text, true);
-  perform public.set_game_status(g,'cancelled');
+  perform public.cancel_game(g,'other','Test cancellation');
 
   begin perform public.delete_game(g_open); log := log || E'D1 open game delete blocked: false\n';
   exception when others then log := log || format(E'D1 only cancelled games can be deleted: %s\n', sqlerrm='only_cancelled_games'); end;

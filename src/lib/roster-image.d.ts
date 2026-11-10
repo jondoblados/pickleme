@@ -3,6 +3,8 @@ export type RosterImageEntry = string | { name: string; userId?: string | null; 
 export interface RosterImageModel {
   title: string; date: string; time: string; location: string; capacity: number;
   playing: RosterImageEntry[]; waitlist: RosterImageEntry[]; snapshot: string;
+  /** FR-019: "Note from Jon (Admin): Rain / wet courts." for cancelled games. */
+  cancelNote?: string | null;
 }
 export interface RosterImageCell {
   number: number; label: string; open: boolean; waiting: boolean;

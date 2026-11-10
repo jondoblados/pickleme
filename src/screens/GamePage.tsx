@@ -8,9 +8,25 @@ import { copyText } from '../lib/clipboard'
 import { ConfirmButton, Notice, Spinner, useToast } from '../components/ui'
 import { Avatar } from '../components/Avatar'
 import { WeatherCard } from '../components/WeatherCard'
+import { CancelNote, CancelReasonForm } from '../components/CancelNote'
+import { cancelNoteLine } from '../lib/cancel-reasons.js'
 
 export function shareMessage(d: GameDetail, url: string) {
   const tz = d.group.timezone
+  if (d.game.status === 'cancelled') {
+    // FR-019: a cancelled game's message leads with the organiser's note instead of sign-up instructions.
+    return [
+      `🏓 CANCELLED: ${d.game.title}`,
+      '',
+      `Date: ${fmtDay(d.game.starts_at, tz)}`,
+      `Time: ${fmtRange(d.game.starts_at, d.game.ends_at, tz)}`,
+      d.game.location ? `Location: ${d.game.location}` : null,
+      '',
+      cancelNoteLine(d.game.cancellation) ?? 'This game has been cancelled.',
+      '',
+      url,
+    ].filter(l => l !== null).join('\n')
+  }
   return [
     `🏓 ${d.game.title}`,
     '',
@@ -41,6 +57,7 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
   const reloadTimer = useRef<number | undefined>(undefined)
   const [att, setAtt] = useState<Attendance | null>(null)
   const [marking, setMarking] = useState<string | null>(null)
+  const [cancelForm, setCancelForm] = useState<'cancel' | 'edit' | null>(null)
 
   // Organisers/admins of a started game also get the attendance list (the playing list frozen at start time).
   const load = useCallback(async () => {
@@ -140,7 +157,8 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
       name={name} onSet={st => markAttendance(uid, name, st)} />
   }
 
-  const stateLabel = game.status === 'cancelled' ? 'Cancelled' : ended ? 'Finished' : started ? 'In progress'
+  const cancelled = game.status === 'cancelled'
+  const stateLabel = cancelled ? 'Cancelled' : ended ? 'Finished' : started ? 'In progress'
     : game.status === 'closed' ? 'Registration closed' : 'Open for sign-ups'
 
   return (
@@ -148,7 +166,7 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
       <button className="link back" onClick={() => go({ name: 'home' })}>← All games</button>
 
       <header className="game-head">
-        <span className={`badge badge-${game.status === 'open' && !started ? 'open' : game.status === 'cancelled' ? 'cancelled' : 'closed'}`}>{stateLabel}</span>
+        {!cancelled && <span className={`badge badge-${game.status === 'open' && !started ? 'open' : 'closed'}`}>{stateLabel}</span>}
         <h1 className="display">{game.title}</h1>
         <dl className="facts">
           <div><dt>Date</dt><dd>{fmtDay(game.starts_at, tz)}</dd></div>
@@ -156,6 +174,13 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
           {game.location && <div><dt>Where</dt><dd>{game.location}</dd></div>}
           <div><dt>Players</dt><dd>{playing.length} / {game.capacity}{waitlist.length ? ` · ${waitlist.length} waitlist` : ''}</dd></div>
         </dl>
+        {cancelled && (cancelForm === 'edit'
+          ? <section className="card cancel-edit"><h2>Edit cancellation note</h2>
+              <CancelReasonForm mode="edit" initial={game.cancellation} busy={busy} onClose={() => setCancelForm(null)}
+                onSubmit={(code, text) => act(() => api.updateCancelReason(game.id, code, text), r => {
+                  setCancelForm(null); return (r as { changed: boolean }).changed ? 'Note updated.' : 'No changes to save.'
+                })} /></section>
+          : <CancelNote cancellation={game.cancellation} tz={tz} canEdit={organiser} onEdit={() => setCancelForm('edit')} />)}
         {game.notes && <p className="notes">{game.notes}</p>}
       </header>
 
@@ -173,7 +198,7 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
               : canJoin ? (started ? `Game in progress — ${spotsLeft} ${spotsLeft === 1 ? 'spot' : 'spots'} still free. Join if you can get there.`
                 : spotsLeft > 0 ? `${spotsLeft} ${spotsLeft === 1 ? 'spot' : 'spots'} left.` : 'Game is full — you’ll join the waitlist.')
               : started && !ended && game.status === 'open' ? 'Game in progress and full.'
-              : game.status === 'cancelled' ? 'This game was cancelled.' : 'Sign-ups are closed.'}
+              : cancelled ? 'This game was cancelled — see the note above.' : 'Sign-ups are closed.'}
           </p>
         </div>
         <div className="me-actions">
@@ -266,10 +291,12 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
             {game.status === 'open'
               ? <button className="btn" disabled={busy} onClick={() => act(() => api.setStatus(game.id, 'closed'), () => 'Registration closed.')}>Close registration</button>
               : <button className="btn" disabled={busy} onClick={() => act(() => api.setStatus(game.id, 'open'), () => 'Registration reopened.')}>Reopen registration</button>}
-            <ConfirmButton className="btn btn-danger-ghost" confirmText="Tap again to cancel game" disabled={busy}
-              onConfirm={() => act(() => api.setStatus(game.id, 'cancelled'), () => 'Game cancelled.')}>Cancel game</ConfirmButton>
+            {cancelForm !== 'cancel' && <button className="btn btn-danger-ghost" disabled={busy} onClick={() => setCancelForm('cancel')}>Cancel game…</button>}
           </div>
-          <p className="small muted">Closing stops new sign-ups but still lets players withdraw. Cancelling is permanent.</p>
+          {cancelForm === 'cancel'
+            ? <CancelReasonForm mode="cancel" busy={busy} onClose={() => setCancelForm(null)}
+                onSubmit={(code, text) => act(() => api.cancelGame(game.id, code, text), () => { setCancelForm(null); return 'Game cancelled. Players will see your note.' })} />
+            : <p className="small muted">Closing stops new sign-ups but still lets players withdraw. Cancelling is permanent and needs a reason for players.</p>}
         </section>
       )}
 
