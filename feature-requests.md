@@ -30,6 +30,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-017 | Hourly weather forecasts for game venues | Implemented (v0.11.0, live) | 2026-11-05 | 2026-11-09 |
 | FR-018 | Roster image with avatar circles | Implemented (v0.12.0) | 2026-11-09 | 2026-11-09 |
 | FR-019 | Required cancellation reason, shown as a note from the organiser | Implemented (v0.13.0, live) | 2026-11-10 | 2026-11-10 |
+| FR-021 | Scheduled game visibility, court booking fees and game-day slot confirmation | Requested (plan and mockups for review) | 2026-11-13 | — |
 
 ## Details
 
@@ -222,3 +223,20 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
   players, Organiser unavailable) plus Other; choosing one fills an editable note (3–200 characters). Shown on the game
   page, games list, WhatsApp message and roster image. Notes can be edited, or added to games cancelled before this release.
 - **Details:** [feature-requests/FR-019-cancel-reasons.md](feature-requests/FR-019-cancel-reasons.md).
+
+### FR-021 — Scheduled game visibility, court booking fees and game-day slot confirmation
+- **Status:** Requested. Plan and mockups ready for review (2026-11-13); no code or database changes yet.
+- **Requested:** 2026-11-13 by Jon, for an organiser entering all of her Q1 2027 games in advance. Courts are booked
+  outside PickleMe; FR-020 (court and facility prebooking, drafted on a separate branch) is not part of this.
+- **Description:** When creating or editing a game, organisers choose when players can see it: **Visible now**
+  (default), **1 week before** or **2 weeks before** the start. Hidden games are visible only to organisers and admins,
+  including through links. Organisers can add a total court booking fee (SGD by default) at creation or later, paid by
+  PayNow to the organiser (default) or another nominated mobile number. Wherever the game is published (games list, game
+  page, shared preview, WhatsApp message, roster image, promotion emails) it shows the total and the per-player share
+  based on current playing members. On the game day, players in paid games confirm their slot with a mobile number that
+  only organisers and admins can see, stored for that game only.
+- **Proposed defaults to confirm:** final fee shared by all playing members at the start time; confirmation window from
+  00:00 on the game date until the start; in-app notice (no email) when a fee is added or changed; confirmation numbers
+  deleted 30 days after the game.
+- **Details:** [feature-requests/FR-021-scheduled-games-fees.md](feature-requests/FR-021-scheduled-games-fees.md),
+  [docs/fr021-plan.md](docs/fr021-plan.md), mockups in [docs/fr021-review/](docs/fr021-review/).
