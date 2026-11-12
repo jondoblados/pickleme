@@ -1,6 +1,6 @@
 # FR-021 implementation plan — scheduled visibility, court booking fees, game-day slot confirmation
 
-Status: draft for review (2026-11-13). No code or database changes until Jon approves.
+Status: decisions confirmed 2026-11-13 (see the spec). No code or database changes until Jon approves the build.
 Spec: [feature-requests/FR-021-scheduled-games-fees.md](../feature-requests/FR-021-scheduled-games-fees.md).
 Mockups: [docs/fr021-review/](fr021-review/) (PNG, with HTML sources in `source/`).
 
@@ -27,21 +27,24 @@ Courts and facilities are booked outside PickleMe. This plan doesn't add booking
 
 - `games.fee_total_cents int` (null = free, 1–999,999), `games.fee_currency char(3) default 'SGD'`, `games.fee_updated_at`.
 - New table `game_payees` (one row per paid game): `payee_kind` (`organiser` | `nominated`), `payee_name`,
-  `payee_mobile` (Singapore format `+65` 8 digits starting 8 or 9). RLS: readable by organisers/admins and by
+  `payee_mobile` (`+65` mobile, since PayNow uses Singapore numbers). RLS: readable by organisers/admins and by
   members with an active playing registration in that game; writable by organisers/admins.
 - `set_game_fee(game_id, total_cents, currency, payee_kind, payee_name, payee_mobile)` — organiser/admin only; `null`
   total removes the fee. Writes an activity-log entry with the old and new totals (no numbers).
 - `get_game` / `list_games` return `fee_total_cents`, `fee_currency`, `playing_count`, `share_cents` (rounded up to
   the cent), `share_if_full_cents`, and `fee_changed_since_join` for the caller.
+- **Final share:** `games.playing_at_start` snapshots the playing list when the game starts (set by the existing
+  attendance trigger or on first read after `starts_at`). Final share = total ÷ (snapshot − players marked `excused`
+  in `game_attendance`); unexcused no-shows count. `share_is_final` is true once every snapshot player is marked.
 
 ### Slot confirmation
 
 - New table `slot_confirmations` (`game_id`, `user_id`, `mobile`, `confirmed_at`, `recorded_by`), unique per game and user.
+  `mobile` is stored in international (E.164) format, `+` then 8–15 digits, any country code, as used by WhatsApp.
   RLS: select for organisers/admins of the group only. Players can't read rows, including their own; the API tells
   them only whether they've confirmed.
 - `confirm_slot(game_id, mobile)` — allowed only if the game has a fee, the caller is playing (not waitlisted), and
-  it's the game date in the group's time zone and before the start time. Organisers can record a confirmation for a
-  player at any time on the game day.
+  the time is between 00:00 on the game date (group time zone) and the start time.
 - `list_slot_confirmations(game_id)` — organiser/admin only; returns confirmed and pending playing members.
 - Weekly `pg_cron` job (same pattern as avatar cleanup) deletes confirmations 30 days after the game ends.
 - Activity log records "Confirmed slot" without the number.
@@ -57,7 +60,8 @@ Courts and facilities are booked outside PickleMe. This plan doesn't add booking
 | `RosterImageShare.tsx`, WhatsApp text | One cost line; never payee or confirmation numbers. |
 | `InfoPages.tsx` | Privacy policy (mobile numbers: purpose, who sees them, 30-day deletion) and FAQ (scheduling, fees, confirming). |
 
-Shared helpers in `src/lib/fees.js` (share calculation, SGD formatting, Singapore mobile validation) with tests.
+Shared helpers in `src/lib/fees.js` (estimated and final share, SGD formatting, international mobile validation with a
+country-code picker defaulting to `+65`, and the `+65` PayNow payee check) with tests.
 
 ## 3. Emails
 
@@ -71,15 +75,17 @@ Shared helpers in `src/lib/fees.js` (share calculation, SGD formatting, Singapor
   - the game becomes visible at `visible_from` with no action;
   - changing `starts_at` moves `visible_from`;
   - fee and share maths (0 players, waitlist excluded, rounding up, promotion from the waitlist);
+  - final share: excused players excluded, unexcused no-shows included, late sign-ups after the start not in the snapshot;
   - payee visible to playing members only;
-  - confirmation rules (date window, paid games only, playing only) and organiser-only reads;
+  - confirmation rules (00:00 to start time, paid games only, playing only), numbers with various country codes,
+    and organiser-only reads;
   - 30-day deletion.
 - `tests/fees.test.mjs` for helpers; roster-image test with a cost line; review harness for the new cards.
 - Regression: existing acceptance suite passes for free, visible games.
 
 ## 5. Rollout
 
-1. Jon reviews this plan and the mockups and confirms the proposed defaults.
+1. Decisions confirmed 2026-11-13. Jon approves the build.
 2. Branch `feature/fr021-scheduled-games-fees`; migration and tests first, then UI.
 3. Draft PR with screenshots; Jon reviews before merge.
 4. Apply the migration to production, deploy, and check on a real phone (hidden game, fee lines, WhatsApp text,

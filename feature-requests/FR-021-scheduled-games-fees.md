@@ -1,6 +1,6 @@
 # FR-021 — Scheduled game visibility, court booking fees and game-day slot confirmation
 
-- Status: Requested. Plan and mockups ready for review (2026-11-13); no code or database changes yet.
+- Status: Requested. Decisions confirmed 2026-11-13; plan and mockups ready. No code or database changes yet.
 - Requested: 2026-11-13 by Jon, for an organiser who has booked courts for every game in Q1 2027 and wants to enter
   all of them now.
 - Plan: [docs/fr021-plan.md](../docs/fr021-plan.md). Mockups: [docs/fr021-review/](../docs/fr021-review/).
@@ -43,10 +43,14 @@ Court and facility prebooking is a separate idea (FR-020, drafted on branch `doc
 - Fields:
   - **Total fee for this game**, in SGD by default (0.01–9,999.99).
   - **Players pay by PayNow to:** the organiser (default; organiser enters their PayNow mobile number) or
-    **another mobile number** (name and number), e.g. whoever booked the courts.
-- **Per-player share** = total fee ÷ current playing members (waitlisted players excluded), rounded up to the cent.
-  With no playing members yet: "per player shown after sign-ups". The game page also shows the share if every place
-  fills.
+    **another mobile number** (name and number), e.g. whoever booked the courts. Because PayNow uses Singapore
+    numbers, the payee number is a `+65` mobile.
+- **Estimated share** (before and during the game) = total fee ÷ current playing members (waitlisted players
+  excluded), rounded up to the cent. With no playing members yet: "per player shown after sign-ups". The game page
+  also shows the share if every place fills.
+- **Final share** = total fee ÷ members on the playing list at the start time, minus those the organiser marks
+  **Excused** (FR-007). No-shows who aren't excused still pay. The share is labelled "final" once attendance has been
+  marked for everyone on the playing list; until then it stays an estimate.
 - The payee name and PayNow number are shown only to members playing in that game, and to organisers and admins.
   PickleMe doesn't handle payments.
 
@@ -66,8 +70,10 @@ When a fee is added or changed after people have joined, the game page shows the
 
 ### 4. Game-day slot confirmation (paid games only)
 
-- On the game date (from 00:00 in the group's time zone until the game starts), each playing member sees
+- On the game date, from 00:00 in the group's time zone until the start time, each playing member sees
   **Confirm your slot for today** and enters a mobile number.
+- Any country code is accepted, in the same international format WhatsApp uses: a country-code picker (default
+  `+65`) and the number, stored as `+<country code><number>` (8–15 digits in total).
 - The number is stored for that game only. It isn't saved to the profile or reused for other games.
 - Only the group's organisers and admins can see it. It's not shown in member lists, rosters, shared messages,
   images or the activity log, and it's deleted 30 days after the game.
@@ -75,15 +81,15 @@ When a fee is added or changed after people have joined, the game page shows the
 - Confirming a slot doesn't mark attendance or payment. Organisers still mark Present / No-show (FR-007).
   Unconfirmed players aren't removed automatically.
 
-## Proposed defaults to confirm before build
+## Decisions (2026-11-13)
 
-| # | Question | Proposed default |
+| # | Question | Decision |
 |---|---|---|
-| 1 | Who shares the final fee? | All playing members at the start time, including no-shows. Organisers can mention exceptions in the game notes. |
-| 2 | Confirmation window | 00:00 on the game date until the start time; the organiser can still record confirmation afterwards. |
+| 1 | Who shares the final fee? | Everyone on the playing list at the start time, including no-shows, except players marked Excused. |
+| 2 | Confirmation window | From 00:00 on the game date until the start time. |
 | 3 | Telling players about a new or changed fee | In-app notice on the game page; no email in the first release. |
-| 4 | Retention of confirmation numbers | Deleted 30 days after the game. |
-| 5 | Currency | SGD only in the first release, stored with a currency code so others can be added. |
+| 4 | Confirmation numbers | Visible only to organisers and admins; any country code in WhatsApp's international format; deleted 30 days after the game. |
+| 5 | Currency | SGD only for now, stored with a currency code so others can be added later. |
 
 ## Acceptance criteria
 
@@ -93,7 +99,10 @@ When a fee is added or changed after people have joined, the game page shows the
 3. Organisers and admins can see, edit, cancel and delete hidden games.
 4. A fee can be added to an existing game; the share updates as players join, withdraw or move up from the waitlist.
 5. The cost line appears on every surface listed in section 3; payee and confirmation numbers never do.
-6. On the game day, a playing member of a paid game can confirm with a valid Singapore mobile number; a waitlisted
-   player, a non-member or a player in a free game can't.
-7. Only organisers and admins of that group can read confirmation numbers; numbers are deleted 30 days after the game.
-8. Privacy policy and FAQ are updated before release.
+6. Between 00:00 on the game date and the start time, a playing member of a paid game can confirm with a mobile
+   number with any country code (e.g. `+65 9876 5432`, `+63 917 123 4567`); a waitlisted player, a non-member or a
+   player in a free game can't, and confirmation closes at the start time.
+7. The final share divides the fee among players on the playing list at the start time, excluding those marked
+   Excused; unexcused no-shows are included.
+8. Only organisers and admins of that group can read confirmation numbers; numbers are deleted 30 days after the game.
+9. Privacy policy and FAQ are updated before release.

@@ -30,7 +30,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-017 | Hourly weather forecasts for game venues | Implemented (v0.11.0, live) | 2026-11-05 | 2026-11-09 |
 | FR-018 | Roster image with avatar circles | Implemented (v0.12.0) | 2026-11-09 | 2026-11-09 |
 | FR-019 | Required cancellation reason, shown as a note from the organiser | Implemented (v0.13.0, live) | 2026-11-10 | 2026-11-10 |
-| FR-021 | Scheduled game visibility, court booking fees and game-day slot confirmation | Requested (plan and mockups for review) | 2026-11-13 | — |
+| FR-021 | Scheduled game visibility, court booking fees and game-day slot confirmation | Requested (decisions confirmed; plan and mockups ready) | 2026-11-13 | — |
 
 ## Details
 
@@ -225,7 +225,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Details:** [feature-requests/FR-019-cancel-reasons.md](feature-requests/FR-019-cancel-reasons.md).
 
 ### FR-021 — Scheduled game visibility, court booking fees and game-day slot confirmation
-- **Status:** Requested. Plan and mockups ready for review (2026-11-13); no code or database changes yet.
+- **Status:** Requested. Decisions confirmed 2026-11-13; plan and mockups ready. No code or database changes yet.
 - **Requested:** 2026-11-13 by Jon, for an organiser entering all of her Q1 2027 games in advance. Courts are booked
   outside PickleMe; FR-020 (court and facility prebooking, drafted on a separate branch) is not part of this.
 - **Description:** When creating or editing a game, organisers choose when players can see it: **Visible now**
@@ -235,8 +235,9 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
   page, shared preview, WhatsApp message, roster image, promotion emails) it shows the total and the per-player share
   based on current playing members. On the game day, players in paid games confirm their slot with a mobile number that
   only organisers and admins can see, stored for that game only.
-- **Proposed defaults to confirm:** final fee shared by all playing members at the start time; confirmation window from
-  00:00 on the game date until the start; in-app notice (no email) when a fee is added or changed; confirmation numbers
-  deleted 30 days after the game.
+- **Decisions (2026-11-13):** the final fee is shared by everyone on the playing list at the start time, including
+  no-shows, except players marked Excused; players confirm from 00:00 on the game date until the start time; an in-app
+  notice (no email) when a fee is added or changed; confirmation numbers take any country code (WhatsApp international
+  format), are visible only to organisers and admins, and are deleted 30 days after the game; SGD only for now.
 - **Details:** [feature-requests/FR-021-scheduled-games-fees.md](feature-requests/FR-021-scheduled-games-fees.md),
   [docs/fr021-plan.md](docs/fr021-plan.md), mockups in [docs/fr021-review/](docs/fr021-review/).
