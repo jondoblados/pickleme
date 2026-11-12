@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css">
+<style>
+.alt { display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; background: #fff; }
+.alt.best { border-color: var(--court-3); background: #f3faf6; }
+.alt b { font-size: 14.5px; }
+.slotchip { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; padding: 4px 9px; border-radius: 8px; background: #f3f0e7; }
+.slotchip.x { background: var(--red-bg); color: var(--red); text-decoration: line-through; }
+.big-ic { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: var(--amber-bg); color: var(--amber); }
+</style></head><body>
+<div class="sheet">
+  <div class="sheet-head"><span class="tag">FR-020 · MOCKUP</span><h1>When two organisers want the same court</h1><span class="sub">First confirmed hold wins; the other organiser gets alternatives</span></div>
+  <div class="frames">
+
+  <div class="frame-wrap"><div class="caption">2a · Slot taken <span>— nothing was held</span></div>
+  <div class="phone">
+    <div class="topbar"><div class="topbar-inner"><span class="wm"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#d9f24a" stroke="#14382b" stroke-width="2"/><g fill="#14382b"><circle cx="11" cy="11" r="2"/><circle cx="20" cy="9.5" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="10" cy="20" r="2"/><circle cx="21.5" cy="19.5" r="2"/><circle cx="15.5" cy="24" r="1.6"/></g></svg><span>Pickle<b>Me</b></span></span><span class="group-name">Tuesday Pickleball ▾</span></div>
+    <div class="tabs"><span>Games</span><span class="active">Courts</span><span>Members</span><span>Jon</span></div></div>
+    <div class="page">
+      <div class="note err"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v6"/><circle cx="12" cy="16.6" r=".6" fill="currentColor"/></svg>
+        <div><b>One of your slots was just taken.</b><br>Another organiser held Court 3, 8–9 pm a moment before you. Nothing was held, so your allowance is unchanged.</div></div>
+      <div class="card stack">
+        <h3>You asked for</h3>
+        <div class="row" style="flex-wrap:wrap;gap:6px"><span class="slotchip">Court 2 · 7–8 pm</span><span class="slotchip">Court 2 · 8–9 pm</span><span class="slotchip">Court 3 · 7–8 pm</span><span class="slotchip x">Court 3 · 8–9 pm</span></div>
+      </div>
+      <div class="stack">
+        <h3>Closest alternatives</h3>
+        <div class="alt best"><div><b>Court 2 · 7–9 pm and Court 3 · 7–8 pm</b><div class="xs muted">Keep the slots that are still free (3&nbsp;court&#8209;hours)</div></div><span class="btn btn-primary btn-sm">Hold</span></div>
+        <div class="alt"><div><b>Court 2 & Court 3 · 10–11 pm</b><div class="xs muted">Same courts, next free time on Tue 17 Nov</div></div><span class="btn btn-sm">Hold</span></div>
+        <div class="alt"><div><b>Thu 19 Nov · Court 2 & Court 3 · 7–9 pm</b><div class="xs muted">Same courts and times, nearest other day</div></div><span class="btn btn-sm">Hold</span></div>
+      </div>
+      <span class="btn btn-block">Back to the court grid</span>
+      <div class="row small muted" style="gap:8px"><div class="toggle off"></div><span>Tell me if Court 3, 8–9 pm becomes free</span></div>
+    </div>
+  </div></div>
+
+  <div class="frame-wrap"><div class="caption">2b · Hold expired <span>— slots released</span></div>
+  <div class="phone">
+    <div class="topbar"><div class="topbar-inner"><span class="wm"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#d9f24a" stroke="#14382b" stroke-width="2"/><g fill="#14382b"><circle cx="11" cy="11" r="2"/><circle cx="20" cy="9.5" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="10" cy="20" r="2"/><circle cx="21.5" cy="19.5" r="2"/><circle cx="15.5" cy="24" r="1.6"/></g></svg><span>Pickle<b>Me</b></span></span><span class="group-name">Tuesday Pickleball ▾</span></div>
+    <div class="tabs"><span>Games</span><span class="active">Courts</span><span>Members</span><span>Jon</span></div></div>
+    <div class="page" style="opacity:.5"><h2>Eastside Sports Centre</h2><div class="card" style="height:300px"></div></div>
+    <div class="overlay"></div>
+    <div class="bottom-sheet" style="align-items:center;text-align:center;padding-top:14px;gap:14px">
+      <div class="grabber"></div>
+      <div class="big-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3 2"/></svg></div>
+      <h2 style="font-size:20px">Your hold has expired</h2>
+      <p class="muted small" style="margin:0;max-width:300px">The 10 minutes ran out, so Court 2 and Court 3, 7–9 pm were released for others. Court 2 is still free if you want to try again.</p>
+      <div class="card" style="box-shadow:none;width:100%;padding:10px 12px;text-align:left">
+        <div class="row between small"><span><b>Court 2</b> · 7–9 pm</span><span class="pill green">Still free</span></div>
+        <div class="row between small" style="margin-top:6px"><span><b>Court 3</b> · 7–9 pm</span><span class="pill amber">On hold by others</span></div>
+      </div>
+      <div class="row" style="gap:10px;width:100%"><span class="btn" style="flex:1">Close</span><span class="btn btn-primary" style="flex:2">Hold Court 2 again</span></div>
+    </div>
+  </div></div>
+
+  <div class="frame-wrap" style="gap:12px;padding-top:30px">
+    <div class="anno"><b>All or nothing.</b> A hold covers every requested slot or none of them. A partial success never takes some courts without telling the organiser.</div>
+    <div class="anno"><b>Who wins.</b> The database enforces one active hold or booking per court and time. The first transaction to commit wins; the second gets <code>slot_unavailable</code> with the clashing slots.</div>
+    <div class="anno"><b>Alternatives.</b> Worked out on the server from the same availability query: the slots that are still free, the same courts at the next free time, or the same times on the nearest other day.</div>
+    <div class="anno"><b>Retries are safe.</b> Each hold request carries an idempotency key, so a double tap or a flaky connection never creates two holds.</div>
+    <div class="anno"><b>Expired holds.</b> Released automatically by a scheduled job and also ignored by the availability check once past their expiry, so a stuck hold can't block a court.</div>
+    <div class="anno"><b>Slot watch (optional).</b> Organisers can ask to be emailed when a taken slot is released. No automatic booking.</div>
+  </div>
+  </div>
+</div></body></html>

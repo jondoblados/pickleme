@@ -1,0 +1,88 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css">
+<style>
+.bk { display: grid; grid-template-columns: 78px 1fr; gap: 12px; }
+.bk-date { border-right: 1px dashed var(--line); padding-right: 10px; }
+.bk-date .day { font-family: var(--display); font-weight: 800; font-size: 16px; color: var(--court); line-height: 1.15; }
+.bk-date .time { font-size: 12px; color: var(--muted); }
+.seg { display: flex; background: #ece7da; border-radius: 999px; padding: 3px; }
+.seg span { flex: 1; text-align: center; padding: 6px 0; border-radius: 999px; font-weight: 650; font-size: 13.5px; color: var(--muted); }
+.seg span.on { background: #fff; color: var(--court); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.check { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--line); display: grid; place-items: center; flex: none; }
+.check.on { background: var(--court); border-color: var(--court); color: var(--ball); font-size: 13px; font-weight: 800; }
+.radio { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid #bdb6a4; flex: none; margin-top: 1px; }
+.radio.on { border: 6px solid var(--court); }
+.opt { display: flex; gap: 10px; align-items: flex-start; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14px; }
+.opt.on { border-color: var(--court-3); background: #f3faf6; }
+</style></head><body>
+<div class="sheet">
+  <div class="sheet-head"><span class="tag">FR-020 · MOCKUP</span><h1>Bookings and cancellation</h1><span class="sub">Organisers manage their group's bookings; players only see them through games</span></div>
+  <div class="frames">
+
+  <div class="frame-wrap"><div class="caption">3a · Bookings <span>— upcoming</span></div>
+  <div class="phone">
+    <div class="topbar"><div class="topbar-inner"><span class="wm"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#d9f24a" stroke="#14382b" stroke-width="2"/><g fill="#14382b"><circle cx="11" cy="11" r="2"/><circle cx="20" cy="9.5" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="10" cy="20" r="2"/><circle cx="21.5" cy="19.5" r="2"/><circle cx="15.5" cy="24" r="1.6"/></g></svg><span>Pickle<b>Me</b></span></span><span class="group-name">Tuesday Pickleball ▾</span></div>
+    <div class="tabs"><span>Games</span><span class="active">Courts</span><span>Members</span><span>Jon</span></div></div>
+    <div class="page">
+      <div class="row between"><h1 class="display">Bookings</h1><span class="btn btn-primary btn-sm">+ Book courts</span></div>
+      <div class="seg"><span class="on">Upcoming</span><span>Past</span><span>Cancelled</span></div>
+      <div class="card bk">
+        <div class="bk-date"><div class="day">Tue 17 Nov</div><div class="time">7:00–9:00 pm</div></div>
+        <div class="stack" style="gap:5px">
+          <div class="row between"><b>Courts 2 & 3</b><span class="pill green">Confirmed</span></div>
+          <div class="small muted">Eastside Sports Centre</div>
+          <div class="row small" style="gap:6px"><span class="pill blue">Game</span><span>Tuesday night doubles · 12/16</span></div>
+          <div class="xs muted">Booked by Jon (Admin) · Fri 13 Nov, 9:14 am</div>
+        </div>
+      </div>
+      <div class="card bk">
+        <div class="bk-date"><div class="day">Thu 19 Nov</div><div class="time">6:00–8:00 pm</div></div>
+        <div class="stack" style="gap:5px">
+          <div class="row between"><b>Court 1</b><span class="pill green">Confirmed</span></div>
+          <div class="small muted">Eastside Sports Centre</div>
+          <div class="row small" style="gap:6px"><span class="pill grey">No game yet</span><span class="muted">Create game</span></div>
+          <div class="xs muted">Booked by Mei (Organiser)</div>
+        </div>
+      </div>
+      <div class="card bk">
+        <div class="bk-date"><div class="day">Fri 20 Nov</div><div class="time">8:00–10:00 pm</div></div>
+        <div class="stack" style="gap:5px">
+          <div class="row between"><b>Courts 2 & 3</b><span class="pill amber">Changed by venue</span></div>
+          <div class="small muted">Eastside Sports Centre</div>
+          <div class="note warn" style="padding:7px 9px;font-size:12.5px">Court 1 closed for net repairs. Moved to Court 3 by the facility admin.</div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+
+  <div class="frame-wrap"><div class="caption">3b · Cancel booking <span>— reason required</span></div>
+  <div class="phone">
+    <div class="topbar"><div class="topbar-inner"><span class="wm"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#d9f24a" stroke="#14382b" stroke-width="2"/><g fill="#14382b"><circle cx="11" cy="11" r="2"/><circle cx="20" cy="9.5" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="10" cy="20" r="2"/><circle cx="21.5" cy="19.5" r="2"/><circle cx="15.5" cy="24" r="1.6"/></g></svg><span>Pickle<b>Me</b></span></span><span class="group-name">Tuesday Pickleball ▾</span></div>
+    <div class="tabs"><span>Games</span><span class="active">Courts</span><span>Members</span><span>Jon</span></div></div>
+    <div class="page" style="opacity:.5"><h1 class="display">Bookings</h1></div>
+    <div class="overlay"></div>
+    <div class="bottom-sheet" style="gap:10px">
+      <div class="grabber"></div>
+      <h2 style="font-size:19px">Cancel booking · Tue 17 Nov, 7–9 pm</h2>
+      <div class="stack" style="gap:6px">
+        <div class="row small" style="gap:10px"><div class="check on">✓</div><span><b>Court 2</b> · 7:00–9:00 pm</span></div>
+        <div class="row small" style="gap:10px"><div class="check on">✓</div><span><b>Court 3</b> · 7:00–9:00 pm</span></div>
+      </div>
+      <div class="field">Reason<div class="input focus">Rain / wet courts <span>▾</span></div></div>
+      <div class="field">Note<div class="input area">Heavy rain forecast all evening; courts will be wet.</div><small class="muted xs" style="font-weight:400">53 / 200 · shown to players if the game is cancelled too</small></div>
+      <div class="opt on"><div class="radio on"></div><div><b>Also cancel the game</b><div class="xs muted">All 12 signed-up players get an email with your note</div></div></div>
+      <div class="opt"><div class="radio"></div><div><b>Keep the game, without courts</b><div class="xs muted">The game shows "No court booked"</div></div></div>
+      <div class="note info" style="padding:8px 10px;font-size:12.5px"><span>Free cancellation until 24 hours before the start. After that, the hours still count against your allowance this week.</span></div>
+      <div class="row" style="gap:10px"><span class="btn" style="flex:1">Keep booking</span><span class="btn btn-danger" style="flex:1.6">Cancel 2 courts</span></div>
+    </div>
+  </div></div>
+
+  <div class="frame-wrap" style="gap:12px;padding-top:30px">
+    <div class="anno"><b>Who sees bookings.</b> Organisers and admins of the group see the Courts tab. Players see the court on the game page only (e.g. "Courts 2 & 3 booked").</div>
+    <div class="anno"><b>Partial cancel.</b> Untick a court to keep it. Cancelling a subset frees only those slots; the rest of the booking stays confirmed.</div>
+    <div class="anno"><b>Reasons.</b> Same preset list and 3–200 character rule as game cancellations (FR-019), so the note can be reused for the game.</div>
+    <div class="anno"><b>Linked game.</b> The organiser decides whether the game is cancelled too. If yes, the existing cancel-game flow and player emails run in the same transaction.</div>
+    <div class="anno"><b>Late cancellation.</b> The cutoff and whether late cancellations still count are facility settings, not hard-coded.</div>
+    <div class="anno"><b>Venue changes.</b> If a facility admin closes a court, affected bookings are moved or cancelled by the admin, flagged here, and the organiser is emailed.</div>
+  </div>
+  </div>
+</div></body></html>

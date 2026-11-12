@@ -1,0 +1,99 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css">
+<style>
+.dates { display: flex; gap: 6px; overflow: hidden; }
+.date { flex: 1; width: 52px; border: 1.5px solid var(--line); background: #fff; border-radius: 12px; text-align: center; padding: 6px 0; }
+.date .d { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+.date .n { font-family: var(--display); font-weight: 800; font-size: 18px; color: var(--court); }
+.date.sel { background: var(--court); border-color: var(--court); }
+.date.sel .d { color: #cfe0d6; } .date.sel .n { color: var(--ball); }
+.date.locked { opacity: .45; }
+.date .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--court-3); margin: 2px auto 0; }
+.grid { display: grid; grid-template-columns: 52px repeat(4, 1fr); gap: 5px; }
+.grid .h { font-size: 12px; font-weight: 700; text-align: center; color: var(--court); padding-bottom: 2px; }
+.grid .t { font-size: 12px; color: var(--muted); font-weight: 600; padding-top: 10px; }
+.c { height: 46px; border-radius: 9px; border: 1.5px solid var(--line); background: #fff; font-size: 10.5px; font-weight: 700; display: grid; place-items: center; text-align: center; line-height: 1.15; color: var(--muted); }
+.c.free { color: var(--court-3); }
+.c.sel { background: var(--court); border-color: var(--court); color: var(--ball); }
+.c.mine { background: var(--green-bg); border-color: #b9dcc7; color: var(--court-2); }
+.c.taken { background: repeating-linear-gradient(135deg, #efebe1 0 6px, #e6e1d3 6px 12px); color: #7d867f; border-color: #e2ddd0; }
+.c.held { background: var(--amber-bg); border-color: #f1d49c; color: var(--amber); }
+.c.closed { background: repeating-linear-gradient(45deg, #fde8e6 0 6px, #f9dcd9 6px 12px); border-color: #f3c9c4; color: var(--red); }
+.selbar { position: absolute; left: 12px; right: 12px; bottom: 14px; background: var(--court); color: #fff; border-radius: 18px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; box-shadow: 0 10px 24px rgba(20,56,43,.35); }
+.selbar .btn { background: var(--ball); border-color: var(--ball); color: var(--court); }
+.quota { height: 7px; border-radius: 4px; background: #e9e4d7; overflow: hidden; }
+.quota i { display: block; height: 100%; width: 55%; background: var(--court-3); }
+.timer { font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--amber); }
+.sumrow { display: flex; justify-content: space-between; font-size: 14px; padding: 3px 0; }
+</style></head><body>
+<div class="sheet">
+  <div class="sheet-head"><span class="tag">FR-020 · MOCKUP</span><h1>Book courts</h1><span class="sub">Organiser view · pick slots, then hold and confirm</span></div>
+  <div class="frames">
+
+  <div class="frame-wrap"><div class="caption">1a · Availability <span>— organiser, mobile</span></div>
+  <div class="phone">
+    <div class="topbar"><div class="topbar-inner"><span class="wm"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#d9f24a" stroke="#14382b" stroke-width="2"/><g fill="#14382b"><circle cx="11" cy="11" r="2"/><circle cx="20" cy="9.5" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="10" cy="20" r="2"/><circle cx="21.5" cy="19.5" r="2"/><circle cx="15.5" cy="24" r="1.6"/></g></svg><span>Pickle<b>Me</b></span></span><span class="group-name">Tuesday Pickleball ▾</span></div>
+    <div class="tabs"><span>Games</span><span class="active">Courts</span><span>Members</span><span>Jon</span></div></div>
+    <div class="page" style="padding-bottom:110px">
+      <div class="row between"><div><h2>Eastside Sports Centre</h2><div class="muted xs">4 courts · 60-min slots · opens 7 days ahead</div></div><span class="btn btn-sm">Change</span></div>
+      <div class="dates">
+        <div class="date"><div class="d">Mon</div><div class="n">16</div></div>
+        <div class="date sel"><div class="d">Tue</div><div class="n">17</div><div class="dot" style="background:var(--ball)"></div></div>
+        <div class="date"><div class="d">Wed</div><div class="n">18</div></div>
+        <div class="date"><div class="d">Thu</div><div class="n">19</div><div class="dot"></div></div>
+        <div class="date"><div class="d">Fri</div><div class="n">20</div></div>
+        <div class="date locked"><div class="d">Sat</div><div class="n">21</div></div>
+      </div>
+      <div class="card" style="padding:10px">
+        <div class="grid" id="g"></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:#fff"></i>Free</span><span><i style="background:var(--court)"></i>Selected</span>
+        <span><i style="background:var(--green-bg)"></i>Your group</span><span><i style="background:var(--amber-bg)"></i>On hold</span>
+        <span><i style="background:#e6e1d3"></i>Booked</span><span><i style="background:var(--red-bg)"></i>Closed</span>
+      </div>
+      <div class="card" style="padding:11px 13px"><div class="row between small"><b>Your weekly allowance</b><span class="muted">5.5 of 10 court-hours</span></div><div class="quota" style="margin-top:6px"><i></i></div></div>
+    </div>
+    <div class="selbar"><div><div style="font-weight:700">2 courts · 7–9 pm</div><div class="xs" style="color:#cfe0d6">4 court-hours · Tue 17 Nov</div></div><span class="btn">Hold slots</span></div>
+  </div></div>
+
+  <div class="frame-wrap"><div class="caption">1b · Hold & confirm <span>— 10-minute hold</span></div>
+  <div class="phone">
+    <div class="topbar"><div class="topbar-inner"><span class="wm"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#d9f24a" stroke="#14382b" stroke-width="2"/><g fill="#14382b"><circle cx="11" cy="11" r="2"/><circle cx="20" cy="9.5" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="10" cy="20" r="2"/><circle cx="21.5" cy="19.5" r="2"/><circle cx="15.5" cy="24" r="1.6"/></g></svg><span>Pickle<b>Me</b></span></span><span class="group-name">Tuesday Pickleball ▾</span></div>
+    <div class="tabs"><span>Games</span><span class="active">Courts</span><span>Members</span><span>Jon</span></div></div>
+    <div class="page" style="opacity:.5"><h2>Eastside Sports Centre</h2><div class="card" style="height:300px"></div></div>
+    <div class="overlay"></div>
+    <div class="bottom-sheet">
+      <div class="grabber"></div>
+      <div class="row between"><h2 style="font-size:19px">Slots on hold</h2><div style="text-align:right"><div class="timer">9:42</div><div class="xs muted">left to confirm</div></div></div>
+      <div class="note warn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3 2"/></svg><span>Nobody else can take these slots while they're on hold. Confirm before the timer runs out or they're released.</span></div>
+      <div class="card" style="box-shadow:none;padding:10px 12px">
+        <div class="sumrow"><span><b>Court 2</b> · Tue 17 Nov</span><span>7:00–9:00 pm</span></div>
+        <div class="sumrow"><span><b>Court 3</b> · Tue 17 Nov</span><span>7:00–9:00 pm</span></div>
+        <hr class="divider"><div class="sumrow muted small"><span>Uses from your allowance</span><span>4 court-hours</span></div>
+      </div>
+      <div class="row between"><div><b>Create a game for this booking</b><div class="xs muted">Location and weather venue are filled in</div></div><div class="toggle"></div></div>
+      <div class="field">Game title<div class="input">Tuesday night doubles</div></div>
+      <div class="row" style="gap:10px"><div class="field" style="flex:1">Players<div class="input">16</div></div><div class="field" style="flex:1.4">Booking note<div class="input muted">Optional</div></div></div>
+      <div class="row" style="gap:10px"><span class="btn" style="flex:1">Release</span><span class="btn btn-primary" style="flex:2">Confirm booking</span></div>
+    </div>
+  </div></div>
+
+  <div class="frame-wrap" style="gap:12px;padding-top:30px">
+    <div class="anno"><b>Slot grid.</b> Times run down, courts run across. Tap to select; drag selects a block. Selections must be whole slots, contiguous per court, within the opening hours.</div>
+    <div class="anno"><b>Booking window.</b> Dates beyond the facility's window (here 7 days) are dimmed and show when they open, e.g. "Opens Sat 14 Nov, 12:00 am".</div>
+    <div class="anno"><b>Other groups.</b> Organisers see that a slot is Booked or On hold but not who holds it, unless it is their own group.</div>
+    <div class="anno"><b>Allowance.</b> Weekly court-hour limit set by the facility admin for each organiser. Holds count against it until released.</div>
+    <div class="anno"><b>Hold then confirm.</b> Holding reserves the slots in one database transaction. Confirm turns the hold into a booking and can create the linked game in the same step.</div>
+  </div>
+  </div>
+</div>
+<script>
+const g=document.getElementById('g');
+const H=['','Court 1','Court 2','Court 3','Court 4'];H.forEach(h=>g.insertAdjacentHTML('beforeend',`<div class="h">${h}</div>`));
+const rows=[['6 pm',['taken','Booked'],['free','Free'],['free','Free'],['closed','Closed']],
+['7 pm',['mine','Your<br>group'],['sel','✓'],['sel','✓'],['closed','Closed']],
+['8 pm',['mine','Your<br>group'],['sel','✓'],['sel','✓'],['held','On hold']],
+['9 pm',['taken','Booked'],['free','Free'],['taken','Booked'],['held','On hold']],
+['10 pm',['free','Free'],['free','Free'],['free','Free'],['free','Free']]];
+rows.forEach(r=>{g.insertAdjacentHTML('beforeend',`<div class="t">${r[0]}</div>`);r.slice(1).forEach(([k,l])=>g.insertAdjacentHTML('beforeend',`<div class="c ${k}">${l}</div>`))});
+</script></body></html>

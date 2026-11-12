@@ -1,0 +1,71 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css">
+<style>
+.mail { width: 380px; background: #f5f2ea; border-radius: 14px; border: 1px solid #c9c2b0; overflow: hidden; box-shadow: 0 18px 40px rgba(0,0,0,.12); font-family: Arial, Helvetica, sans-serif; }
+.mail .hdr { background: #fff; border-bottom: 1px solid var(--line); padding: 10px 14px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+.mail .hdr b { color: var(--ink); }
+.mail .body { padding: 18px; display: flex; flex-direction: column; gap: 14px; color: #15211b; font-size: 14px; }
+.hero { background: #14382b; color: #fff; border-radius: 14px; padding: 18px 20px; }
+.hero .k { margin: 0 0 6px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #cfe0d6; }
+.hero h1 { margin: 0; font-size: 21px; line-height: 1.2; }
+.hero p { margin: 8px 0 0; color: #cfe0d6; font-size: 14px; }
+.hero strong { color: #d9f24a; }
+.hero.warn { background: #6d4000; } .hero.warn strong { color: #ffe3a8; }
+.hero.red { background: #7c1a14; } .hero.red strong { color: #ffd2cc; }
+.dt { width: 100%; font-size: 13.5px; } .dt td { padding: 3px 10px 3px 0; border: 0; }
+.dt td:first-child { color: #5a675f; font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; width: 90px; }
+.dt td:last-child { font-weight: bold; }
+.cta { background: #14382b; color: #fff; padding: 11px 20px; border-radius: 999px; font-weight: bold; display: inline-block; font-size: 14px; }
+.foot { font-size: 11.5px; color: #5a675f; }
+.quote { background: #fff; border-left: 3px solid #d9f24a; padding: 8px 10px; border-radius: 0 8px 8px 0; font-size: 13.5px; }
+.flow { display: grid; grid-template-columns: 210px repeat(4, 1fr); font-size: 12.5px; background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; width: 1196px; }
+.flow > div { padding: 8px 10px; border-bottom: 1px solid #efebe1; }
+.flow .h { background: #f3f0e7; font-weight: 700; color: var(--court); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.flow .e { font-weight: 600; }
+.flow .y { color: var(--court-3); font-weight: 700; } .flow .n { color: #b8b19e; }
+</style></head><body>
+<div class="sheet">
+  <div class="sheet-head"><span class="tag">FR-020 · MOCKUP</span><h1>Booking emails</h1><span class="sub">Same layout as the existing promotion email · sent through the outbox</span></div>
+  <div class="frames">
+    <div class="frame-wrap"><div class="caption">6a · Booking confirmed <span>— to the organiser</span></div>
+    <div class="mail"><div class="hdr"><b>PickleMe</b> &lt;notify@pickleme.doblados.net&gt;<br>Booked: Courts 2 & 3, Tue 17 Nov, 7–9 pm</div>
+      <div class="body">
+        <div class="hero"><p class="k">Booking confirmed</p><h1>Your courts are booked, Jon.</h1><p><strong>Courts 2 & 3</strong> at Eastside Sports Centre are yours on <strong>Tue 17 Nov</strong>.</p></div>
+        <table class="dt"><tr><td>When</td><td>7:00–9:00 pm (SGT)</td></tr><tr><td>Where</td><td>Eastside Sports Centre</td></tr><tr><td>Courts</td><td>Court 2, Court 3</td></tr><tr><td>Game</td><td>Tuesday night doubles</td></tr><tr><td>Ref</td><td>BK-7Q4M</td></tr></table>
+        <div class="small">Free cancellation until <b>Mon 16 Nov, 7:00 pm</b>.</div>
+        <div><span class="cta">View booking</span></div>
+        <div class="foot">PickleMe · Tuesday Pickleball. You're receiving this because you made this booking.</div>
+      </div></div></div>
+
+    <div class="frame-wrap"><div class="caption">6b · Changed by the venue <span>— to the organiser</span></div>
+    <div class="mail"><div class="hdr"><b>PickleMe</b> &lt;notify@pickleme.doblados.net&gt;<br>Changed: your booking on Fri 20 Nov</div>
+      <div class="body">
+        <div class="hero warn"><p class="k">Booking changed</p><h1>Your court has moved.</h1><p><strong>Court 1</strong> is closed on Fri 20 Nov. Your booking is now on <strong>Court 3</strong>, same time.</p></div>
+        <table class="dt"><tr><td>When</td><td>8:00–10:00 pm (SGT)</td></tr><tr><td>Before</td><td>Court 1, Court 2</td></tr><tr><td>Now</td><td>Court 3, Court 2</td></tr></table>
+        <div class="quote">Net repairs on Court 1. — Facility admin</div>
+        <div class="small">Your game's location has been updated. Players are not emailed about a court move.</div>
+        <div><span class="cta">View booking</span></div>
+        <div class="foot">PickleMe · Tuesday Pickleball. You're receiving this because you made this booking.</div>
+      </div></div></div>
+
+    <div class="frame-wrap"><div class="caption">6c · Reminder <span>— before the free cancellation cutoff</span></div>
+    <div class="mail"><div class="hdr"><b>PickleMe</b> &lt;notify@pickleme.doblados.net&gt;<br>Still need Court 1 on Thu 19 Nov?</div>
+      <div class="body">
+        <div class="hero"><p class="k">Free cancellation ends soon</p><h1>Still need these courts?</h1><p>Free cancellation for <strong>Court 1, Thu 19 Nov, 6–8 pm</strong> ends in <strong>3 hours</strong>.</p></div>
+        <table class="dt"><tr><td>Game</td><td>None linked yet</td></tr><tr><td>Booked by</td><td>Mei (Organiser)</td></tr></table>
+        <div class="small">If you don't need it, cancelling now gives the court to another group and keeps your allowance.</div>
+        <div class="row" style="gap:8px"><span class="cta">Create a game</span><span class="btn btn-sm" style="font-family:Arial">Cancel booking</span></div>
+        <div class="foot">PickleMe · Tuesday Pickleball. You can turn off reminders in your profile.</div>
+      </div></div></div>
+  </div>
+
+  <div class="caption">6d · Who gets what</div>
+  <div class="flow">
+    <div class="h">Event</div><div class="h">Organiser who booked</div><div class="h">Group admins</div><div class="h">Players of linked game</div><div class="h">Slot watchers</div>
+    <div class="e">Booking confirmed</div><div class="y">Email</div><div class="n">—</div><div class="n">—</div><div class="n">—</div>
+    <div class="e">Cancelled by organiser</div><div class="y">Email</div><div>In activity log</div><div>Email only if the game is cancelled too (FR-019 note)</div><div class="y">Email: slot free</div>
+    <div class="e">Cancelled or moved by facility admin</div><div class="y">Email with reason</div><div class="y">Email</div><div>Email only if the game is cancelled</div><div class="y">Email if freed</div>
+    <div class="e">Hold expired</div><div>In-app only</div><div class="n">—</div><div class="n">—</div><div class="y">Email: slot free</div>
+    <div class="e">Cancellation cutoff reminder</div><div class="y">Email (opt-out)</div><div class="n">—</div><div class="n">—</div><div class="n">—</div>
+    <div class="e" style="border-bottom:0">Organiser suspended</div><div class="y" style="border-bottom:0">Email</div><div class="y" style="border-bottom:0">Email</div><div class="n" style="border-bottom:0">—</div><div class="n" style="border-bottom:0">—</div>
+  </div>
+</div></body></html>

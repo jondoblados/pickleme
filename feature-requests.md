@@ -30,6 +30,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-017 | Hourly weather forecasts for game venues | Implemented (v0.11.0, live) | 2026-11-05 | 2026-11-09 |
 | FR-018 | Roster image with avatar circles | Implemented (v0.12.0) | 2026-11-09 | 2026-11-09 |
 | FR-019 | Required cancellation reason, shown as a note from the organiser | Implemented (v0.13.0, live) | 2026-11-10 | 2026-11-10 |
+| FR-020 | Court and facility prebooking | Requested (plan and mockups for review) | 2026-11-13 | — |
 
 ## Details
 
@@ -222,3 +223,16 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
   players, Organiser unavailable) plus Other; choosing one fills an editable note (3–200 characters). Shown on the game
   page, games list, WhatsApp message and roster image. Notes can be edited, or added to games cancelled before this release.
 - **Details:** [feature-requests/FR-019-cancel-reasons.md](feature-requests/FR-019-cancel-reasons.md).
+
+### FR-020 — Court and facility prebooking
+- **Status:** Requested. Mockups and implementation plan ready for review (2026-11-13); no code or database changes yet.
+- **Requested:** 2026-11-13 by Jon.
+- **Description:** Organisers and admins reserve courts at a facility (court grid, short hold, then confirm) before
+  announcing a game, and can create the game from the booking in one step. The database guarantees a court is never
+  double-booked; if two organisers want the same slot, the first to commit wins and the other is offered alternatives.
+  Cancellation needs a reason (FR-019 presets) and can cancel the linked game too. Facility admins manage courts,
+  opening hours, booking rules, closures, and which organisers may book with weekly court-hour allowances.
+- **Notifications:** booking confirmed, changed or cancelled by the facility, cancellation-cutoff reminder, organiser
+  suspended, and optional freed-slot alerts, through a new email outbox like FR-004.
+- **Details:** [feature-requests/FR-020-court-prebooking.md](feature-requests/FR-020-court-prebooking.md),
+  [docs/fr020-court-prebooking-plan.md](docs/fr020-court-prebooking-plan.md), mockups in [docs/fr020-review/](docs/fr020-review/).

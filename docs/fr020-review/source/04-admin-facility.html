@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css">
+<style>
+.layout { display: grid; grid-template-columns: 210px 1fr; min-height: 640px; }
+.side { background: #fff; border-right: 1px solid var(--line); padding: 16px 10px; display: flex; flex-direction: column; gap: 2px; }
+.side .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; padding: 10px 10px 4px; }
+.side a { padding: 8px 10px; border-radius: 9px; font-weight: 600; font-size: 14px; color: var(--ink); }
+.side a.on { background: var(--green-bg); color: var(--court); }
+.main { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.cols { display: grid; grid-template-columns: 1.05fr 1fr; gap: 16px; }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; font-size: 14px; align-items: center; }
+.kv .v { background: #f6f3eb; border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; font-weight: 600; min-width: 92px; text-align: right; }
+.hours td, .hours th { padding: 7px 8px; }
+td, th { white-space: nowrap; }
+</style></head><body>
+<div class="sheet">
+  <div class="sheet-head"><span class="tag">FR-020 · MOCKUP</span><h1>Facility admin · setup and closures</h1><span class="sub">Desktop · facility admins only</span></div>
+  <div class="frames">
+  <div class="desk" style="width:1240px">
+    <div class="chrome"><i></i><i></i><i></i><span class="url">jon.doblados.net/pickleme/#/facilities/eastside/setup</span></div>
+    <div class="topbar"><div class="topbar-inner" style="padding:10px 20px"><span class="wm"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#d9f24a" stroke="#14382b" stroke-width="2"/><g fill="#14382b"><circle cx="11" cy="11" r="2"/><circle cx="20" cy="9.5" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="10" cy="20" r="2"/><circle cx="21.5" cy="19.5" r="2"/><circle cx="15.5" cy="24" r="1.6"/></g></svg><span>Pickle<b>Me</b></span></span><span class="group-name">Facility admin · Eastside Sports Centre ▾</span></div></div>
+    <div class="layout">
+      <div class="side">
+        <div class="lbl">Eastside Sports Centre</div>
+        <a class="on">Setup & rules</a><a>Courts</a><a>Closures</a><a>Organisers & access</a><a>All bookings</a><a>Activity log</a>
+        <div class="lbl">Other facilities</div><a class="muted">Northpoint Hall</a><a class="muted">+ Add facility</a>
+      </div>
+      <div class="main">
+        <div class="row between"><div><h1 class="display" style="font-size:24px">Setup & rules</h1><div class="muted small">Changes apply to new bookings. Existing bookings keep the rules they were made under.</div></div><span class="btn btn-primary btn-sm">Save changes</span></div>
+        <div class="cols">
+          <div class="stack">
+            <div class="card stack">
+              <h3>Courts</h3>
+              <table><tr><th>Court</th><th>Surface</th><th>Status</th><th></th></tr>
+                <tr><td><b>Court 1</b></td><td>Indoor · hardcourt</td><td><span class="pill green">Bookable</span></td><td class="muted xs">Edit</td></tr>
+                <tr><td><b>Court 2</b></td><td>Indoor · hardcourt</td><td><span class="pill green">Bookable</span></td><td class="muted xs">Edit</td></tr>
+                <tr><td><b>Court 3</b></td><td>Indoor · hardcourt</td><td><span class="pill green">Bookable</span></td><td class="muted xs">Edit</td></tr>
+                <tr><td><b>Court 4</b></td><td>Outdoor · sheltered</td><td><span class="pill amber">Closure on 17 Nov</span></td><td class="muted xs">Edit</td></tr>
+              </table>
+            </div>
+            <div class="card stack">
+              <h3>Opening hours <span class="muted small" style="font-weight:500">· Asia/Singapore</span></h3>
+              <table class="hours"><tr><th>Days</th><th>Opens</th><th>Closes</th></tr>
+                <tr><td>Mon–Fri</td><td>7:00 am</td><td>11:00 pm</td></tr>
+                <tr><td>Sat, Sun</td><td>7:00 am</td><td>10:00 pm</td></tr>
+                <tr><td>Public holidays</td><td>8:00 am</td><td>8:00 pm</td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="card stack">
+              <h3>Booking rules</h3>
+              <div class="kv">
+                <span>Slot length</span><span class="v">60 min</span>
+                <span>Booking window opens</span><span class="v">7 days ahead</span>
+                <span>New dates released at</span><span class="v">12:00 am</span>
+                <span>Hold time before confirming</span><span class="v">10 min</span>
+                <span>Longest single booking</span><span class="v">3 hours</span>
+                <span>Most courts in one booking</span><span class="v">4</span>
+                <span>Free cancellation until</span><span class="v">24 h before</span>
+                <span>Late cancellations count toward allowance</span><span class="v">Yes</span>
+              </div>
+            </div>
+            <div class="card stack" style="border-color:#f1d49c">
+              <div class="row between"><h3>New closure</h3><span class="pill amber">2 bookings affected</span></div>
+              <div class="small"><b>Court 4</b> · Tue 17 Nov, 6:00–8:00 pm · <span class="muted">Net replacement</span></div>
+              <table style="font-size:13px"><tr><th>Booking</th><th>Group</th><th>Action</th></tr>
+                <tr><td>Court 4 · 6–7 pm</td><td>Lunchtime Smash</td><td><span class="pill blue">Move to Court 2</span></td></tr>
+                <tr><td>Court 4 · 7–8 pm</td><td>Northside Social</td><td><span class="pill red">Cancel</span> <span class="xs muted">organiser asked</span></td></tr>
+              </table>
+              <div class="row" style="gap:8px;justify-content:flex-end"><span class="btn btn-sm">Discard</span><span class="btn btn-primary btn-sm">Add closure & email organisers</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="frame-wrap" style="gap:12px;padding-top:4px">
+    <div class="anno"><b>Rules are versioned.</b> Each booking stores the rule set it was made under, so changing the cutoff later doesn't change existing bookings.</div>
+    <div class="anno"><b>Closures never silently overlap.</b> Adding a closure lists every affected booking first. The admin picks move or cancel for each; nothing is saved until all are resolved.</div>
+    <div class="anno"><b>Move suggestions.</b> A booking can only move to a court that is free for the same time, checked by the same database rule that stops double booking.</div>
+    <div class="anno"><b>Notifications.</b> Affected organisers are emailed. If a linked game is cancelled, its players get the usual cancellation email.</div>
+  </div>
+  </div>
+</div></body></html>

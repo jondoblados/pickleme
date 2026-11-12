@@ -1,0 +1,72 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css">
+<style>
+.layout { display: grid; grid-template-columns: 210px 1fr; min-height: 640px; }
+.side { background: #fff; border-right: 1px solid var(--line); padding: 16px 10px; display: flex; flex-direction: column; gap: 2px; }
+.side .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; padding: 10px 10px 4px; }
+.side a { padding: 8px 10px; border-radius: 9px; font-weight: 600; font-size: 14px; color: var(--ink); }
+.side a.on { background: var(--green-bg); color: var(--court); }
+.main { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.bar { height: 6px; border-radius: 3px; background: #e9e4d7; overflow: hidden; width: 90px; }
+.bar i { display: block; height: 100%; background: var(--court-3); }
+.matrix td, .matrix th { text-align: center; padding: 7px 8px; }
+.matrix td:first-child, .matrix th:first-child { text-align: left; }
+.y { color: var(--court-3); font-weight: 800; } .n { color: #c3bcaa; }
+.drawer { position: absolute; top: 0; right: 0; bottom: 0; width: 320px; background: #fff; border-left: 1px solid var(--line); box-shadow: -10px 0 30px rgba(0,0,0,.08); padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.matrix td:first-child { white-space: normal; min-width: 230px; } .matrix td, .matrix th { white-space: nowrap; }
+</style></head><body>
+<div class="sheet">
+  <div class="sheet-head"><span class="tag">FR-020 · MOCKUP</span><h1>Facility admin · organisers and access</h1><span class="sub">Who can book, how much, and who can change the facility</span></div>
+  <div class="frames">
+  <div class="desk" style="position:relative;width:1380px">
+    <div class="chrome"><i></i><i></i><i></i><span class="url">jon.doblados.net/pickleme/#/facilities/eastside/organisers</span></div>
+    <div class="topbar"><div class="topbar-inner" style="padding:10px 20px"><span class="wm"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#d9f24a" stroke="#14382b" stroke-width="2"/><g fill="#14382b"><circle cx="11" cy="11" r="2"/><circle cx="20" cy="9.5" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="10" cy="20" r="2"/><circle cx="21.5" cy="19.5" r="2"/><circle cx="15.5" cy="24" r="1.6"/></g></svg><span>Pickle<b>Me</b></span></span><span class="group-name">Facility admin · Eastside Sports Centre ▾</span></div></div>
+    <div class="layout">
+      <div class="side">
+        <div class="lbl">Eastside Sports Centre</div>
+        <a>Setup & rules</a><a>Courts</a><a>Closures</a><a class="on">Organisers & access</a><a>All bookings</a><a>Activity log</a>
+      </div>
+      <div class="main" style="padding-right:344px">
+        <div class="row between"><h1 class="display" style="font-size:24px">Organisers & access</h1><span class="btn btn-primary btn-sm">+ Add organiser</span></div>
+        <div class="card" style="padding:6px 8px">
+          <table>
+            <tr><th>Organiser</th><th>Group</th><th>This week</th><th>Status</th></tr>
+            <tr style="background:#f3faf6"><td><div class="row"><div class="avatar" style="background:#2e7a5b">JD</div><div><b>Jon</b><div class="xs muted">Group admin</div></div></div></td><td>Tuesday Pickleball</td><td><div class="xs">5.5 / 10 h</div><div class="bar"><i style="width:55%"></i></div></td><td><span class="pill green">Can book</span></td></tr>
+            <tr><td><div class="row"><div class="avatar" style="background:#8a5a9e">MT</div><div><b>Mei</b><div class="xs muted">Organiser</div></div></div></td><td>Tuesday Pickleball</td><td><div class="xs">2 / 6 h</div><div class="bar"><i style="width:33%"></i></div></td><td><span class="pill green">Can book</span></td></tr>
+            <tr><td><div class="row"><div class="avatar" style="background:#b86a00">RK</div><div><b>Ravi</b><div class="xs muted">Organiser</div></div></div></td><td>Lunchtime Smash</td><td><div class="xs">8 / 8 h</div><div class="bar"><i style="width:100%;background:var(--amber)"></i></div></td><td><span class="pill amber">At limit</span></td></tr>
+            <tr><td><div class="row"><div class="avatar" style="background:#5a675f">AL</div><div><b>Alex</b><div class="xs muted">Organiser</div></div></div></td><td>Lunchtime Smash</td><td><div class="xs muted">—</div></td><td><span class="pill red">Suspended</span></td></tr>
+          </table>
+        </div>
+        <div class="card stack">
+          <h3>What each role can do here</h3>
+          <table class="matrix" style="font-size:13px">
+            <tr><th>Action</th><th>Player</th><th>Organiser</th><th>Group admin</th><th>Facility admin</th></tr>
+            <tr><td>See which court a game is on</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+            <tr><td>See the court grid (free / taken)</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+            <tr><td>Hold, book, cancel own group's bookings</td><td class="n">—</td><td class="y">✓ within allowance</td><td class="y">✓ within allowance</td><td class="y">✓</td></tr>
+            <tr><td>Cancel another organiser's booking in the group</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td></tr>
+            <tr><td>Change rules, courts, closures, allowances</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td></tr>
+            <tr><td>See which group holds each slot</td><td class="n">—</td><td class="n">own group</td><td class="n">own group</td><td class="y">✓</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="drawer" style="top:84px">
+      <div class="row between"><h2>Edit organiser · Jon</h2><span class="muted">✕</span></div>
+      <div class="field">Group<div class="input">Tuesday Pickleball</div></div>
+      <div class="row between"><div><b>Can book courts</b><div class="xs muted">Off = can still view, not book</div></div><div class="toggle"></div></div>
+      <div class="field">Weekly allowance<div class="input">10 court-hours <span class="muted">▾</span></div><small class="muted xs" style="font-weight:400">Weeks run Mon–Sun, Singapore time</small></div>
+      <div class="field">Most active bookings at once<div class="input">6</div></div>
+      <div class="field">Booking window<div class="input">Facility default (7 days) <span class="muted">▾</span></div></div>
+      <hr class="divider">
+      <div class="field">Suspend until<div class="input muted">Not suspended</div><small class="muted xs" style="font-weight:400">Suspending keeps existing bookings; the admin decides whether to cancel them.</small></div>
+      <div class="row" style="gap:8px;justify-content:flex-end;margin-top:auto"><span class="btn btn-sm">Cancel</span><span class="btn btn-primary btn-sm">Save</span></div>
+    </div>
+  </div>
+  <div class="frame-wrap" style="gap:12px;padding-top:4px">
+    <div class="anno"><b>Organisers come from groups.</b> Only organisers and admins of a group that has access to the facility can be added. Removing someone from the group removes their booking access too.</div>
+    <div class="anno"><b>Allowance.</b> Counted in court-hours per week across holds and confirmed bookings. The check runs inside the booking transaction, so two quick bookings can't both slip under the limit.</div>
+    <div class="anno"><b>Enforced in the database.</b> Every permission in the table is checked by the booking functions and row-level security, not just hidden in the app.</div>
+    <div class="anno"><b>Audited.</b> Allowance changes, suspensions and admin cancellations are recorded with before and after values.</div>
+  </div>
+  </div>
+</div></body></html>
