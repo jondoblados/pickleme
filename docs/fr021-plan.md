@@ -1,6 +1,6 @@
 # FR-021 implementation plan — scheduled visibility, court booking fees, game-day slot confirmation
 
-Status: in progress (draft PR). Decisions confirmed 2026-11-13 (see the spec). Not applied to production until Jon approves.
+Status: implemented (v0.14.0, live 2026-11-13). Decisions confirmed 2026-11-13 (see the spec).
 Spec: [feature-requests/FR-021-scheduled-games-fees.md](../feature-requests/FR-021-scheduled-games-fees.md).
 Mockups: [docs/fr021-review/](fr021-review/) (PNG, with HTML sources in `source/`).
 
@@ -100,9 +100,9 @@ country-code picker defaulting to `+65`, and the `+65` PayNow payee check) with 
 - **Personal data:** new mobile numbers. Kept per game, organiser/admin-only, excluded from logs and shares, and
   deleted after 30 days.
 
-## Build notes (draft PR, 2026-11-13)
+## Build notes (v0.14.0, 2026-11-13)
 
-How the build interprets or extends the spec. Flagged for review in the pull request.
+How the build interprets or extends the spec. Reviewed in PR #12.
 
 - **Late joiners pay too.** The final share is the total divided by everyone on the attendance list (the playing list
   at the start time plus anyone added late, FR-008), minus players marked Excused. Unexcused no-shows still pay.

@@ -1,6 +1,6 @@
 # FR-021 — Scheduled game visibility, court booking fees and game-day slot confirmation
 
-- Status: In progress (draft PR). Decisions confirmed 2026-11-13. Not applied to production.
+- Status: Implemented (v0.14.0, live 2026-11-13). Decisions confirmed 2026-11-13.
 - Requested: 2026-11-13 by Jon, for an organiser who has booked courts for every game in Q1 2027 and wants to enter
   all of them now.
 - Plan: [docs/fr021-plan.md](../docs/fr021-plan.md). Mockups: [docs/fr021-review/](../docs/fr021-review/).
@@ -107,9 +107,9 @@ When a fee is added or changed after people have joined, the game page shows the
 8. Only organisers and admins of that group can read confirmation numbers; numbers are deleted 30 days after the game.
 9. Privacy policy and FAQ are updated before release.
 
-## Build notes (draft PR, 2026-11-13)
+## Build notes (v0.14.0, 2026-11-13)
 
-How the build interprets or extends the spec. Flagged for review in the pull request.
+How the build interprets or extends the spec. Reviewed in PR #12.
 
 - **Late joiners pay too.** The final share is the total divided by everyone on the attendance list (the playing list
   at the start time plus anyone added late, FR-008), minus players marked Excused. Unexcused no-shows still pay.

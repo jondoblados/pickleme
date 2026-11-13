@@ -2,9 +2,9 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
-## [0.14.0] — Unreleased — FR-021 scheduled games and court booking fees
+## [0.14.0] — 2026-11-13 — FR-021 scheduled games and court booking fees
 
-Draft. The migration must be applied to Supabase before the app is deployed.
+The migration and the updated `send-promotions` function are live.
 
 ### Added
 - **Scheduled visibility.** When creating or editing a game, organisers choose **Visible now** (default), **1 week before**
