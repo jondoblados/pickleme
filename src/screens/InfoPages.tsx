@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export const PRIVACY_CONTACT = 'jon@doblados.net'
-export const POLICY_UPDATED = '9 November 2026'
+export const POLICY_UPDATED = '13 November 2026'
 
 type Nav = (view: 'privacy' | 'faq') => void
 
@@ -54,6 +54,9 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         <li><b>Group activity log</b> — a record of actions in a group, such as joining the group or a game, withdrawing, removals, game changes,
           role changes, invite links and confirmation emails resent by an admin, with who did it, who it affected, the names shown at the time, and when. Automatic actions, such as waitlist promotions, record whose
           action triggered them.</li>
+        <li><b>Mobile numbers for paid games</b> — on the day of a game with a court booking fee, players on the playing list enter a mobile
+          number (any country code) to confirm their place. It's stored for that game only, isn't added to your profile, and isn't written to the activity log.
+          Organisers who collect court fees also enter a Singapore PayNow mobile number for the game.</li>
         <li><b>Technical information</b> needed to run and secure the service, such as sign-in records, session information, error logs and security logs.</li>
       </ul>
       <p>PickleMe does not use passwords. Your email and account details are still personal information, and we treat them that way.</p>
@@ -68,6 +71,7 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         <li>Show your profile photo, if you add one, next to your name so members of your groups can recognise you.</li>
         <li>Email you when you move from the waitlist into the playing list.</li>
         <li>Let organisers record attendance and review attendance and repeat no-show reports for their group, so places go to people who turn up.</li>
+        <li>Let organisers see who has confirmed their place in a paid game, and show players where to pay their share of the court fee.</li>
         <li>Keep a group activity log so admins can see who changed what and resolve disputes.</li>
         <li>Investigate problems, prevent misuse and keep the service secure.</li>
         <li>Answer questions and privacy requests, and meet legal requirements.</li>
@@ -88,6 +92,10 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         It shows each player's profile photo if they've added one, otherwise their initials. It doesn't include emails or attendance.
         Once shared, the image — including any photos in it — can be seen by everyone in that chat, can be forwarded, and won't update.
         If you don't want your photo in shared roster images, remove it from the tab with your name.</p>
+      <p>For games with a court booking fee, the total and the estimated share per player are shown to group members wherever the game appears,
+        including WhatsApp messages and roster images. The PayNow name and number are shown only to organisers, admins and players who owe a share.
+        A mobile number you enter to confirm your slot is visible only to that group's organisers and admins, never to other players, and never
+        appears in shared messages or images. PickleMe doesn't take payments; you pay in your own banking app.</p>
       <p>The group activity log is visible only to that group's admins, who can export it as a spreadsheet (CSV) file; once exported, that file is their responsibility.</p>
       <p>Your full email address is not shown to other players, organisers or admins anywhere in the app. Only the operator can see it,
         through the back-end systems used to run PickleMe, and only to operate and support the service.</p>
@@ -120,6 +128,8 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
       <h2>7. Browser storage</h2>
       <p>PickleMe stores your signed-in session in your browser and remembers the last email you used to sign in on that device.
         After sending a sign-in email it also remembers, for up to an hour, which address it was sent to, so the code box is still there when you come back.
+        For organisers who collect court fees, it remembers your own PayNow number on that device to pre-fill the next game, and it remembers
+        which fee-change notices you've dismissed.
         We don't use analytics, advertising trackers or advertising cookies.</p>
       <p>Signing out ends your session on that device. Clearing your browser data also removes it, but doesn't delete your PickleMe account.</p>
 
@@ -128,6 +138,8 @@ export function PrivacyPolicy({ onNav }: { onNav: Nav }) {
         <li><b>Account, profile and membership:</b> while you have an account. Deleted when you ask us to close it.</li>
         <li><b>Game sign-up history:</b> the app shows past games for 60 days. We keep identifiable sign-up records for up to 12 months after a game, then delete or anonymise them.</li>
         <li><b>Attendance records:</b> kept for up to 12 months after a game, then deleted or anonymised together with sign-up records.</li>
+        <li><b>Slot confirmation numbers:</b> deleted automatically 30 days after the game, or straight away if you withdraw or the organiser removes the fee.
+          PayNow numbers for a game are deleted if the fee is removed, otherwise with the game.</li>
         <li><b>Profile photo:</b> until you change or remove it, or close your account. A replaced or removed photo is deleted straight away;
           if that fails, or you close your account, a weekly clean-up deletes it within 7 days. No one else can see it in the meantime.</li>
         <li><b>Unconfirmed sign-ups:</b> shown to the group's admins for up to 30 days. If you never confirm, the operator may delete the unconfirmed account.</li>
@@ -257,6 +269,23 @@ export function Faq({ onNav }: { onNav: Nav }) {
         <p>On the Games tab tap <b>New game</b>. Details are pre-filled from the last game, one week later. Check the date, time, place and player limit,
           save, then share the link in WhatsApp.</p>
       </Q>
+      <Q q="Can I enter games in advance but show them later?">
+        <p>Yes. When creating a game, choose <b>When should players see this game?</b>: <b>Visible now</b> (the default), <b>1 week before</b> or
+          <b>2 weeks before</b>. Until then, only organisers and admins can see it, marked <b>Hidden until …</b> in the games list, and shared links won't open it for players.
+          This lets you enter a whole season at once. New games copy the visibility and fee of the last game. Once players have joined, a game can't be hidden again.</p>
+      </Q>
+      <Q q="How do court booking fees work?">
+        <p>Courts are booked outside PickleMe. Add the <b>total fee</b> (in SGD) when creating or editing a game, or later, and choose who players pay by PayNow:
+          you, or another Singapore mobile number such as the person who booked the courts. Everyone sees the total and the estimated share, based on how many are playing;
+          waitlisted players don't pay unless they move up. Players who joined before a fee was added or changed see a notice on the game.</p>
+        <p>After the game, the final share splits the total between everyone on the attendance list (including late joiners), except players marked <b>Excused</b>.
+          Unexcused no-shows still pay. Shares are rounded up to the cent.</p>
+      </Q>
+      <Q q="What is slot confirmation?">
+        <p>For games with a fee, players on the playing list confirm their place on game day, from midnight until the start time, by entering a mobile number
+          (any country code, as on WhatsApp). Organisers and admins see who has confirmed, with their numbers, under <b>Slot confirmations</b> on the game page.
+          Confirming doesn't mark attendance or payment; mark attendance as usual. Numbers are deleted 30 days after the game.</p>
+      </Q>
       <Q q="Can I change a game after posting it?">
         <p>Yes — open the game and tap <b>Edit game</b>. You can raise the player limit (waitlisted players move in automatically), but not lower it below the number already playing.</p>
       </Q>
@@ -331,6 +360,10 @@ export function Faq({ onNav }: { onNav: Nav }) {
         <p>No other player or organiser can see it in the app. It's used only to sign you in and send game emails.
           The one exception: if you started signing in from a group's link but haven't confirmed yet, that group's admins see a partly hidden
           version (like <b>ec•••@yahoo.com.sg</b>) so they can resend your confirmation email.</p>
+      </Q>
+      <Q q="Who can see the mobile number I enter for a paid game?">
+        <p>Only that group's organisers and admins. It's used for that game only, isn't saved to your profile, never appears in WhatsApp messages,
+          roster images or the activity log, and is deleted 30 days after the game (or straight away if you withdraw).</p>
       </Q>
       <Q q="Who can see my profile photo?">
         <p>In the app, only people who share a group with you, while signed in. It's stored privately and never public. It is also included in

@@ -1,12 +1,12 @@
 # FR-021 implementation plan — scheduled visibility, court booking fees, game-day slot confirmation
 
-Status: decisions confirmed 2026-11-13 (see the spec). No code or database changes until Jon approves the build.
+Status: implemented (v0.14.0, live 2026-11-13). Decisions confirmed 2026-11-13 (see the spec).
 Spec: [feature-requests/FR-021-scheduled-games-fees.md](../feature-requests/FR-021-scheduled-games-fees.md).
 Mockups: [docs/fr021-review/](fr021-review/) (PNG, with HTML sources in `source/`).
 
 Courts and facilities are booked outside PickleMe. This plan doesn't add booking, provider integration or payments.
 
-## 1. Database (migration `2026111x000018_scheduled_games_fees.sql`)
+## 1. Database (migration `20261113000018_scheduled_games_fees.sql`)
 
 ### Visibility
 
@@ -99,3 +99,22 @@ country-code picker defaulting to `+65`, and the `+65` PayNow payee check) with 
 - **Moving share amounts:** the share changes with sign-ups; the UI always labels it "about" and gives the split basis.
 - **Personal data:** new mobile numbers. Kept per game, organiser/admin-only, excluded from logs and shares, and
   deleted after 30 days.
+
+## Build notes (v0.14.0, 2026-11-13)
+
+How the build interprets or extends the spec. Reviewed in PR #12.
+
+- **Late joiners pay too.** The final share is the total divided by everyone on the attendance list (the playing list
+  at the start time plus anyone added late, FR-008), minus players marked Excused. Unexcused no-shows still pay.
+- **Hidden games are enforced in the database.** The existing `get_game`, `list_games`, `preview_shared_game`,
+  `join_game`, `join_shared_game`, `get_game_weather` and `claim_promotion_emails` functions move to the private schema
+  and are wrapped by public functions with the same signatures that apply the visibility check first. Row-level security
+  on games and registrations uses the same check.
+- **No direct table access** to `game_payees` (PayNow payee) or `slot_confirmations`; both are read and written only
+  through functions.
+- **Mobile numbers.** Confirmation numbers are chosen with a country picker (+65 first) or typed in full starting with
+  `+` or `00`; bare digits without a country code are rejected. The PayNow payee must be a Singapore mobile (+65,
+  starting with 8 or 9); a local 8-digit number is accepted as +65.
+- **Repeat games.** A new game copies the fee, payee and visibility of the group's last game, like title and location.
+  The organiser's own PayNow number is remembered on their device.
+- **Policy date.** The privacy policy shows "Last updated 13 November 2026"; adjust it to the release date.

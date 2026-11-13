@@ -7,7 +7,8 @@ export const activityLabels = Object.freeze({
   invite_created: 'Created invite', invite_revoked: 'Revoked invite', group_renamed: 'Renamed group',
   verification_resent: 'Resent confirmation email', pending_signup_dismissed: 'Dismissed unconfirmed sign-up',
   cancel_reason_updated: 'Edited cancellation note',
-  weather_venue_set: 'Set weather venue', weather_venue_removed: 'Turned off weather venue'
+  weather_venue_set: 'Set weather venue', weather_venue_removed: 'Turned off weather venue',
+  fee_changed: 'Changed court fee', slot_confirmed: 'Confirmed slot'
 })
 export function activityLabel(action) { return activityLabels[action] ?? action }
 /** Affected player: snapshot name, else the masked email recorded for unconfirmed sign-ups. */

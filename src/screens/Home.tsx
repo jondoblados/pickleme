@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { api, isOrganiser, type GameSummary, type Me } from '../lib/api'
 import { friendlyError } from '../lib/errors'
 import type { Route } from '../lib/route'
-import { fmtRange, fmtShortDay } from '../lib/time'
+import { fmtRange, fmtShortDay, fmtTime } from '../lib/time'
+import { costLine } from '../lib/fees.js'
 import { Notice } from '../components/ui'
 import { StatusChip } from '../components/StatusChip'
 
@@ -46,6 +47,8 @@ export function Home({ group, go }: { group: Me['groups'][number]; go: (r: Route
         <ul className="game-list">
           {games.map(g => {
             const full = g.playing >= g.capacity
+            const cost = g.status !== 'cancelled' ? costLine(g.fee ?? null, { short: true }) : null
+            const hiddenUntil = g.visible_from && new Date(g.visible_from).getTime() > Date.now() ? g.visible_from : null
             return (
               <li key={g.id}>
                 <button className="game-card" onClick={() => go({ name: 'game', gameId: g.id })}>
@@ -56,6 +59,8 @@ export function Home({ group, go }: { group: Me['groups'][number]; go: (r: Route
                   <div className="game-card-body">
                     <strong className="title">{g.title}</strong>
                     {g.location && <span className="muted">{g.location}</span>}
+                    {cost && <span className="small fee-line">{cost}</span>}
+                    {hiddenUntil && <span className="chip chip-hidden">Hidden until {fmtShortDay(hiddenUntil, g.timezone)}, {fmtTime(hiddenUntil, g.timezone)}</span>}
                     {g.status === 'cancelled' && g.cancel_reason && <span className="cancel-card-reason">{g.cancel_reason}</span>}
                     <div className="meter" aria-label={`${g.playing} of ${g.capacity} places taken`}>
                       <span style={{ width: `${Math.min(100, (g.playing / g.capacity) * 100)}%` }} />

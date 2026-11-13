@@ -1,6 +1,6 @@
 # FR-021 — Scheduled game visibility, court booking fees and game-day slot confirmation
 
-- Status: Requested. Decisions confirmed 2026-11-13; plan and mockups ready. No code or database changes yet.
+- Status: Implemented (v0.14.0, live 2026-11-13). Decisions confirmed 2026-11-13.
 - Requested: 2026-11-13 by Jon, for an organiser who has booked courts for every game in Q1 2027 and wants to enter
   all of them now.
 - Plan: [docs/fr021-plan.md](../docs/fr021-plan.md). Mockups: [docs/fr021-review/](../docs/fr021-review/).
@@ -106,3 +106,22 @@ When a fee is added or changed after people have joined, the game page shows the
    Excused; unexcused no-shows are included.
 8. Only organisers and admins of that group can read confirmation numbers; numbers are deleted 30 days after the game.
 9. Privacy policy and FAQ are updated before release.
+
+## Build notes (v0.14.0, 2026-11-13)
+
+How the build interprets or extends the spec. Reviewed in PR #12.
+
+- **Late joiners pay too.** The final share is the total divided by everyone on the attendance list (the playing list
+  at the start time plus anyone added late, FR-008), minus players marked Excused. Unexcused no-shows still pay.
+- **Hidden games are enforced in the database.** The existing `get_game`, `list_games`, `preview_shared_game`,
+  `join_game`, `join_shared_game`, `get_game_weather` and `claim_promotion_emails` functions move to the private schema
+  and are wrapped by public functions with the same signatures that apply the visibility check first. Row-level security
+  on games and registrations uses the same check.
+- **No direct table access** to `game_payees` (PayNow payee) or `slot_confirmations`; both are read and written only
+  through functions.
+- **Mobile numbers.** Confirmation numbers are chosen with a country picker (+65 first) or typed in full starting with
+  `+` or `00`; bare digits without a country code are rejected. The PayNow payee must be a Singapore mobile (+65,
+  starting with 8 or 9); a local 8-digit number is accepted as +65.
+- **Repeat games.** A new game copies the fee, payee and visibility of the group's last game, like title and location.
+  The organiser's own PayNow number is remembered on their device.
+- **Policy date.** The privacy policy shows "Last updated 13 November 2026"; adjust it to the release date.

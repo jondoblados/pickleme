@@ -53,6 +53,39 @@ jobs:
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/profile_avatars.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/game_weather.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/tests/cancel_reasons.sql
+  full-chain-database:
+    # Applies every migration in order (with extension stand-ins) so later features that depend on the full schema can be tested.
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: full_chain
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d full_chain"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: full_chain
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Apply all migrations
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/fr013_bootstrap.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/storage_bootstrap.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/extension_stubs.sql
+          for f in supabase/migrations/*.sql; do
+            case "$f" in *000014_activity_join_names.sql) psql -X -v ON_ERROR_STOP=1 -f supabase/tests/activity_join_names_seed.sql ;; esac
+            sed -E "s/create extension if not exists (pg_net|pg_cron);//" "$f" | psql -X -q -v ON_ERROR_STOP=1 -1
+          done
+      - name: FR-021 scheduled games and fees
+        run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/scheduled_games_fees.sql
   build:
     runs-on: ubuntu-latest
     steps:
@@ -62,7 +95,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs tests/otp.test.mjs tests/avatar.test.mjs tests/weather.test.mjs tests/cancel-reasons.test.mjs
+      - run: node --test tests/activity-log.test.mjs tests/roster-image.test.mjs tests/otp.test.mjs tests/avatar.test.mjs tests/weather.test.mjs tests/cancel-reasons.test.mjs tests/fees.test.mjs
       - run: npm run build
   browser:
     # Playwright 1.56 cannot install Chromium on ubuntu-latest (26.04); pin until Playwright is upgraded.

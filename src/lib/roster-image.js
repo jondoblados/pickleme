@@ -90,7 +90,10 @@ export async function renderRosterImage(model, makeCanvas = () => document.creat
   const dateTop = 156 + (title.length - 1) * 51
   const timeTop = dateTop + date.length * 36 + 8
   const locationTop = timeTop + time.length * 34 + 7
-  const headerBottom = locationTop + location.length * 32 + 37
+  // FR-021: the court fee summary (amounts only, never payee or phone numbers) sits under the location.
+  const cost = model.costLine ? wrap(model.costLine, 25, CONTENT, 600) : []
+  const costTop = locationTop + location.length * 32 + 6
+  const headerBottom = locationTop + location.length * 32 + (cost.length ? 6 + cost.length * 32 : 0) + 37
   // FR-019: a cancelled game's note from the organiser sits in an information band under the header.
   const cancelLines = model.cancelNote ? wrap(model.cancelNote, 24, CONTENT - 40, 600) : []
   const cancelHeight = cancelLines.length ? 34 + cancelLines.length * 32 + 22 : 0
@@ -188,6 +191,7 @@ export async function renderRosterImage(model, makeCanvas = () => document.creat
   drawLines(date, LEFT, dateTop, 29, '#ffffff', 600)
   drawLines(time, LEFT, timeTop, 27, '#ffffff')
   drawLines(location, LEFT, locationTop, 25, '#ffffff')
+  if (cost.length) drawLines(cost, LEFT, costTop, 25, C.lime, 600, 32)
 
   if (cancelHeight) {
     const top = headerBottom + 24

@@ -6,6 +6,36 @@ export type { Cancellation, CancelReasonCode }
 export type Role = 'player' | 'organiser' | 'admin'
 export type GameStatus = 'open' | 'closed' | 'cancelled'
 export type MyStatus = { status: 'playing' | 'waitlist' | null; position?: number }
+/** FR-021: when a game appears to players. Organisers and admins always see it. */
+export type Visibility = 'now' | 'week_before' | 'two_weeks_before'
+export type PayeeKind = 'organiser' | 'nominated'
+/** FR-021: court booking fee summary. Amounts are in cents (SGD only for now). */
+export interface FeeSummary {
+  total_cents: number; currency: 'SGD'
+  /** People the fee is split between: playing now, or the attendance list minus Excused once the game has started. */
+  basis: number
+  share_cents: number | null
+  share_if_full_cents: number | null
+  /** True once the game has ended and every player on the attendance list is marked. */
+  final: boolean
+  previous_cents: number | null; updated_at: string | null
+}
+export interface GameFee extends FeeSummary {
+  /** Shown only to organisers, admins and players who owe a share. */
+  payee: { kind: PayeeKind; name: string; mobile: string } | null
+  changed_since_join: boolean
+}
+export interface SlotConfirmation {
+  required: boolean; opens_at: string; closes_at: string; open: boolean; confirmed_at: string | null
+}
+export interface SlotConfirmationRow {
+  user_id: string; name: string; avatar_path?: string | null; position: number
+  confirmed_at: string | null; mobile: string | null
+}
+export interface FeeSettings {
+  total_cents: number | null; currency: 'SGD'
+  payee: { kind: PayeeKind; name: string | null; mobile: string; user_id: string | null } | null
+}
 
 export interface Me {
   user_id: string
@@ -19,6 +49,10 @@ export interface GameSummary {
   /** FR-019: the organiser's reason, for cancelled games only. */
   cancel_reason?: string | null
   playing: number; waitlist: number; me: MyStatus
+  visibility?: Visibility
+  /** Organisers and admins only: when a scheduled game appears to players. */
+  visible_from?: string | null
+  fee?: FeeSummary | null
 }
 export interface RosterEntry {
   user_id: string; display_name: string; avatar_path?: string | null; joined_at: string; rank: number
@@ -28,11 +62,15 @@ export interface GameDetail {
   game: { id: string; title: string; starts_at: string; ends_at: string; location: string; capacity: number
           notes: string; status: GameStatus; updated_at: string
           /** FR-019: null unless cancelled. reason is null for games cancelled before reasons were required. */
-          cancellation?: Cancellation | null }
+          cancellation?: Cancellation | null
+          visibility?: Visibility; visible_from?: string | null
+          fee?: GameFee | null }
   group: { id: string; name: string; timezone: string }
   my_role: Role
   me: MyStatus
   roster: RosterEntry[]
+  /** FR-021: game-day slot confirmation, for paid games only. */
+  confirmation?: SlotConfirmation | null
 }
 export interface Member { user_id: string; display_name: string | null; avatar_path?: string | null; role: Role; joined_at: string
   /** Admins only: false when the member's email is not confirmed. null for everyone else. */
@@ -63,12 +101,19 @@ export const api = {
   withdraw: (id: string) => rpc<{ cancelled: boolean; promoted: number }>('withdraw_game', { p_game_id: id }),
   removeRegistration: (gameId: string, userId: string) =>
     rpc('remove_registration', { p_game_id: gameId, p_user_id: userId }),
-  createGame: (g: { groupId: string; title: string; startsAt: string; endsAt: string; location: string; capacity: number; notes: string }) =>
+  createGame: (g: { groupId: string; title: string; startsAt: string; endsAt: string; location: string; capacity: number; notes: string; visibility: Visibility }) =>
     rpc<string>('create_game', { p_group_id: g.groupId, p_title: g.title, p_starts_at: g.startsAt, p_ends_at: g.endsAt,
-      p_location: g.location, p_capacity: g.capacity, p_notes: g.notes }),
-  updateGame: (id: string, g: { title: string; startsAt: string; endsAt: string; location: string; capacity: number; notes: string }) =>
+      p_location: g.location, p_capacity: g.capacity, p_notes: g.notes, p_visibility: g.visibility }),
+  updateGame: (id: string, g: { title: string; startsAt: string; endsAt: string; location: string; capacity: number; notes: string; visibility: Visibility }) =>
     rpc<{ promoted: number }>('update_game', { p_game_id: id, p_title: g.title, p_starts_at: g.startsAt, p_ends_at: g.endsAt,
-      p_location: g.location, p_capacity: g.capacity, p_notes: g.notes }),
+      p_location: g.location, p_capacity: g.capacity, p_notes: g.notes, p_visibility: g.visibility }),
+  /** FR-021: set, change or remove (totalCents null) the court booking fee. Organisers and admins only. */
+  setGameFee: (id: string, totalCents: number | null, payee?: { kind: PayeeKind; name?: string; mobile: string }) =>
+    rpc<{ changed: boolean }>('set_game_fee', { p_game_id: id, p_total_cents: totalCents,
+      p_payee_kind: payee?.kind ?? 'organiser', p_payee_name: payee?.name ?? null, p_payee_mobile: payee?.mobile ?? null }),
+  getGameFeeSettings: (id: string) => rpc<FeeSettings>('get_game_fee_settings', { p_game_id: id }),
+  confirmSlot: (id: string, mobile: string) => rpc<{ confirmed_at: string }>('confirm_slot', { p_game_id: id, p_mobile: mobile }),
+  listSlotConfirmations: (id: string) => rpc<SlotConfirmationRow[]>('list_slot_confirmations', { p_game_id: id }),
   renameGroup: (groupId: string, name: string) => rpc<{ id: string; name: string; changed: boolean }>('rename_group', { p_group_id: groupId, p_name: name }),
   deleteGame: (id: string) => rpc<{ deleted: boolean; title: string }>('delete_game', { p_game_id: id }),
   /** FR-019: cancelling always needs a reason; setStatus only opens and closes registration. */

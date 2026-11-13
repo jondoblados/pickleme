@@ -2,6 +2,31 @@
 
 All notable work on PickleMe, newest first. Phases refer to the PickleMe Implementation Plan (18 Oct 2026).
 
+## [0.14.0] — 2026-11-13 — FR-021 scheduled games and court booking fees
+
+The migration and the updated `send-promotions` function are live.
+
+### Added
+- **Scheduled visibility.** When creating or editing a game, organisers choose **Visible now** (default), **1 week before**
+  or **2 weeks before** the start. Until then only organisers and admins can see the game, including through shared links;
+  it appears automatically. Organisers see a "Hidden until" label.
+- **Court booking fee.** Organisers can add a total fee in SGD at creation or later, paid by PayNow to the organiser
+  (default) or another nominated Singapore mobile number. Courts are booked outside PickleMe.
+- **Cost line everywhere a game is published:** games list, game page, shared preview, WhatsApp message, roster image and
+  caption, and promotion emails show the total and the per-player share based on current sign-ups.
+- **Fee notice.** Players who joined before a fee was added or changed see an in-app notice with the old and new amounts.
+- **Game-day slot confirmation.** From midnight on the game day until the start, players in paid games confirm with a
+  mobile number (any country code). Only organisers and admins see the numbers, for that game only; they're deleted
+  30 days after the game. Organisers see confirmed and pending players.
+- Migration `20261113000018_scheduled_games_fees.sql`; tests `supabase/tests/scheduled_games_fees.sql`,
+  `tests/fees.test.mjs`, roster-image test; review harness `tests/fees.harness.html`. New CI job applies the full
+  migration chain with `supabase/tests/extension_stubs.sql`.
+
+### Changed
+- `create_game` and `update_game` take a visibility argument.
+- Activity log records fee changes (amounts only, no phone numbers).
+- Privacy policy and FAQ: fees, PayNow and slot confirmation numbers.
+
 ## [0.13.0] — 2026-11-10 — FR-019 cancellation reasons
 
 ### Added

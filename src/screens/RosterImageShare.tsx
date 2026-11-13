@@ -5,6 +5,7 @@ import { fmtRange } from '../lib/time'
 import { friendlyError } from '../lib/errors'
 import { renderRosterImage } from '../lib/roster-image.js'
 import { cancelNoteLine } from '../lib/cancel-reasons.js'
+import { costLine as feeCostLine } from '../lib/fees.js'
 import { copyText } from '../lib/clipboard'
 import { loadAvatarImage } from '../lib/avatar'
 import { Notice } from '../components/ui'
@@ -46,13 +47,14 @@ export function RosterImageShare({ gameId }: { gameId: string }) {
       const title = d.game.status === 'cancelled' ? `CANCELLED: ${d.game.title}` : d.game.status === 'closed' ? `REGISTRATION CLOSED: ${d.game.title}` : d.game.title
       const time = `${fmtRange(d.game.starts_at, d.game.ends_at, tz)} (${tz})`
       const cancelNote = d.game.status === 'cancelled' ? cancelNoteLine(d.game.cancellation) : null
-      const blob = await renderRosterImage({ title, date, time, location: d.game.location, capacity: d.game.capacity, playing: playingEntries, waitlist: waitlistEntries, snapshot, cancelNote })
+      const costLine = d.game.status === 'cancelled' ? null : feeCostLine(d.game.fee ?? null)
+      const blob = await renderRosterImage({ title, date, time, location: d.game.location, capacity: d.game.capacity, playing: playingEntries, waitlist: waitlistEntries, snapshot, cancelNote, costLine })
       for (const e of [...playingEntries, ...waitlistEntries]) e.photo?.close()
       if (request.current !== id) return
       const file = new File([blob], `pickleme-roster-${d.game.id}.png`, { type: 'image/png' })
       const url = URL.createObjectURL(file); imageUrl.current = url
       const link = `${APP_URL}?game=${d.game.id}`
-      const caption = `${title}\n${cancelNote ? `${cancelNote}\n` : ''}${date}\n${time}\n${d.game.location}\nPlaying: ${playing.length}/${d.game.capacity} · Waitlist: ${waitlist.length}\nSnapshot: ${snapshot}\n\nLatest list, join or withdraw:\n${link}\n\nThis image is a snapshot and does not update.`
+      const caption = `${title}\n${cancelNote ? `${cancelNote}\n` : ''}${date}\n${time}\n${d.game.location}\n${costLine ? `${costLine}\n` : ''}Playing: ${playing.length}/${d.game.capacity} · Waitlist: ${waitlist.length}\nSnapshot: ${snapshot}\n\nLatest list, join or withdraw:\n${link}\n\nThis image is a snapshot and does not update.`
       setPrepared({ file, url, caption, snapshot })
     } catch (e) {
       if (request.current === id) setError(e instanceof Error ? e.message : friendlyError(e))
@@ -72,7 +74,7 @@ export function RosterImageShare({ gameId }: { gameId: string }) {
   return <section className="share card stack" aria-label="Share roster image">
     <h2>Share roster image</h2>
     <p>Preview a fresh Playing and Waitlist snapshot before sharing it in WhatsApp.</p>
-    <p className="small muted">Organisers and admins only. Display names and profile photos (where set) will be visible to recipients and the image can be forwarded. Attendance and email addresses are not included. Images are generated on this device, not published to a public image URL.</p>
+    <p className="small muted">Organisers and admins only. Display names and profile photos (where set) will be visible to recipients and the image can be forwarded. Attendance, email addresses and phone numbers are not included. Images are generated on this device, not published to a public image URL.</p>
     <div className="row wrap"><button className="btn btn-primary" disabled={busy} onClick={generate}>{busy ? 'Working…' : prepared ? 'Refresh image from latest roster' : 'Generate roster preview'}</button></div>
     {error && <Notice tone="error">{error}</Notice>}
     {notice && <p role="status">{notice}</p>}

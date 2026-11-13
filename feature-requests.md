@@ -30,7 +30,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 | FR-017 | Hourly weather forecasts for game venues | Implemented (v0.11.0, live) | 2026-11-05 | 2026-11-09 |
 | FR-018 | Roster image with avatar circles | Implemented (v0.12.0) | 2026-11-09 | 2026-11-09 |
 | FR-019 | Required cancellation reason, shown as a note from the organiser | Implemented (v0.13.0, live) | 2026-11-10 | 2026-11-10 |
-| FR-021 | Scheduled game visibility, court booking fees and game-day slot confirmation | Requested (decisions confirmed; plan and mockups ready) | 2026-11-13 | — |
+| FR-021 | Scheduled game visibility, court booking fees and game-day slot confirmation | Implemented (v0.14.0, live) | 2026-11-13 | 2026-11-13 |
 
 ## Details
 
@@ -225,7 +225,7 @@ Status key: **Requested** · **In progress** · **Implemented** · **Declined**
 - **Details:** [feature-requests/FR-019-cancel-reasons.md](feature-requests/FR-019-cancel-reasons.md).
 
 ### FR-021 — Scheduled game visibility, court booking fees and game-day slot confirmation
-- **Status:** Requested. Decisions confirmed 2026-11-13; plan and mockups ready. No code or database changes yet.
+- **Status:** Implemented (v0.14.0, live 2026-11-13).
 - **Requested:** 2026-11-13 by Jon, for an organiser entering all of her Q1 2027 games in advance. Courts are booked
   outside PickleMe; FR-020 (court and facility prebooking, drafted on a separate branch) is not part of this.
 - **Description:** When creating or editing a game, organisers choose when players can see it: **Visible now**

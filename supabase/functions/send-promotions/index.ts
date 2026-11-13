@@ -15,6 +15,16 @@ interface Promotion {
   id: number; email: string; display_name: string; game_id: string; title: string
   starts_at: string; ends_at: string; location: string; notes: string; timezone: string
   group_name: string; position: number | null; attempt: number
+  /** FR-021: fee summary (amounts only). Null for free games. */
+  fee?: { total_cents: number; share_cents: number | null; basis: number } | null
+}
+
+const sgd = (c: number) => `SGD ${Math.floor(c / 100).toLocaleString('en-SG')}.${String(c % 100).padStart(2, '0')}`
+/** "SGD 48.00 total · about SGD 6.00 each (8 playing)". Never includes payee or phone numbers. */
+export function feeText(p: Promotion) {
+  if (!p.fee) return null
+  return p.fee.share_cents != null ? `${sgd(p.fee.total_cents)} total · about ${sgd(p.fee.share_cents)} each (${p.fee.basis} playing)`
+    : `${sgd(p.fee.total_cents)} total`
 }
 
 async function rpc<T>(fn: string, args: Record<string, unknown>): Promise<T> {
@@ -52,6 +62,7 @@ export function buildEmail(p: Promotion) {
     `Date: ${f.day}`,
     `Time: ${f.range}`,
     p.location ? `Location: ${p.location}` : null,
+    feeText(p) ? `Court fee: ${feeText(p)}. Payment details are on the game page.` : null,
     '',
     `View the game: ${url}`,
     '',
@@ -69,7 +80,7 @@ export function buildEmail(p: Promotion) {
     <h1 style="margin:0;font-size:24px;line-height:1.2">You're in, ${esc(p.display_name)}.</h1>
     <p style="margin:10px 0 0;color:#cfe0d6">A spot opened up for <strong style="color:#d9f24a">${esc(p.title)}</strong>.${p.position ? ` You're <strong style="color:#d9f24a">#${p.position}</strong> on the playing list.` : ''}</p>
   </div>
-  <table style="margin:20px 0;border-collapse:collapse">${row('Date', f.day)}${row('Time', f.range)}${p.location ? row('Where', p.location) : ''}</table>
+  <table style="margin:20px 0;border-collapse:collapse">${row('Date', f.day)}${row('Time', f.range)}${p.location ? row('Where', p.location) : ''}${feeText(p) ? row('Court fee', feeText(p)!) : ''}</table>
   <p style="margin:0 0 22px"><a href="${url}" style="background:#14382b;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:bold;display:inline-block">View the game</a></p>
   <p style="margin:0 0 8px;font-size:14px">Can't make it any more? Please withdraw on the game page so the next person on the waitlist gets the spot.</p>
   <p style="margin:16px 0 0;font-size:12px;color:#5a675f">PickleMe · ${esc(p.group_name)}. You're receiving this because you joined the waitlist for this game.</p>
