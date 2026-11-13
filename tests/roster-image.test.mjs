@@ -111,3 +111,17 @@ test('FR-019: cancelled games show the organiser note in an information band; ot
   const note = c.drawn.find(t => t.s.includes('Rain'))
   assert.ok(note.y < heading.y, 'note sits above the playing list')
 })
+
+test('FR-021: paid games show the cost line in the header, below the location; free games do not', async () => {
+  const plain = canvas(); await renderRosterImage(model, () => plain)
+  assert.ok(!strings(plain).some(s => s.startsWith('Court fee')))
+  const c = canvas()
+  const line = 'Court fee: SGD 48.00 total · about SGD 6.00 each (8 playing; changes with sign-ups)'
+  await renderRosterImage({ ...model, costLine: line }, () => c)
+  const cost = c.drawn.filter(t => t.s.startsWith('Court fee') || t.s.includes('SGD'))
+  assert.ok(cost.length >= 1)
+  const loc = c.drawn.find(t => t.s === 'CBP1'); const header = c.rects[2]
+  assert.ok(cost[0].y > loc.y, 'cost sits under the location')
+  assert.ok(header.y + header.h - (cost.at(-1).y + 25) >= 37, 'header grows to fit the cost line')
+  assert.ok(c.height > plain.height)
+})

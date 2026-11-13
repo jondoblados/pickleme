@@ -5,6 +5,8 @@ export interface RosterImageModel {
   playing: RosterImageEntry[]; waitlist: RosterImageEntry[]; snapshot: string;
   /** FR-019: "Note from Jon (Admin): Rain / wet courts." for cancelled games. */
   cancelNote?: string | null;
+  /** FR-021: "Court fee: SGD 48.00 total · about SGD 6.00 each (8 playing; changes with sign-ups)". */
+  costLine?: string | null;
 }
 export interface RosterImageCell {
   number: number; label: string; open: boolean; waiting: boolean;

@@ -6,8 +6,10 @@ import type { Route } from '../lib/route'
 import { Notice, Spinner, useToast } from '../components/ui'
 import { GamePage } from './GamePage'
 import { RosterImageShare } from './RosterImageShare'
+import { costLine } from '../lib/fees.js'
+import type { FeeSummary } from '../lib/api'
 
-type Preview = { title: string; group_id: string; group_name: string; member: boolean; can_join: boolean }
+type Preview = { title: string; group_id: string; group_name: string; member: boolean; can_join: boolean; fee?: FeeSummary | null }
 type Status = 'unmarked' | 'present' | 'no_show' | 'excused'
 type AttendanceRow = { user_id: string; name: string; status: Status; marked_at: string | null }
 type Attendance = { started: boolean; ended: boolean; cancelled: boolean; rows: AttendanceRow[] }
@@ -49,6 +51,8 @@ export function GameFeatures({ gameId,userId,go,onJoined }: {
   if(!preview.member) return <section className="stack card">
     <h1 className="display">{preview.title}</h1><p>{preview.group_name}</p>
     <p>Join this group and add your name to the game. If the game is full, you will join the waitlist in order. Once a game has started you can still join while a place is free.</p>
+    {preview.fee && <p className="fee-line">{costLine(preview.fee)}</p>}
+    {preview.fee && <p className="small">By joining, you agree to pay your share to the organiser. Payment details appear on the game page after you join.</p>}
     <p className="small muted">Joining makes your display name and registration visible to this group's members. A place is assigned only when you join, not when you sign in.</p>
     {error && <Notice tone="error">{error}</Notice>}
     <button className="btn btn-primary" disabled={busy || !preview.can_join} onClick={join}>{busy?'Joining…':'Join group & game'}</button>

@@ -10,6 +10,9 @@ import { Avatar } from '../components/Avatar'
 import { WeatherCard } from '../components/WeatherCard'
 import { CancelNote, CancelReasonForm } from '../components/CancelNote'
 import { cancelNoteLine } from '../lib/cancel-reasons.js'
+import { costLine } from '../lib/fees.js'
+import { fmtShortDay, fmtTime } from '../lib/time'
+import { ConfirmSlotCard, FeeCard, FeeChangedNotice, SlotConfirmationsPanel } from '../components/FeeCards'
 
 export function shareMessage(d: GameDetail, url: string) {
   const tz = d.group.timezone
@@ -34,12 +37,14 @@ export function shareMessage(d: GameDetail, url: string) {
     `Time: ${fmtRange(d.game.starts_at, d.game.ends_at, tz)}`,
     d.game.location ? `Location: ${d.game.location}` : null,
     `Players: ${d.game.capacity} maximum`,
+    costLine(d.game.fee ?? null), // FR-021: never includes payee or confirmation numbers
     '',
     'Join or withdraw using this link:',
     url,
     '',
     'When the game is full, new signups join the waitlist.',
     'If someone withdraws, the next waitlisted player moves in automatically.',
+    d.game.fee ? 'By joining, you agree to pay your share of the court fee.' : null,
   ].filter(l => l !== null).join('\n')
 }
 
@@ -182,7 +187,12 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
                 })} /></section>
           : <CancelNote cancellation={game.cancellation} tz={tz} canEdit={organiser} onEdit={() => setCancelForm('edit')} />)}
         {game.notes && <p className="notes">{game.notes}</p>}
+        {organiser && game.visible_from && new Date(game.visible_from).getTime() > now &&
+          <p className="chip chip-hidden">Hidden from players until {fmtShortDay(game.visible_from, tz)}, {fmtTime(game.visible_from, tz)}</p>}
       </header>
+
+      {me.status && <FeeChangedNotice game={game} />}
+      {!cancelled && <ConfirmSlotCard data={data} onDone={load} />}
 
       <section className={`me-card me-${me.status ?? 'none'}`} aria-live="polite">
         <div>
@@ -206,10 +216,14 @@ export function GamePage({ gameId, userId, go }: { gameId: string; userId: strin
             const s = r as { status: string; position: number }
             return s.status === 'playing' ? `You're in — #${s.position}` : `You're on the waitlist — #${s.position}`
           })}>{busy ? 'Joining…' : started ? 'Join now' : spotsLeft > 0 ? 'Join game' : 'Join waitlist'}</button>}
+          {canJoin && game.fee && <p className="small muted">By joining, you agree to pay your share to the organiser.</p>}
           {canWithdraw && <ConfirmButton className="btn btn-danger-ghost" disabled={busy} confirmText="Tap again to withdraw"
             onConfirm={() => act(() => api.withdraw(game.id), () => 'You have withdrawn.')}>Withdraw</ConfirmButton>}
         </div>
       </section>
+
+      {!cancelled && <FeeCard game={game} />}
+      {organiser && !cancelled && <SlotConfirmationsPanel data={data} refreshKey={roster.map(r => r.user_id).join(',')} />}
 
       {game.status !== 'cancelled' && <WeatherCard gameId={game.id} refreshKey={`${game.location}|${game.starts_at}|${game.ends_at}|${game.status}`} />}
 
